@@ -12839,3 +12839,29 @@ Copyright (c) 2015 Daniel Eden
   height: 94px;
   width: 92px;
 }
+
+/* Softer Dark Mode */
+body.dark-mode {
+    background-color: #2E2E2E; /* Soft dark gray */
+    color: #E0E0E0; /* Light gray for text */
+}
+
+.navbar, .card {
+    background-color: #424242; /* Dark gray for cards and navbar */
+    color: #E0E0E0;
+}
+
+button, input, textarea {
+    background-color: #555; /* Softer button background */
+    color: #E0E0E0;
+    border: 1px solid #888; /* Lighter borders */
+}
+
+a {
+    color: #80CBC4; /* Soft teal for links */
+}
+
+/* Lighter hover effect for buttons */
+button:hover {
+    background-color: #666; /* Slightly lighter gray on hover */
+}

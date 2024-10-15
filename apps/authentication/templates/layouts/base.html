@@ -19,13 +19,35 @@
 <head>
 
   <meta charset="utf-8" />
+
+  <meta name="geo.place-name" content="Spain">
+  <meta property="og:type" content="website">
+  <meta name="description"
+    content="Experience the power of Your Copromanager AI. Enhance productivity, streamline tasks, and get personalized assistance.">
+  <meta property="og:title" content="Your Copromanager - AI Personal Assistant">
+  <meta property="og:description"
+    content="Your Copromanager - Your personal assistant powered by Your Copromanager AI. Increase productivity, automate tasks, and receive personalized recommendations.">
+  <meta property="og:image" content="https://your.copromanager.pro/static/assets/img/shark.png">
+  <meta property="og:url" content="https://your.copromanager.pro">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Your Copromanager - Your Copromanager AI Personal Assistant">
+  <meta name="twitter:description"
+    content="Your Copromanager - Your Copromanager AI. Increase productivity, automate tasks, and receive personalized recommendations.">
+  <meta name="twitter:image" content="https://your.copromanager.pro/static/assets/img/shark.png">
+  <meta name="keywords"
+    content="Your Copromanager AI assistant, ChatGPT, productivity, automation, personalized recommendations, Gestion des Copropriétaires, Préstataires, Immeubles">
+  <meta name="author" content="Developer">
+  <meta name="google-site-verification" content="bYBQsihs2g2t3_99rBWJO60qaXSCS7ay3kIz5urnBGs">
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  
   <link rel="apple-touch-icon" sizes="76x76" href="/static/assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="/static/assets/img/favicon.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <link rel="canonical" href="https://appseed.us/admin-dashboards/django-dashboard-material">
 
   <title>
-    Django Material Dashboard - {% block title %}{% endblock %} | AppSeed
+    Your Copromanager - {% block title %}{% endblock %} | AI
   </title>
 
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
@@ -43,7 +65,15 @@
 </head>
 
 <body class="">
+  
   <div class="wrapper ">
+    <div class="togglebutton">
+      <label>
+        <input type="checkbox" id="theme-toggle">
+        <span class="toggle"></span>
+        Dark Mode
+      </label>
+    </div>
 
     {% include 'includes/sidebar.html' %}
 
@@ -53,6 +83,12 @@
 
       <!-- End Navbar -->
       <div class="content">
+        <div class="text-center mb-5">
+          <img class="img-container" src="/static/assets/img/shark.png" />
+          {% if user.is_authenticated %}
+          <h5 class="mb-0">-¡!¡- Welcome, {{ user.username }} -¡!¡-</h5>
+          {% endif %}
+        </div>
         <div class="container-fluid">
 
           {% block content %}{% endblock content %}
@@ -74,5 +110,7 @@
   <!-- Specific Page JS goes HERE  -->
   {% block javascripts %}{% endblock javascripts %}
   
+  <script src="/static/assets/js/script.js"></script>
+
 </body>
 </html>
