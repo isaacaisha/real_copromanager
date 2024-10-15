@@ -1,0 +1,54 @@
+services:
+  appseed-app:
+    container_name: appseed_app
+    restart: always
+    env_file: .env
+    build: .
+    networks:
+      - db_network
+      - web_network
+    ports:
+      - "5005:5005"
+    volumes:
+      - ./static:/app/static 
+    depends_on:
+      - postgres
+    #command: ["sh", "-c", "python manage.py migrate && gunicorn appseed_app.wsgi:application --bind 0.0.0.0:5005"]
+
+  postgres:
+    container_name: postgres
+    build:
+      context: ./postgres  # Use the custom Dockerfile from the postgres directory
+    restart: always
+    environment:
+      POSTGRES_DB: real_copromanager
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Toure7Medina
+    ports:
+      - "5432:5432"
+    networks:
+      - db_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  nginx:
+    container_name: nginx
+    restart: always
+    image: "nginx:latest"
+    ports:
+      - "85:85"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    networks:
+      - web_network
+    depends_on: 
+      - appseed-app
+
+networks:
+  db_network:
+    driver: bridge
+  web_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
