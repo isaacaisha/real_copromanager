@@ -13,7 +13,7 @@ services:
       - ./static:/app/static 
     depends_on:
       - postgres
-    #command: ["sh", "-c", "python manage.py migrate && gunicorn core.wsgi:application --bind 0.0.0.0:5005"]
+    command: ["sh", "-c", "python manage.py migrate && gunicorn core.wsgi:application --bind 0.0.0.0:5005"]
 
   postgres:
     container_name: postgres
@@ -25,7 +25,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: Toure7Medina
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       - db_network
     volumes:
@@ -35,8 +35,10 @@ services:
     container_name: nginx
     restart: always
     image: "nginx:latest"
+    #ports:
+    #  - "85:85"
     ports:
-      - "85:85"
+      - "80:85"
     volumes:
       - ./nginx:/etc/nginx/conf.d
     networks:

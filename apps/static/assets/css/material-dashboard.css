@@ -12841,24 +12841,31 @@ Copyright (c) 2015 Daniel Eden
 }
 
 /* Softer Dark Mode */
+body {
+    background-color: #b9bbbe; /* Soft dark gray */
+    color: #000; /* Light gray for text */
+}
 body.dark-mode {
     background-color: #2E2E2E; /* Soft dark gray */
-    color: #E0E0E0; /* Light gray for text */
+}
+
+a, div.togglebutton > label, .card-description {
+  color: #000 !important;
 }
 
 .navbar, .card {
-    background-color: #424242; /* Dark gray for cards and navbar */
-    color: #E0E0E0;
+    background-color: #666; /* Dark gray for cards and navbar */
+    color: #777;
 }
 
 button, input, textarea {
     background-color: #555; /* Softer button background */
-    color: #E0E0E0;
+    color: #666;
     border: 1px solid #888; /* Lighter borders */
 }
 
-a {
-    color: #80CBC4; /* Soft teal for links */
+label, h5, td, .stats {
+  color: #b9bbbe !important;
 }
 
 /* Lighter hover effect for buttons */
