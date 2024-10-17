@@ -12840,32 +12840,13 @@ Copyright (c) 2015 Daniel Eden
   width: 92px;
 }
 
-/* Softer Dark Mode */
-body {
-    background-color: #b9bbbe; /* Soft dark gray */
-    color: #000; /* Light gray for text */
-}
 body.dark-mode {
-    background-color: #2E2E2E; /* Soft dark gray */
+  background-color: #333; /* Soft dark gray */
+  color: #999 !important;
 }
 
-a, div.togglebutton > label, .card-description {
-  color: #000 !important;
-}
-
-.navbar, .card {
-    background-color: #666; /* Dark gray for cards and navbar */
-    color: #777;
-}
-
-button, input, textarea {
-    background-color: #555; /* Softer button background */
-    color: #666;
-    border: 1px solid #888; /* Lighter borders */
-}
-
-label, h5, td, .stats {
-  color: #b9bbbe !important;
+div.togglebutton > label {
+  color: #999 !important;
 }
 
 /* Lighter hover effect for buttons */

@@ -39,7 +39,7 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = [
     'your.copromanager.pro', 'www.your.copromanager.pro', '142.93.235.205',
     'localhost', '127.0.0.1', config('SERVER', default='127.0.0.1'),
-    '192.168.7.182', '0.0.0.0'
+    '192.168.31.182', '0.0.0.0'
     ]
 
 # Application definition
@@ -100,7 +100,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # # Better for Production
 DATABASES = {
-    'default': env.db('DATABASE_URL'),
+    'default': env.db('DATABASE_URL', default='postgresql://postgres:Toure7Medina@localhost:5432/real_copromanager'),
 }
 
 # Password validation
