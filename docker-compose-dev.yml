@@ -1,3 +1,5 @@
+# docker-compose-dev.yml
+
 services:
   appseed-app:
     container_name: appseed_app
@@ -11,6 +13,7 @@ services:
       - "5005:5005"
     volumes:
       - ./static:/app/static 
+      - ./staticfiles:/app/staticfiles 
     depends_on:
       - postgres
     command: ["sh", "-c", "python manage.py migrate && gunicorn core.wsgi:application --bind 0.0.0.0:5005"]
@@ -21,11 +24,11 @@ services:
       context: ./postgres  # Use the custom Dockerfile from the postgres directory
     restart: always
     environment:
-      POSTGRES_DB: real_copromanager
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Toure7Medina
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
       - db_network
     volumes:
@@ -41,6 +44,8 @@ services:
       - "80:85"
     volumes:
       - ./nginx:/etc/nginx/conf.d
+      - ./static:/app/static
+      - ./staticfiles:/app/staticfiles 
     networks:
       - web_network
     depends_on: 

@@ -12845,7 +12845,7 @@ body.dark-mode {
   color: #999 !important;
 }
 
-div.togglebutton > label {
+td, .gray {
   color: #999 !important;
 }
 

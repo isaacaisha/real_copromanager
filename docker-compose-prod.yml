@@ -1,0 +1,67 @@
+# docker-compose-prod.yml
+
+services:
+  appseed-app:
+    container_name: appseed_app_prod
+    image: isaacaisha/real_copromanager_project-appseed-app:latest  # Using the pushed image
+    restart: always
+    env_file: ./.env 
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5005 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - db_network
+      - web_network
+    depends_on:
+      - postgres
+    command: ["sh", "-c", "python manage.py migrate && gunicorn core.wsgi:application --bind 0.0.0.0:5005"]
+
+  postgres:
+    container_name: postgres_prod
+    image: postgres:latest  # Using the official Postgres image
+    restart: always
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    networks:
+      - db_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  nginx:
+    container_name: nginx_prod
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"   # HTTP
+      - "443:443" # HTTPS
+    volumes:
+      - ./nginx:/etc/nginx/conf.d  # Nginx config
+      - ./static:/app/static       # Serve static files
+      - ./staticfiles:/app/staticfiles  # Serve staticfiles (if needed)
+    networks:
+      - web_network
+    depends_on: 
+      - appseed-app
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]  # Nginx health check
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  db_network:
+    driver: bridge
+  web_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

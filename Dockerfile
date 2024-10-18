@@ -9,7 +9,7 @@ WORKDIR /app
 
 # Install python dependencies
 COPY requirements.txt .
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip -i https://pypi.python.org/simple
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the project files
