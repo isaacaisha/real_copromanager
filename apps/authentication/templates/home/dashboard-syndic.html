@@ -84,7 +84,8 @@
                 <div class="card-body">
                     <ul>
                         {% for coproprietaire in coproprietaires %}
-                        <li>{{ coproprietaire.user.nom }} (Email: {{ coproprietaire.user.email }})</li>
+                        <li>- Nom: {{ coproprietaire.user.nom }}<br>- Email: <a href="#">{{ prestataire.user.email }}</a><br>
+                            - Syndic: {{ coproprietaire.syndic.user.username }}<br>- Username: {{ coproprietaire.user.username }}</li>
                         {% empty %}
                         <p>Aucun copropriétaire trouvé pour cet utilisateur.</p>
                         {% endfor %}

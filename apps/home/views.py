@@ -10,11 +10,16 @@ from django.template import loader
 from django.urls import reverse
 
 from apps.authentication.models import Syndic
+from django.utils import timezone
 
 
 @login_required(login_url="/login/")
 def index(request):
-    context = {'segment': 'index'}
+    context = {
+        'segment': 'index',
+        'date': timezone.now().strftime("%a %d %B %Y")
+        
+        }
     try:
         syndic = Syndic.objects.get(user=request.user)
         context['syndic'] = syndic
@@ -27,7 +32,7 @@ def index(request):
 
 @login_required(login_url="/login/")
 def pages(request):
-    context = {}
+    context = {'date': timezone.now().strftime("%a %d %B %Y")}
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
     load_template = request.path.split('/')[-1]

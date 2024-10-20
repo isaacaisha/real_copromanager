@@ -12840,8 +12840,13 @@ Copyright (c) 2015 Daniel Eden
   width: 92px;
 }
 
+/* Check Form */
+.form-check-sign > .check  {
+  border: #08e3ff 0.1rem solid !important;
+}
+
 /* Greetings User */
-.m-1 {
+a, .m-1 {
   color: #2CA8FF;
 }
 
@@ -12871,8 +12876,12 @@ body.dark-mode .card-title, body.dark-mode input, body.dark-mode #id_role {
   color: #08e3ff !important;
 }
 
-body.dark-mode tr, body.dark-mode .card-body {
+body.dark-mode .card-body {
   background-color: #222 !important;
+}
+
+body.dark-mode tr {
+  background-color: #171a1d !important;
 }
 
 body.dark-mode .table-hover tr:hover {
