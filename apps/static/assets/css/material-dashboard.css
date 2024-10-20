@@ -12845,7 +12845,7 @@ body.dark-mode {
   color: #999 !important;
 }
 
-td, #id_role, .gray {
+#id_role, .gray {
   color: #999 !important;
 }
 
@@ -12857,4 +12857,16 @@ button:hover {
 /* Dark-Mode BTN */
 .togglebutton {
   margin-top: 3px;
+}
+/* Card background in dark mode */
+body.dark-mode .card, a.btn.btn-secondary.btn-sm {
+  background-color: #555;
+  color: #fff;
+}
+
+body.dark-mode .card-title {
+  color: #08e3ff !important;
+}
+body.dark-mode tr {
+  background-color: #111 !important;
 }
