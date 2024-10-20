@@ -12840,12 +12840,14 @@ Copyright (c) 2015 Daniel Eden
   width: 92px;
 }
 
-body.dark-mode {
-  background-color: #333; /* Soft dark gray */
-  color: #999 !important;
+/* Greetings User */
+.m-1 {
+  color: #2CA8FF;
 }
 
-#id_role, .gray {
+/* Dark-Mode Section */
+body.dark-mode {
+  background-color: #333; /* Soft dark gray */
   color: #999 !important;
 }
 
@@ -12855,7 +12857,8 @@ button:hover {
 }
 
 /* Dark-Mode BTN */
-.togglebutton {
+.togglebutton, .gray {
+  color: #999 !important;
   margin-top: 3px;
 }
 /* Card background in dark mode */
@@ -12864,9 +12867,14 @@ body.dark-mode .card, a.btn.btn-secondary.btn-sm {
   color: #fff;
 }
 
-body.dark-mode .card-title {
+body.dark-mode .card-title, body.dark-mode input, body.dark-mode #id_role {
   color: #08e3ff !important;
 }
-body.dark-mode tr {
-  background-color: #111 !important;
+
+body.dark-mode tr, body.dark-mode .card-body {
+  background-color: #222 !important;
+}
+
+body.dark-mode .table-hover tr:hover {
+  background-color: #666 !important;
 }
