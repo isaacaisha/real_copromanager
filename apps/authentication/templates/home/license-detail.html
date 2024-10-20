@@ -1,0 +1,103 @@
+<!-- templates/home/license_detail.html -->
+{% extends "layouts/base.html" %}
+
+{% load static %}
+
+{% block title %} License Details - {{ licence.id }} {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block favicon %}
+<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon5.ico' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Détails de la Licence: {{ syndic.user.nom }}</h4>
+            </div>
+            <div class="card-body">
+                <!-- Licence Details -->
+                <h5 class="text-muted">Informations de la Licence</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <strong>Nom :</strong> {{ license.syndic.user.nom }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Date de Début :</strong> {{ license.date_debut|date:"d/m/Y" }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Date de Fin :</strong> {{ license.date_fin|date:"d/m/Y" }}
+                    </li>
+                </ul>
+            
+                <!-- Syndic Details -->
+                {% if syndic %}
+                <h5 class="mt-5 text-muted">Syndic associé</h5>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <strong>Nom :</strong> {{ syndic.user.nom }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Email :</strong> {{ syndic.user.email }}
+                    </li>
+                </ul>
+                {% endif %}
+            
+                <!-- Coproprietaires -->
+                {% if coproprietaires %}
+                <h5 class="mt-5 text-muted">Copropriétaires</h5>
+                <ul class="list-group">
+                    {% for coproprietaire in coproprietaires %}
+                    <li class="list-group-item">
+                        {{ coproprietaire.nom }} ({{ coproprietaire.email }})
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            
+                <!-- Prestataires -->
+                {% if prestataires %}
+                <h5 class="mt-5 text-muted">Prestataires</h5>
+                <ul class="list-group">
+                    {% for prestataire in prestataires %}
+                    <li class="list-group-item">
+                        {{ prestataire.nom }} ({{ prestataire.email }})
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            
+                <!-- Immeubles -->
+                {% if immeubles %}
+                <h5 class="mt-5 text-muted">Immeubles gérés</h5>
+                <ul class="list-group">
+                    {% for immeuble in immeubles %}
+                    <li class="list-group-item">
+                        {{ immeuble.nom }} - {{ immeuble.adresse }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    
+        <div class="text-center mt-4">
+            <a href="{% url 'customize-license' license.id %}" class="btn btn-primary">
+                Modifier la licence
+            </a>
+        </div>
+    
+        <div class="text-center mt-5 mb-5">
+            {% if user.is_authenticated and user.role == 'Superadmin' %}
+            <a href="{% url 'dashboard-superadmin' %}" class="btn btn-secondary">Retour à Backoffice</a>
+            {% else %}
+            <a href="{% url 'home' %}" class="btn btn-secondary mb-4">Retour à l'accueil</a>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

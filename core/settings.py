@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     #'corsheaders',
 ]
 
-#AUTH_USER_MODEL = 'base.User'
+AUTH_USER_MODEL = 'authentication.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -98,9 +98,16 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-# # Better for Production
+## # Better for Production
+#DATABASES = {
+#    'default': env.db('DATABASE_URL', default='postgresql://postgres:Toure7Medina@localhost:5432/real_copromanager'),
+#}
+
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgresql://postgres:Toure7Medina@localhost:5432/real_copromanager'),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': str(BASE_DIR.child('db.sqlite3')),
+    }
 }
 
 # Password validation
@@ -154,3 +161,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 #############################################################
 #############################################################
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -12845,11 +12845,16 @@ body.dark-mode {
   color: #999 !important;
 }
 
-td, .gray {
+td, #id_role, .gray {
   color: #999 !important;
 }
 
 /* Lighter hover effect for buttons */
 button:hover {
     background-color: #666; /* Slightly lighter gray on hover */
+}
+
+/* Dark-Mode BTN */
+.togglebutton {
+  margin-top: 3px;
 }

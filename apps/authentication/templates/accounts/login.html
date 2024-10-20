@@ -53,12 +53,14 @@
 
             <br />
 
-            <button type="submit" name="login" class="btn btn-primary pull-left">Login</button>
+            <div class="text-center">
+              <button type="submit" name="login" class="btn btn-primary">Login</button>
+            </div>
 
-            &nbsp; &nbsp; 
+            <!--&nbsp; &nbsp;
             <span class="pull-right">
               Don't have an account? <a href="{% url 'register' %}" class="text-primary">Create</a>
-            </span>
+            </span>-->
 
             <div class="clearfix"></div>
 
@@ -67,6 +69,20 @@
       </div>
     </div>
   </div>
+
+<!--
+  <h2>Login</h2>
+  <form method="post">
+    {% if msg %}
+      <div class="text-danger">{{ msg }}</div>
+    {% endif %}
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+  </form>
+
+  <a href="{% url 'register' %}" class="btn btn-primary">Inscription</a>
+-->
 
 {% endblock content %}
 

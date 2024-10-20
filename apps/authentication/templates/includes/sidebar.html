@@ -9,6 +9,39 @@
         <ul class="nav">
         {% if request.user.is_authenticated %}
 
+          {% if user.is_authenticated and user.role == 'Superadmin' %}
+          <li class="nav-item {% if 'dashboard_superadmin' in segment %} active {% endif %}">
+            <a class="nav-link" href="{% url 'dashboard-superadmin' %}">
+              <i class="material-icons">person</i>
+              <p>Dashboard SuperAdmin</p>
+            </a>
+          </li>
+          {% endif %}
+          {% if user.is_authenticated and user.role == 'Syndic' %}
+          <li class="nav-item {% if 'dashboard_superadmin' in segment %} active {% endif %}">
+            <a class="nav-link" href="{% url 'dashboard-syndic' syndic_id=syndic.id %}">
+              <i class="material-icons">person</i>
+              <p>Dashboard Syndic</p>
+            </a>
+          </li>
+          {% endif %}
+          {% if user.is_authenticated and user.role == 'Coproprietaire' %}
+          <li class="nav-item {% if 'dashboard_superadmin' in segment %} active {% endif %}">
+            <a class="nav-link" href="{% url 'dashboard-coproprietaire' %}">
+              <i class="material-icons">person</i>
+              <p>Dashboard Coproprietaire</p>
+            </a>
+          </li>
+          {% endif %}
+          {% if user.is_authenticated and user.role == 'Prestataire' %}
+          <li class="nav-item {% if 'dashboard_superadmin' in segment %} active {% endif %}">
+            <a class="nav-link" href="{% url 'dashboard-prestataire' %}">
+              <i class="material-icons">person</i>
+              <p>Dashboard Prestataire</p>
+            </a>
+          </li>
+          {% endif %}
+
           <li class="nav-item {% if 'index' in segment %} active {% endif %}">
             <a class="nav-link" href="/">
               <i class="material-icons">dashboard</i>
@@ -21,14 +54,6 @@
               <p>User Profile</p>
             </a>
           </li>
-
-          <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
-            <a class="nav-link" href="/page-superadmin.html">
-              <i class="material-icons">person</i>
-              <p>Dashboard SuperAdmin</p>
-            </a>
-          </li>
-
           <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
             <a class="nav-link" href="/ui-tables.html">
               <i class="material-icons">content_paste</i>
@@ -73,6 +98,15 @@
               <p>Logout</p>
             </a>
           </li>
+          <!--<<li class="nav-item">
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="nav-link" style="background:none; border:none; color:inherit;">
+                <i class="material-icons">directions_run</i>
+                <p>Logout</p>
+              </button>
+            </form>
+          </li>-->
 
           <li class="nav-item active-pro ">
             <a class="nav-link" 
