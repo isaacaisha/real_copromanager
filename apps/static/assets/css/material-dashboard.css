@@ -12840,40 +12840,16 @@ Copyright (c) 2015 Daniel Eden
   width: 92px;
 }
 
-/* Check Form */
-.form-check-sign > .check  {
-  border: #08e3ff 0.1rem solid !important;
-}
-
-/* Greetings User */
-a, .m-1 {
-  color: #2CA8FF;
-}
-
 /* Dark-Mode Section */
 body.dark-mode {
   background-color: #333; /* Soft dark gray */
   color: #999 !important;
 }
 
-/* Lighter hover effect for buttons */
-button:hover {
-    background-color: #666; /* Slightly lighter gray on hover */
-}
-
-/* Dark-Mode BTN */
-.togglebutton, .gray {
-  color: #999 !important;
-  margin-top: 3px;
-}
 /* Card background in dark mode */
 body.dark-mode .card, a.btn.btn-secondary.btn-sm {
   background-color: #555;
   color: #fff;
-}
-
-body.dark-mode .card-title, body.dark-mode input, body.dark-mode #id_role {
-  color: #08e3ff !important;
 }
 
 body.dark-mode .card-body {
@@ -12884,6 +12860,46 @@ body.dark-mode tr {
   background-color: #171a1d !important;
 }
 
-body.dark-mode .table-hover tr:hover {
+body.dark-mode .table-hover tr:hover, body.dark-mode > div.wrapper > div.sidebar {
   background-color: #666 !important;
+}
+
+/* Greetings User, <input> Tags in dark mode */
+body.dark-mode .username, body.dark-mode input {
+  color: #c1e2fc !important;
+}
+
+body.dark-mode .siisi_dbt {
+  color: #e7e7e7;
+}
+
+body.dark-mode .a_link {
+  color: #26c6da;
+}
+
+body.dark-mode .card-title {
+  color: #d6d8d9 !important;
+}
+
+/* Check Form in dark mode */
+body.dark-mode .form-check-sign > .check  {
+  border: #08e3ff 0.1rem solid !important;
+}
+
+/* Lighter hover effect for buttons */
+button:hover {
+    background-color: #666; /* Slightly lighter gray on hover */
+}
+
+/* Dark-Mode BTN */
+body.dark-mode .togglebutton, .dark-mode-text {
+  color: #999 !important;
+  margin-top: 3px;
+}
+
+body.dark-mode .copyright {
+    background-color: rgb(41, 41, 46);
+    border: 0.1rem solid #ccc;
+    border-radius: 0.5rem;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }

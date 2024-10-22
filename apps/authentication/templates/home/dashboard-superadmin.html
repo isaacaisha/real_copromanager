@@ -71,7 +71,7 @@
                             </td>
                             <td>
                                 {% if syndic.license %}
-                                <a href="{% url 'customize-license' syndic.license.id %}">Customize License</a>
+                                <a href="{% url 'customize-license' syndic.license.id %}" class="a_link">Customize License</a>
                                 {% else %}
                                 <p>No license found for this syndic.</p>
                                 {% endif %}

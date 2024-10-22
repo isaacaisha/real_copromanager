@@ -37,6 +37,7 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 
 # load production server from .env
 ALLOWED_HOSTS = [
+    'test-cop.copromanager.com', 'www.test-cop.copromanager.com', 'aaa-www.test-cop.copromanager.com',
     'your.copromanager.pro', 'www.your.copromanager.pro', '142.93.235.205',
     'localhost', '127.0.0.1', config('SERVER', default='127.0.0.1'),
     '192.168.31.182', '0.0.0.0'

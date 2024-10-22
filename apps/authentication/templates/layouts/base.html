@@ -74,7 +74,7 @@
       <label>
         <input type="checkbox" id="theme-toggle">
         <span id="darkMode" class="toggle"></span>
-        <span class="gray">Dark Mode</span>
+        <span class="dark-mode-text">Dark Mode</span>
       </label>
     </div>
 
@@ -89,7 +89,7 @@
         <div class="text-center mb-5">
           <img class="img-container" src="/static/assets/img/shark.png" />
           {% if user.is_authenticated %}
-          <h5 class="m-1">-¡!¡- Welcome, {{ user.username }} -¡!¡-</h5>
+          <h5 class="username">-¡!¡- Welcome, {{ user.username }} -¡!¡-</h5>
           {% endif %}
         </div>
         <div class="container-fluid">
