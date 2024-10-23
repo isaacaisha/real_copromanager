@@ -25,11 +25,11 @@
                 <ul class="list-group">
                     <li class="list-group-item">
                         <strong>Nom :</strong> {{ license.syndic.user.nom }}
-                    </li>
-                    <li class="list-group-item">
+                        <br>
+                        <strong>Prenom :</strong> {{ license.syndic.user.username }}
+                        <br>
                         <strong>Date de Début :</strong> {{ license.date_debut|date:"d/m/Y" }}
-                    </li>
-                    <li class="list-group-item">
+                        <br>
                         <strong>Date de Fin :</strong> {{ license.date_fin|date:"d/m/Y" }}
                     </li>
                 </ul>
@@ -40,8 +40,9 @@
                 <ul class="list-group">
                     <li class="list-group-item">
                         <strong>Nom :</strong> {{ syndic.user.nom }}
-                    </li>
-                    <li class="list-group-item">
+                        <br>
+                        <strong>Prenom :</strong> {{ syndic.user.username }}
+                        <br>
                         <strong>Email :</strong> <a href="#" class="a_link">{{ syndic.user.email }}</a>
                     </li>
                 </ul>
@@ -86,7 +87,7 @@
                 </ul>
                 {% endif %}
 
-                <div class="text-center">
+                <div class="text-center mt-5">
                     <a href="{% url 'customize-license' license.id %}" class="btn btn-warning btn-sm pull-left">
                         Modifier
                     </a>

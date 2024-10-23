@@ -24,10 +24,11 @@
             <p class="mb-0">Bienvenue, {{ syndic.user.nom }}!</p>
         </div>
         <div class="card-body">
-            <p><strong>User:</strong> {{ syndic.user.nom }}</p>
-            <p><strong>Email:</strong> {{ syndic.user.email }}</p>
-            <p><strong>Created at:</strong> {{ syndic.user.date_debut }}</p>
-            <p><strong>Updated at:</strong> {{ syndic.user.updated_at }}</p>
+            <p><strong>Nom:</strong> {{ syndic.user.nom }}</p>
+            <strong>Prenom:</strong> {{ syndic.user.username }}<br>
+            <strong>Email:</strong> <a href="#" class="a_link">{{ syndic.user.email }}</a><br>
+            <strong>Created at:</strong> {{ syndic.user.date_debut }}<br>
+            <strong>Updated at:</strong> {{ syndic.user.updated_at }}<br>
         </div>
     </div>
     {% endif %}
@@ -39,9 +40,9 @@
             <h4><i class="fas fa-id-card"></i> License Information</h4>
         </div>
         <div class="card-body">
-            <p><strong>ID License:</strong> {{ license.id }}</p>
-            <p><strong>Date de début:</strong> {{ license.date_debut }}</p>
-            <p><strong>Date de fin:</strong> {{ license.date_fin }}</p>
+            <strong>ID License:</strong> {{ license.id }}<br>
+            <strong>Date de début:</strong> {{ license.date_debut }}<br>
+            <strong>Date de fin:</strong> {{ license.date_fin }}<br>
         </div>
     </div>
     {% endif %}
@@ -74,8 +75,10 @@
         <div class="card-body">
             <ul>
                 {% for coproprietaire in coproprietaires %}
-                <li>- Nom: {{ coproprietaire.user.nom }}<br>- Email: <a href="#" class="a_link">{{ coproprietaire.user.email }}</a><br>
-                    - Syndic: {{ coproprietaire.syndic.user.username }}<br>- Username: {{ coproprietaire.user.username }}
+                <li>- Nom: {{ coproprietaire.user.nom }}<br>
+                    - Preom: {{ coproprietaire.user.username }}<br>
+                    - Email: <a href="#" class="a_link">{{ coproprietaire.user.email }}</a><br>
+                    - Syndic: {{ coproprietaire.syndic.user.username }}<br>
                 </li>
                 <br>
                 {% empty %}
@@ -95,7 +98,8 @@
         <div class="card-body">
             <ul>
                 {% for prestataire in prestataires %}
-                <li>- Nom: {{ prestataire.user.nom }}<br>- Prenom: {{ prestataire.user.username }}<br>
+                <li>- Nom: {{ prestataire.user.nom }}<br>
+                    - Prenom: {{ prestataire.user.username }}<br>
                     - Email: <a href="#" class="a_link">{{ prestataire.user.email }}</a><br>
                     - Syndic: {{ prestataire.syndic.user.username }}<br>
                 </li>

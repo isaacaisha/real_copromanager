@@ -28,10 +28,10 @@
                     <p class="card-category">Syndic</p>
                 </div>
                 <div class="card-body">
-                    <p><strong>Prenom:</strong> <a href="#" class="a_link">{{ syndic.user.username }}</a></p>
-                    <p><strong>Email:</strong> <a href="#" class="a_link">{{ syndic.user.email }}</a></p>
-                    <p><strong>Created at:</strong> {{ syndic.user.date_debut }}</p>
-                    <p><strong>Updated at:</strong> {{ syndic.user.updated_at }}</p>
+                    <strong>Prenom:</strong> <a href="#" class="a_link">{{ syndic.user.username }}</a><br>
+                    <strong>Email:</strong> <a href="#" class="a_link">{{ syndic.user.email }}</a><br>
+                    <strong>Created at:</strong> {{ syndic.user.date_debut }}<br>
+                    <strong>Updated at:</strong> {{ syndic.user.updated_at }}<br>
                 </div>
             </div>
         </div>
@@ -49,8 +49,8 @@
                     <h3 class="card-title">{{ license.id }}</h3>
                 </div>
                 <div class="card-body">
-                    <p><strong>Date de début:</strong> {{ license.date_debut }}</p>
-                    <p><strong>Date de fin:</strong> {{ license.date_fin }}</p>
+                    <strong>Date de début:</strong> {{ license.date_debut }}<br>
+                    <strong>Date de fin:</strong> {{ license.date_fin }}<br>
                 </div>
             </div>
         </div>
@@ -87,7 +87,8 @@
                 <div class="card-body">
                     <ul>
                         {% for coproprietaire in coproprietaires %}
-                        <li>- Nom: {{ coproprietaire.user.nom }}<br>- Prenom: {{ coproprietaire.user.username }}<br>
+                        <li>- Nom: {{ coproprietaire.user.nom }}<br>
+                            - Prenom: {{ coproprietaire.user.username }}<br>
                             - Email: <a href="#" class="a_link">{{ coproprietaire.user.email }}</a><br>
                         <br>
                         <li>
@@ -115,8 +116,10 @@
                 <div class="card-body">
                     <ul>
                         {% for prestataire in prestataires %}
-                        <li>- Nom: {{ prestataire.user.nom }}<br>- Email: <a href="#" class="a_link">{{ prestataire.user.email }}</a><br>
-                            - Syndic: {{ prestataire.syndic.user.username }}<br>- Username: {{ prestataire.user.username }}
+                        <li>- Nom: {{ prestataire.user.nom }}<br>
+                            - Preom: {{ prestataire.user.username }}<br>
+                            - Email: <a href="#" class="a_link">{{ prestataire.user.email }}</a><br>
+                            - Syndic: {{ prestataire.syndic.user.username }}<br>
                         </li>
                         <br>
                         {% empty %}
@@ -130,7 +133,7 @@
     </div>
 
     <!-- Back Button login -->
-    <div class="text-center">
+    <div class="text-center mt-5">
         {% if user.is_authenticated and user.role == 'Superadmin' %}
         <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm">Backoffice</a>
         {% else %}

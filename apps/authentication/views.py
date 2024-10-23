@@ -71,6 +71,7 @@ def logout_view(request):
     return redirect('home')
 
 
+@user_passes_test(lambda user: user.role == 'Superadmin')
 def register_user(request):
     msg = None
     success = False
@@ -110,9 +111,9 @@ def register_user(request):
                     license.syndic = syndic  # Link license to the Syndic
                     license.save()
 
-                    ## Assign the license to the syndic and save
-                    #syndic.license = license
-                    #syndic.save()
+                    # Assign the license to the syndic and save
+                    syndic.license = license
+                    syndic.save()
                     
                     messages.success(request, 'Syndic created successfully, Edit the License.')
                     return redirect('dashboard-superadmin')
@@ -162,6 +163,7 @@ def register_user(request):
 
 
 # Delete Syndic View
+@user_passes_test(lambda user: user.role == 'Superadmin')
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def delete_syndic(request, syndic_id):
     syndic = get_object_or_404(CustomUser, id=syndic_id, role='Syndic')
@@ -170,6 +172,7 @@ def delete_syndic(request, syndic_id):
     return redirect('dashboard-superadmin')
 
 # Delete Coproprietaire View
+@user_passes_test(lambda user: user.role == 'Superadmin')
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def delete_coproprietaire(request, coproprietaire_id):
     coproprietaire = get_object_or_404(Coproprietaire, user__id=coproprietaire_id)
@@ -179,6 +182,7 @@ def delete_coproprietaire(request, coproprietaire_id):
     return redirect('dashboard-superadmin')
 
 # Delete Prestataire View
+@user_passes_test(lambda user: user.role == 'Superadmin')
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def delete_prestataire(request, prestataire_id):
     prestataire = get_object_or_404(Prestataire, user__id=prestataire_id)
@@ -190,7 +194,7 @@ def delete_prestataire(request, prestataire_id):
 
 # Superadmin dashboard
 @login_required
-#@user_passes_test(lambda user: user.role == 'Superadmin')
+@user_passes_test(lambda user: user.role == 'Superadmin')
 def dashboard_superadmin(request):
     syndics = CustomUser.objects.filter(role='Syndic')
 
@@ -221,7 +225,7 @@ def dashboard_superadmin(request):
 
 # View for license customization
 @login_required
-#@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def customize_license(request, license_id):
     license = get_object_or_404(License, id=license_id)
     if request.method == 'POST':

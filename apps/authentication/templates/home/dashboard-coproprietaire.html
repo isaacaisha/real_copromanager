@@ -102,7 +102,8 @@
         <div class="card-body">
             <ul>
                 {% for prestataire in prestataires %}
-                <li>- Nom: {{ prestataire.user.nom }}<br>- Prenom: {{ prestataire.user.username }}<br>
+                <li>- Nom: {{ prestataire.user.nom }}<br>
+                    - Prenom: {{ prestataire.user.username }}<br>
                     - Email: <a href="#" class="a_link">{{ prestataire.user.email }}</a><br>
                     - Syndic: {{ prestataire.syndic.user.username }}<br>
                 </li>
