@@ -41,7 +41,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label class="bmd-label-floating">Username</label>
+                    <label class="bmd-label-floating"></label>
                     {{ form.username }}
                   </div>
                 </div>
@@ -53,12 +53,12 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label class="bmd-label-floating">Username Nom</label>
+                    <label class="bmd-label-floating"></label>
                     {{ form.nom }}
                   </div>
                 </div>
               </div>
-              <span class="text-danger">{{ form.username.errors }}</span>
+              <span class="text-danger">{{ form.nom.errors }}</span>
 
               <br />
 
@@ -70,14 +70,14 @@
                   </div>
                 </div>
               </div>
-              <span class="text-danger">{{ form.username.errors }}</span>
+              <span class="text-danger">{{ form.role.errors }}</span>
 
               <br />
 
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label class="bmd-label-floating">Email</label>
+                    <label class="bmd-label-floating"></label>
                     {{ form.email }}
                   </div>
                 </div>
@@ -89,7 +89,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label class="bmd-label-floating">Password</label>
+                    <label class="bmd-label-floating"></label>
                     {{ form.password1 }}
                   </div>
                 </div>
@@ -101,7 +101,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label class="bmd-label-floating">Password Check</label>
+                    <label class="bmd-label-floating"></label>
                     {{ form.password2 }}
                   </div>
                 </div>
@@ -110,16 +110,11 @@
 
               <br />
 
-              <button type="submit" name="register" class="btn btn-success pull-left">Register</button>
-
-              <!--&nbsp; &nbsp; 
-              <span class="pull-right">
-                Have an account? <a href="{% url 'login' %}" class="text-primary">Login</a>
-              </span>-->
+              <button type="submit" name="register" class="btn btn-success btn-sm pull-left">Inscrire</button>
 
               <!-- Back Button gestion -->
-              <a href="{% url 'dashboard-superadmin' %}" class="btn pull-right">
-               Back Gestion
+              <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm pull-right">
+               Backoffice
               </a>
 
               <div class="clearfix"></div>

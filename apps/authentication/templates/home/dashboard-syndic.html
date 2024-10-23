@@ -5,6 +5,7 @@
 
 {% block title %} Syndic Dashboard {% endblock %}
 
+<!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block favicon %}
@@ -17,7 +18,7 @@
     <div class="row">
         {% if syndic %}
         <!-- Syndic Information -->
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-lg-4 col-md-6">
             <div class="card card-stats">
                 <div class="card-header card-header-warning card-header-icon">
                     <div class="card-icon">
@@ -27,6 +28,7 @@
                     <p class="card-category">Syndic</p>
                 </div>
                 <div class="card-body">
+                    <p><strong>Prenom:</strong> <a href="#" class="a_link">{{ syndic.user.username }}</a></p>
                     <p><strong>Email:</strong> <a href="#" class="a_link">{{ syndic.user.email }}</a></p>
                     <p><strong>Created at:</strong> {{ syndic.user.date_debut }}</p>
                     <p><strong>Updated at:</strong> {{ syndic.user.updated_at }}</p>
@@ -37,7 +39,7 @@
 
         {% if license %}
         <!-- License Information -->
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-lg-4 col-md-6">
             <div class="card card-stats">
                 <div class="card-header card-header-success card-header-icon">
                     <div class="card-icon">
@@ -56,7 +58,7 @@
 
         {% if immeubles %}
         <!-- List of Managed Buildings (Immeubles) -->
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-lg-4 col-md-6">
             <div class="card">
                 <div class="card-header">
                     <h3>Managed Buildings</h3>
@@ -65,6 +67,7 @@
                     <ul>
                         {% for immeuble in immeubles %}
                         <li>{{ immeuble.nom }} - {{ immeuble.adresse }}</li>
+                        <br>
                         {% empty %}
                         <p>Aucun immeuble trouvé pour cet utilisateur.</p>
                         {% endfor %}
@@ -76,16 +79,23 @@
 
         {% if coproprietaires %}
         <!-- List of Co-owners (Coproprietaires) -->
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-lg-4 col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h3>Associated Co-owners</h3>
+                    <h3><i class="fas fa-handshake"></i> coproprietaires</h3>
                 </div>
                 <div class="card-body">
                     <ul>
                         {% for coproprietaire in coproprietaires %}
-                        <li>- Nom: {{ coproprietaire.user.nom }}<br>- Email: <a href="#" class="a_link">{{ prestataire.user.email }}</a><br>
-                            - Syndic: {{ coproprietaire.syndic.user.username }}<br>- Username: {{ coproprietaire.user.username }}</li>
+                        <li>- Nom: {{ coproprietaire.user.nom }}<br>- Prenom: {{ coproprietaire.user.username }}<br>
+                            - Email: <a href="#" class="a_link">{{ coproprietaire.user.email }}</a><br>
+                        <br>
+                        <li>
+                            - Syndic Nom: {{ coproprietaire.syndic.user.nom }}<br>
+                            - Syndic Prenom: {{ coproprietaire.syndic.user.username }}<br>
+                            - Syndic Email: <a href="#" class="a_link">{{ coproprietaire.syndic.email }}</a><br>
+                        </li>
+                        <br>
                         {% empty %}
                         <p>Aucun copropriétaire trouvé pour cet utilisateur.</p>
                         {% endfor %}
@@ -97,7 +107,7 @@
 
         {% if prestataires %}
         <!-- List of Co-prestataires (Prestataires) -->
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-lg-4 col-md-6">
             <div class="card">
                 <div class="card-header">
                     <h3>Associated Co-prestataires</h3>
@@ -106,8 +116,9 @@
                     <ul>
                         {% for prestataire in prestataires %}
                         <li>- Nom: {{ prestataire.user.nom }}<br>- Email: <a href="#" class="a_link">{{ prestataire.user.email }}</a><br>
-                            - Syndic: {{ prestataire.syndic.user.username }}<br>- Username: {{ prestataire.user.username
-                            }}</li>
+                            - Syndic: {{ prestataire.syndic.user.username }}<br>- Username: {{ prestataire.user.username }}
+                        </li>
+                        <br>
                         {% empty %}
                         <p>Aucun prestataire trouvé pour cet utilisateur.</p>
                         {% endfor %}
@@ -119,11 +130,11 @@
     </div>
 
     <!-- Back Button login -->
-    <div class="text-center mt-5 mb-5">
+    <div class="text-center">
         {% if user.is_authenticated and user.role == 'Superadmin' %}
-        <a href="{% url 'dashboard-superadmin' %}" class="btn btn-secondary">Annuler</a>
+        <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm">Backoffice</a>
         {% else %}
-        <a href="{% url 'home' %}" class="btn btn-secondary mb-4">Retour à l'accueil</a>
+        <a href="{% url 'home' %}" class="btn btn-sm">Retour à l'accueil</a>
         {% endif %}
     </div>
 </div>

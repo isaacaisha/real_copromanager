@@ -7,7 +7,8 @@ from django.urls import path
 from .views import (
     register_user, login_view, logout_view,
     dashboard_superadmin, customize_license, license_detail,
-    dashboard_syndic, dashboard_coproprietaire, dashboard_prestataire
+    dashboard_syndic, dashboard_coproprietaire, dashboard_prestataire,
+    delete_syndic, delete_coproprietaire, delete_prestataire
     )
 
 
@@ -24,4 +25,9 @@ urlpatterns = [
     path('dashboard-syndic/<int:syndic_id>/', dashboard_syndic, name='dashboard-syndic'),
     path('dashboard-coproprietaire/', dashboard_coproprietaire, name='dashboard-coproprietaire'),
     path('dashboard-prestataire/', dashboard_prestataire, name='dashboard-prestataire'),
+    
+    # Delete operations for syndic, coproprietaire, prestataire
+    path('delete-syndic/<int:syndic_id>/', delete_syndic, name='delete-syndic'),
+    path('delete/coproprietaire/<int:coproprietaire_id>/', delete_coproprietaire, name='delete-coproprietaire'),
+    path('delete/prestataire/<int:prestataire_id>/', delete_prestataire, name='delete-prestataire'),
 ]

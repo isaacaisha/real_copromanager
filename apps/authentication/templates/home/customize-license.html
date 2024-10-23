@@ -14,7 +14,7 @@
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="container">
 
     <div class="card">
         <div class="card-header">
@@ -27,9 +27,9 @@
                 {{ license_form.as_p }}
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-success mb-3">Sauvegarder License</button>
+                    <button type="submit" class="btn btn-success btn-sm pull-left">Sauvegarder</button>
                     {% if user.is_authenticated and user.role == 'Superadmin' %}
-                    <a href="{% url 'dashboard-superadmin' %}" class="btn">Annuler</a>
+                    <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm pull-right">Annuler</a>
                     {% else %}
                     <a href="{% url 'home' %}" class="btn mb-4">Retour à l'accueil</a>
                     {% endif %}

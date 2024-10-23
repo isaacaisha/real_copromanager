@@ -1683,19 +1683,6 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
   .form-check-input:disabled ~ .form-check-label {
     color: #6c757d; }
 
-.form-check-label {
-  margin-bottom: 0; }
-
-.form-check-inline {
-  display: inline-flex;
-  align-items: center;
-  padding-left: 0;
-  margin-right: 0.75rem; }
-  .form-check-inline .form-check-input {
-    position: static;
-    margin-top: 0;
-    margin-right: 0.3125rem;
-    margin-left: 0; }
 
 .valid-feedback {
   display: none;
@@ -12840,6 +12827,10 @@ Copyright (c) 2015 Daniel Eden
   width: 92px;
 }
 
+a.btn.btn-secondary.btn-sm {
+    background-color: #ccc;
+}
+
 /* Dark-Mode Section */
 body.dark-mode {
   background-color: #333; /* Soft dark gray */
@@ -12847,9 +12838,30 @@ body.dark-mode {
 }
 
 /* Card background in dark mode */
-body.dark-mode .card, a.btn.btn-secondary.btn-sm {
+body.dark-mode .card {
   background-color: #555;
   color: #fff;
+}
+
+/* Dark Mode Sidebar Wrapper with Dark Transparent Background */
+body.dark-mode .sidebar-wrapper, body.dark-mode .logo {
+    background-color: rgba(0, 0, 0, 0.7) !important; /* 70% opaque black background */
+}
+
+/* Optional: Adjust the opacity for the links and other elements inside the sidebar */
+body.dark-mode .sidebar .nav li > a, body.dark-mode .sidebar .dropdown-item {
+    color: #c1e2fc !important; /* Light text color */
+}
+
+body.dark-mode .sidebar .nav li > a:hover {
+    background-color: #333 !important; /* Slightly lighter background on hover */
+    color: #fff !important; /* Light text color on hover */
+}
+
+/* Greetings User, <input> Tags in dark mode */
+body.dark-mode > div.wrapper > div.sidebar > div.logo > a,
+body.dark-mode .username, body.dark-mode .siisi_dbt, body.dark-mode input, body.dark-mode select {
+  color: #e7e7e7 !important;
 }
 
 body.dark-mode .card-body {
@@ -12860,35 +12872,21 @@ body.dark-mode tr {
   background-color: #171a1d !important;
 }
 
-body.dark-mode .table-hover tr:hover, body.dark-mode > div.wrapper > div.sidebar {
+body.dark-mode .table-hover tr:hover {
   background-color: #666 !important;
 }
 
-/* Greetings User, <input> Tags in dark mode */
-body.dark-mode .username, body.dark-mode input {
-  color: #c1e2fc !important;
-}
-
-body.dark-mode .siisi_dbt {
-  color: #e7e7e7;
-}
-
 body.dark-mode .a_link {
-  color: #26c6da;
+  color: #47a5ed;
 }
 
 body.dark-mode .card-title {
-  color: #d6d8d9 !important;
+  color: #a3d7a5 !important;
 }
 
 /* Check Form in dark mode */
 body.dark-mode .form-check-sign > .check  {
   border: #08e3ff 0.1rem solid !important;
-}
-
-/* Lighter hover effect for buttons */
-button:hover {
-    background-color: #666; /* Slightly lighter gray on hover */
 }
 
 /* Dark-Mode BTN */
@@ -12902,4 +12900,12 @@ body.dark-mode .copyright {
     border: 0.1rem solid #ccc;
     border-radius: 0.5rem;
     font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: smaller;
+}
+
+.copyright {
+    border: 0.1rem solid #f9f9f9;
+    border-radius: 0.5rem;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: smaller;
 }

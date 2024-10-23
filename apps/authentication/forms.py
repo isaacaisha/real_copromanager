@@ -5,7 +5,6 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from .models import CustomUser, License, LicenseBase
 
 
@@ -13,9 +12,8 @@ class LoginForm(forms.Form):
     username = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Username",
+                "placeholder": "Prenom",
                 "class": "form-control",
-                #"style": "font-size: 16px; color: #000;"
             }
         ))
     password = forms.CharField(
@@ -31,14 +29,14 @@ class SignUpForm(UserCreationForm):
     username = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Username",
+                "placeholder": "Prenom",
                 "class": "form-control"
             }
         ))
     nom = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Username nom",
+                "placeholder": "Nom",
                 "class": "form-control"
             }
         ))
@@ -46,6 +44,7 @@ class SignUpForm(UserCreationForm):
         choices=[('Superadmin', 'Superadmin'), ('Syndic', 'Syndic'), ('Coproprietaire', 'Coproprietaire'), ('Prestataire', 'Prestataire')],
         widget=forms.Select(
             attrs={
+                "placeholder": "Role:",
                 "class": "form-control"
             }
         ))

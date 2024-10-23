@@ -14,7 +14,7 @@
 
 {% block content %}
 
-    <div class="container mt-5">
+    <div class="container">
         <div class="card">
             <div class="card-header card-header-primary">
                 <h4 class="card-title">Détails de la Licence: {{ syndic.user.nom }}</h4>
@@ -55,6 +55,7 @@
                     <li class="list-group-item">
                         {{ coproprietaire.nom }} ({{ coproprietaire.email }})
                     </li>
+                    <br>
                     {% endfor %}
                 </ul>
                 {% endif %}
@@ -67,6 +68,7 @@
                     <li class="list-group-item">
                         {{ prestataire.nom }} ({{ prestataire.email }})
                     </li>
+                    <br>
                     {% endfor %}
                 </ul>
                 {% endif %}
@@ -79,24 +81,26 @@
                     <li class="list-group-item">
                         {{ immeuble.nom }} - {{ immeuble.adresse }}
                     </li>
+                    <br>
                     {% endfor %}
                 </ul>
                 {% endif %}
+
+                <div class="text-center">
+                    <a href="{% url 'customize-license' license.id %}" class="btn btn-warning btn-sm pull-left">
+                        Modifier
+                    </a>
+                
+                    {% if user.is_authenticated and user.role == 'Superadmin' %}
+                    <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm pull-right">
+                        Backoffice
+                    </a>
+                    {% else %}
+                    <a href="{% url 'home' %}" class="btn btn-sm">Retour à l'accueil</a>
+                    {% endif %}
+                </div>
+
             </div>
-        </div>
-    
-        <div class="text-center mt-4">
-            <a href="{% url 'customize-license' license.id %}" class="btn btn-primary">
-                Modifier la licence
-            </a>
-        </div>
-    
-        <div class="text-center mt-3 mb-5">
-            {% if user.is_authenticated and user.role == 'Superadmin' %}
-            <a href="{% url 'dashboard-superadmin' %}" class="btn btn-secondary">Retour à Backoffice</a>
-            {% else %}
-            <a href="{% url 'home' %}" class="btn btn-secondary mb-4">Retour à l'accueil</a>
-            {% endif %}
         </div>
     </div>
 

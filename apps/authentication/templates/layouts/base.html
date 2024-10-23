@@ -87,10 +87,23 @@
       <!-- End Navbar -->
       <div class="content">
         <div class="text-center mb-5">
+        {% if user.is_authenticated and user.role == 'Superadmin' %}
           <img class="img-container" src="/static/assets/img/shark.png" />
+        {% endif %}
           {% if user.is_authenticated %}
           <h5 class="username">-¡!¡- Welcome, {{ user.username }} -¡!¡-</h5>
           {% endif %}
+          
+          {% if messages %}
+          <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+              {{ message }}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
         </div>
         <div class="container-fluid">
 

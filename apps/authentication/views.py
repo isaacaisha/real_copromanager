@@ -114,7 +114,7 @@ def register_user(request):
                     #syndic.license = license
                     #syndic.save()
                     
-                    messages.success(request, 'Syndic and license created successfully.')
+                    messages.success(request, 'Syndic created successfully, Edit the License.')
                     return redirect('dashboard-superadmin')
                 else:
                     print("License form is not valid:", license_form.errors)
@@ -159,6 +159,33 @@ def register_user(request):
     }
 
     return render(request, "accounts/register.html", context)
+
+
+# Delete Syndic View
+@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+def delete_syndic(request, syndic_id):
+    syndic = get_object_or_404(CustomUser, id=syndic_id, role='Syndic')
+    syndic.delete()
+    messages.success(request, f'Syndic {syndic.username} has been deleted.')
+    return redirect('dashboard-superadmin')
+
+# Delete Coproprietaire View
+@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+def delete_coproprietaire(request, coproprietaire_id):
+    coproprietaire = get_object_or_404(Coproprietaire, user__id=coproprietaire_id)
+    user = coproprietaire.user  # Access the linked CustomUser
+    user.delete()  # Delete the CustomUser, which cascades the deletion to Coproprietaire
+    messages.success(request, f'Coproprietaire {user.username} has been deleted.')
+    return redirect('dashboard-superadmin')
+
+# Delete Prestataire View
+@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+def delete_prestataire(request, prestataire_id):
+    prestataire = get_object_or_404(Prestataire, user__id=prestataire_id)
+    user = prestataire.user  # Access the linked CustomUser
+    user.delete()  # Delete the CustomUser, which cascades the deletion to Prestataire
+    messages.success(request, f'Prestataire {user.username} has been deleted.')
+    return redirect('dashboard-superadmin')
 
 
 # Superadmin dashboard
@@ -248,8 +275,8 @@ def dashboard_syndic(request, syndic_id):
         coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
         # Retrieve the license for the logged-in syndic, handle multiple licenses if necessary
         license = License.objects.filter(syndic__user=request.user).order_by('-date_debut').first()
-        if not license:
-            messages.warning(request, 'No license found for this syndic.')
+        #if not license:
+        #    messages.warning(request, 'No license found for this syndic.')
         
         context = {
             'syndic': syndic,

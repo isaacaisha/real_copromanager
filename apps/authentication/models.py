@@ -19,6 +19,7 @@ class CustomUser(AbstractUser):
         ('Prestataire', 'Prestataire'),
     )
     nom = models.CharField(max_length=255)
+    prenom = models.CharField(max_length=255)
     role = models.CharField(max_length=50, choices=ROLES, default='Syndic')
     email = models.EmailField(unique=True)  # Ensure email is unique
 
