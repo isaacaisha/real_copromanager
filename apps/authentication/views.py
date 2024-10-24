@@ -71,7 +71,7 @@ def logout_view(request):
     return redirect('home')
 
 
-@user_passes_test(lambda user: user.role == 'Superadmin')
+#@user_passes_test(lambda user: user.role == 'Superadmin')
 def register_user(request):
     msg = None
     success = False

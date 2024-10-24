@@ -9,10 +9,10 @@ from .models import CustomUser, License, LicenseBase
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(
-        widget=forms.TextInput(
+    username = forms.EmailField(
+        widget=forms.EmailInput(
             attrs={
-                "placeholder": "Prenom",
+                "placeholder": "Email",
                 "class": "form-control",
             }
         ))
@@ -26,10 +26,10 @@ class LoginForm(forms.Form):
 
 
 class SignUpForm(UserCreationForm):
-    username = forms.CharField(
-        widget=forms.TextInput(
+    username = forms.EmailField(
+        widget=forms.EmailInput(
             attrs={
-                "placeholder": "Prenom",
+                "placeholder": "Email",
                 "class": "form-control"
             }
         ))
@@ -40,18 +40,18 @@ class SignUpForm(UserCreationForm):
                 "class": "form-control"
             }
         ))
+    prenom = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": "Prenom",
+                "class": "form-control"
+            }
+        ))
     role = forms.ChoiceField(
         choices=[('Superadmin', 'Superadmin'), ('Syndic', 'Syndic'), ('Coproprietaire', 'Coproprietaire'), ('Prestataire', 'Prestataire')],
         widget=forms.Select(
             attrs={
                 "placeholder": "Role:",
-                "class": "form-control"
-            }
-        ))
-    email = forms.EmailField(
-        widget=forms.EmailInput(
-            attrs={
-                "placeholder": "Email",
                 "class": "form-control"
             }
         ))
@@ -72,7 +72,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'nom', 'role', 'email', 'password1', 'password2')
+        fields = ('username', 'nom', 'prenom', 'role', 'password1', 'password2')
 
 
 class LicenseForm(forms.ModelForm):
