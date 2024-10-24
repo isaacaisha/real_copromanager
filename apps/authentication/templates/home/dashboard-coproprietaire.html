@@ -75,13 +75,13 @@
         <div class="card-body">
             <ul>
                 {% for coproprietaire in coproprietaires %}
-                <li>- Nom: {{ coproprietaire.user.nom }}<br>- Prenom: {{ coproprietaire.user.username }}<br>
+                <li>- Nom: {{ coproprietaire.user.nom }}<br>- Prenom: {{ coproprietaire.user.prenom }}<br>
                     - Coproprietaire Email: <a href="#" class="a_link">{{ coproprietaire.user.email }}</a>
                 </li>
                 <br>
                 <li>
                     - Syndic Nom: {{ coproprietaire.syndic.user.nom }}<br>
-                    - Syndic Prenom: {{ coproprietaire.syndic.user.username }}<br>
+                    - Syndic Prenom: {{ coproprietaire.syndic.user.prenom }}<br>
                     - Syndic Email: <a href="#" class="a_link">{{ coproprietaire.syndic.email }}</a><br>
                 </li>
                 <br>
@@ -103,7 +103,7 @@
             <ul>
                 {% for prestataire in prestataires %}
                 <li>- Nom: {{ prestataire.user.nom }}<br>
-                    - Prenom: {{ prestataire.user.username }}<br>
+                    - Prenom: {{ prestataire.user.prenom }}<br>
                     - Email: <a href="#" class="a_link">{{ prestataire.user.email }}</a><br>
                     - Syndic: {{ prestataire.syndic.user.username }}<br>
                 </li>

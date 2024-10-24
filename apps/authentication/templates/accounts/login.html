@@ -35,11 +35,11 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label class="bmd-label-floating"></label>
-                  {{ form.username }}
+                  {{ form.email }}
                 </div>
               </div>
             </div>
-            <span class="text-danger">{{ form.username.errors }}</span>
+            <span class="text-danger">{{ form.email.errors }}</span>
 
             <br />
 
@@ -63,6 +63,12 @@
             <span class="pull-right">
               Don't have an account? <a href="{% url 'register' %}" class="text-primary">Create</a>
             </span>
+
+            &nbsp; &nbsp;
+            <span class="pull-right">
+              Password? <a href="#" class="text-primary">Reset</a>
+            </span>
+
 
             <div class="clearfix"></div>
 

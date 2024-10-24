@@ -62,7 +62,7 @@
                     <tbody>
                         {% for syndic in syndics %}
                         <tr>
-                            <td>{{ syndic.username }}</td>
+                            <td>{{ syndic.nom }}</td>
                             <td>{{ syndic.email }}</td>
                             <td>
                                 {% if syndic.license %}
@@ -145,7 +145,7 @@
                     <tbody>
                         {% for coproprietaire in coproprietaires %}
                         <tr>
-                            <td>{{ coproprietaire.username }}</td>
+                            <td>{{ coproprietaire.nom }}</td>
                             <td>{{ coproprietaire.email }}</td>
                             <td>
                                 <a href="{% url 'dashboard-coproprietaire' %}" class="btn btn-sm">
@@ -201,7 +201,7 @@
                     <tbody>
                         {% for prestataire in prestataires %}
                         <tr>
-                            <td>{{ prestataire.username }}</td>
+                            <td>{{ prestataire.nom }}</td>
                             <td>{{ prestataire.email }}</td>
                             <td>
                                 <a href="{% url 'dashboard-prestataire' %}" class="btn btn-sm">

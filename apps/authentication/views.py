@@ -37,15 +37,14 @@ def redirect_based_on_role(request, user):
 
 def login_view(request):
     form = LoginForm(request.POST or None)
-
     msg = None
 
     if request.method == "POST":
 
         if form.is_valid():
-            username = form.cleaned_data.get("username")
+            email = form.cleaned_data.get("email")
             password = form.cleaned_data.get("password")
-            user = authenticate(username=username, password=password)
+            user = authenticate(email=email, password=password)
 
             if user is not None:
                 login(request, user)
@@ -111,9 +110,9 @@ def register_user(request):
                     license.syndic = syndic  # Link license to the Syndic
                     license.save()
 
-                    # Assign the license to the syndic and save
-                    syndic.license = license
-                    syndic.save()
+                    ## Assign the license to the syndic and save
+                    #syndic.license = license
+                    #syndic.save()
                     
                     messages.success(request, 'Syndic created successfully, Edit the License.')
                     return redirect('dashboard-superadmin')
@@ -168,7 +167,7 @@ def register_user(request):
 def delete_syndic(request, syndic_id):
     syndic = get_object_or_404(CustomUser, id=syndic_id, role='Syndic')
     syndic.delete()
-    messages.success(request, f'Syndic {syndic.username} has been deleted.')
+    messages.success(request, f'Syndic {syndic.nom} has been deleted.')
     return redirect('dashboard-superadmin')
 
 # Delete Coproprietaire View
@@ -178,7 +177,7 @@ def delete_coproprietaire(request, coproprietaire_id):
     coproprietaire = get_object_or_404(Coproprietaire, user__id=coproprietaire_id)
     user = coproprietaire.user  # Access the linked CustomUser
     user.delete()  # Delete the CustomUser, which cascades the deletion to Coproprietaire
-    messages.success(request, f'Coproprietaire {user.username} has been deleted.')
+    messages.success(request, f'Coproprietaire {user.nom} has been deleted.')
     return redirect('dashboard-superadmin')
 
 # Delete Prestataire View
@@ -188,7 +187,7 @@ def delete_prestataire(request, prestataire_id):
     prestataire = get_object_or_404(Prestataire, user__id=prestataire_id)
     user = prestataire.user  # Access the linked CustomUser
     user.delete()  # Delete the CustomUser, which cascades the deletion to Prestataire
-    messages.success(request, f'Prestataire {user.username} has been deleted.')
+    messages.success(request, f'Prestataire {user.nom} has been deleted.')
     return redirect('dashboard-superadmin')
 
 

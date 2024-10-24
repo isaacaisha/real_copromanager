@@ -25,7 +25,7 @@
         </div>
         <div class="card-body">
             <p><strong>Nom:</strong> {{ syndic.user.nom }}</p>
-            <strong>Prenom:</strong> {{ syndic.user.username }}<br>
+            <strong>Prenom:</strong> {{ syndic.user.prenom }}<br>
             <strong>Email:</strong> <a href="#" class="a_link">{{ syndic.user.email }}</a><br>
             <strong>Created at:</strong> {{ syndic.user.date_debut }}<br>
             <strong>Updated at:</strong> {{ syndic.user.updated_at }}<br>
@@ -76,9 +76,9 @@
             <ul>
                 {% for coproprietaire in coproprietaires %}
                 <li>- Nom: {{ coproprietaire.user.nom }}<br>
-                    - Preom: {{ coproprietaire.user.username }}<br>
+                    - Preom: {{ coproprietaire.user.prenom }}<br>
                     - Email: <a href="#" class="a_link">{{ coproprietaire.user.email }}</a><br>
-                    - Syndic: {{ coproprietaire.syndic.user.username }}<br>
+                    - Syndic: {{ coproprietaire.syndic.user.prenom }}<br>
                 </li>
                 <br>
                 {% empty %}
@@ -99,9 +99,9 @@
             <ul>
                 {% for prestataire in prestataires %}
                 <li>- Nom: {{ prestataire.user.nom }}<br>
-                    - Prenom: {{ prestataire.user.username }}<br>
+                    - Prenom: {{ prestataire.user.prenom }}<br>
                     - Email: <a href="#" class="a_link">{{ prestataire.user.email }}</a><br>
-                    - Syndic: {{ prestataire.syndic.user.username }}<br>
+                    - Syndic: {{ prestataire.syndic.user.prenom }}<br>
                 </li>
                 <br>
                 {% empty %}

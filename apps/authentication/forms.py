@@ -9,7 +9,7 @@ from .models import CustomUser, License, LicenseBase
 
 
 class LoginForm(forms.Form):
-    username = forms.EmailField(
+    email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
                 "placeholder": "Email",
@@ -26,7 +26,7 @@ class LoginForm(forms.Form):
 
 
 class SignUpForm(UserCreationForm):
-    username = forms.EmailField(
+    email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
                 "placeholder": "Email",
@@ -72,7 +72,7 @@ class SignUpForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'nom', 'prenom', 'role', 'password1', 'password2')
+        fields = ('email', 'nom', 'prenom', 'role', 'password1', 'password2')
 
 
 class LicenseForm(forms.ModelForm):
