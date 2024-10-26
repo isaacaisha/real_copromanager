@@ -14,132 +14,14 @@
 
 {% block content %}
 
-<div class="container">
-    <div class="row">
-        {% if syndic %}
-        <!-- Syndic Information -->
-        <div class="col-lg-4 col-md-6">
-            <div class="card card-stats">
-                <div class="card-header card-header-warning card-header-icon">
-                    <div class="card-icon">
-                        <i class="material-icons">person</i>
-                    </div>
-                    <h3 class="card-title">{{ syndic.user.nom }}</h3>
-                    <p class="card-category">Syndic</p>
-                </div>
-                <div class="card-body">
-                    <strong>Prenom:</strong> {{ syndic.user.prenom }}<br>
-                    <strong>Email:</strong> <a href="#" class="a_link">{{ syndic.user.email }}</a><br>
-                    <strong>Created at:</strong> {{ syndic.user.date_debut }}<br>
-                    <strong>Updated at:</strong> {{ syndic.user.updated_at }}<br>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if license %}
-        <!-- License Information -->
-        <div class="col-lg-4 col-md-6">
-            <div class="card card-stats">
-                <div class="card-header card-header-success card-header-icon">
-                    <div class="card-icon">
-                        <i class="material-icons">assignment</i>
-                    </div>
-                    <p class="card-category">License Information</p>
-                    <h3 class="card-title">{{ license.id }}</h3>
-                </div>
-                <div class="card-body">
-                    <strong>Date de début:</strong> {{ license.date_debut }}<br>
-                    <strong>Date de fin:</strong> {{ license.date_fin }}<br>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if immeubles %}
-        <!-- List of Managed Buildings (Immeubles) -->
-        <div class="col-lg-4 col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Managed Buildings</h3>
-                </div>
-                <div class="card-body">
-                    <ul>
-                        {% for immeuble in immeubles %}
-                        <li>{{ immeuble.nom }} - {{ immeuble.adresse }}</li>
-                        <br>
-                        {% empty %}
-                        <p>Aucun immeuble trouvé pour cet utilisateur.</p>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if coproprietaires %}
-        <!-- List of Co-owners (Coproprietaires) -->
-        <div class="col-lg-4 col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3><i class="fas fa-handshake"></i> coproprietaires</h3>
-                </div>
-                <div class="card-body">
-                    <ul>
-                        {% for coproprietaire in coproprietaires %}
-                        <li>- Nom: {{ coproprietaire.user.nom }}<br>
-                            - Prenom: {{ coproprietaire.user.username }}<br>
-                            - Email: <a href="#" class="a_link">{{ coproprietaire.user.email }}</a><br>
-                        <br>
-                        <li>
-                            - Syndic Nom: {{ coproprietaire.syndic.user.nom }}<br>
-                            - Syndic Prenom: {{ coproprietaire.syndic.user.username }}<br>
-                            - Syndic Email: <a href="#" class="a_link">{{ coproprietaire.syndic.email }}</a><br>
-                        </li>
-                        <br>
-                        {% empty %}
-                        <p>Aucun copropriétaire trouvé pour cet utilisateur.</p>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if prestataires %}
-        <!-- List of Co-prestataires (Prestataires) -->
-        <div class="col-lg-4 col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Associated Co-prestataires</h3>
-                </div>
-                <div class="card-body">
-                    <ul>
-                        {% for prestataire in prestataires %}
-                        <li>- Nom: {{ prestataire.user.nom }}<br>
-                            - Preom: {{ prestataire.user.username }}<br>
-                            - Email: <a href="#" class="a_link">{{ prestataire.user.email }}</a><br>
-                            - Syndic: {{ prestataire.syndic.user.username }}<br>
-                        </li>
-                        <br>
-                        {% empty %}
-                        <p>Aucun prestataire trouvé pour cet utilisateur.</p>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        {% endif %}
+    <div class="d-flex justify-content-center mb-3">
+        <a href="{% url 'customize-license' syndic.id %}" class="btn btn-warning btn-sm pull-left">
+            Modifier
+        </a>
     </div>
 
-    <!-- Back Button login -->
-    <div class="text-center mt-5">
-        {% if user.is_authenticated and user.role == 'Superadmin' %}
-        <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm">Backoffice</a>
-        {% else %}
-        <a href="{% url 'home' %}" class="btn btn-sm">Retour à l'accueil</a>
-        {% endif %}
+    <div class="container">
+        {% include 'includes/users-datas.html' %}
     </div>
-</div>
 
 {% endblock %}

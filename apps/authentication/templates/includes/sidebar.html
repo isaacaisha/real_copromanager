@@ -17,7 +17,7 @@
           </li>
           {% endif %}
           {% if user.is_authenticated and user.role == 'Syndic' %}
-          <li class="nav-item {% if 'dashboard_superadmin' in segment %} active {% endif %}">
+          <li class="nav-item {% if 'dashboard_syndic' in segment %} active {% endif %}">
             <a class="nav-link" href="{% url 'dashboard-syndic' syndic_id=syndic.id %}">
               <i class="material-icons">person</i>
               <p>Dashboard Syndic</p>
@@ -25,16 +25,16 @@
           </li>
           {% endif %}
           {% if user.is_authenticated and user.role == 'Coproprietaire' %}
-          <li class="nav-item {% if 'dashboard_superadmin' in segment %} active {% endif %}">
-            <a class="nav-link" href="{% url 'dashboard-coproprietaire' %}">
+          <li class="nav-item {% if 'dashboard_coprorietaire' in segment %} active {% endif %}">
+            <a class="nav-link" href="{% url 'dashboard-coproprietaire' coproprietaire_id=coproprietaire.id %}">
               <i class="material-icons">person</i>
               <p>Dashboard Coproprietaire</p>
             </a>
           </li>
           {% endif %}
           {% if user.is_authenticated and user.role == 'Prestataire' %}
-          <li class="nav-item {% if 'dashboard_superadmin' in segment %} active {% endif %}">
-            <a class="nav-link" href="{% url 'dashboard-prestataire' %}">
+          <li class="nav-item {% if 'dashboard_prestataire' in segment %} active {% endif %}">
+            <a class="nav-link" href="{% url 'dashboard-prestataire' prestataire_id=prestataire.id %}">
               <i class="material-icons">person</i>
               <p>Dashboard Prestataire</p>
             </a>

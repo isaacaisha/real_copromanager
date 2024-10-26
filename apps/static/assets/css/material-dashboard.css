@@ -12827,6 +12827,18 @@ Copyright (c) 2015 Daniel Eden
   width: 92px;
 }
 
+.card {
+  background-color: #666;
+}
+
+.card-title {
+  color: #008fa1 !important;
+}
+
+.card-body {
+  background-color: #ccc;
+}
+
 a.btn.btn-secondary.btn-sm {
     background-color: #ccc;
 }
@@ -12835,6 +12847,32 @@ a.btn.btn-secondary.btn-sm {
 body.dark-mode {
   background-color: #333; /* Soft dark gray */
   color: #999 !important;
+}
+
+/* Dark Mode for Table */
+body.dark-mode .table {
+  background-color: #3339 !important; /* Dark table background */
+  color: #ccc; /* Light text color for readability */
+}
+
+/* Dark Mode for Table Header */
+body.dark-mode .table thead {
+  background-color: #4449 !important; /* Darker background for headers */
+  color: #eee; /* Light text color */
+}
+
+/* Dark Mode for Striped Rows */
+body.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+  background-color: #3339 !important; /* Darker background for odd rows */
+}
+
+body.dark-mode .table-striped tbody tr:nth-of-type(even) {
+  background-color: #7779 !important; /* Slightly lighter background for even rows */
+}
+
+/* Dark Mode for Table Hover */
+body.dark-mode .table-hover tbody tr:hover {
+  background-color: #666 !important; /* Highlight row on hover */
 }
 
 /* Card background in dark mode */
@@ -12860,7 +12898,7 @@ body.dark-mode .sidebar .nav li > a:hover {
 
 /* Greetings User, <input> Tags in dark mode */
 body.dark-mode > div.wrapper > div.sidebar > div.logo > a,
-body.dark-mode .username, body.dark-mode .siisi_dbt, body.dark-mode input, body.dark-mode select {
+body.dark-mode .prenom, body.dark-mode .titlePage, body.dark-mode input, body.dark-mode select {
   color: #e7e7e7 !important;
 }
 
@@ -12869,7 +12907,7 @@ body.dark-mode .card-body {
 }
 
 body.dark-mode tr {
-  background-color: #171a1d !important;
+  background-color: #555 !important;
 }
 
 body.dark-mode .table-hover tr:hover {

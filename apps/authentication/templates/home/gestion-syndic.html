@@ -1,0 +1,126 @@
+<!-- templates/home/dashboard_superadmin.html -->
+{% extends "layouts/base.html" %}
+
+{% load static %}
+
+{% block title %} SuperAdmin Dashboard {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block favicon %}
+<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon3.ico' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="container text-center mb-5">
+        {% if user.is_authenticated and user.role == 'Superadmin' %}
+        <a href="{% url 'register' %}" class="btn btn-success btn-sm">Inscription</a>
+        {% endif %}
+    </div>
+    
+    <div class="card">
+        <div class="card-header text-white bg-black">
+            <h3>Backoffice - Gestion des Syndics</h3>
+        </div>
+        <div class="card-body">
+
+            <!-- Syndics Section -->
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="card card-stats">
+                        <div class="card-header card-header-icon">
+                            <div class="card-icon">
+                                <i class="material-icons">group</i>
+                            </div>
+                            <p class="card-category">Syndics</p>
+                            <h3 class="card-title">{{ syndics.count }}</h3>
+                        </div>
+                        <div class="card-footer">
+                            <div class="stats">
+                                <i class="material-icons">info</i> Total Syndics
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3>Details des Syndics</h3>
+            <div class="table-responsive mb-5">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Nom du Syndic</th>
+                            <th>Email</th>
+                            <th>Licence</th>
+                            <th>Configurer</th>
+                            <th>Syndic infos</th>
+                            <th>Supprimer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for syndic in syndics %}
+                        <tr>
+                            <td>{{ syndic.nom }}</td>
+                            <td>{{ syndic.email }}</td>
+                            <td>
+                                {% if syndic.license %}
+                                {{ syndic.license.statut }}
+                                ({{ syndic.license.date_debut|date:"D, d M Y" }} -
+                                {{ syndic.license.date_fin|date:"D, d M Y" }})
+                                {% else %}
+                                Pas de license
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if syndic.license %}
+                                <a href="{% url 'customize-license' syndic.license.id %}" class="a_link">
+                                    <button type="su" rel="tooltip" title="Configurer"
+                                        class="btn btn-primary btn-link btn-sm">
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                </a>
+                                {% else %}
+                                <p>No license found for this syndic.</p>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if syndic.license %}
+                                <a href="{% url 'dashboard-syndic' syndic.license.id %}" class="btn btn-sm">Voir Détails</a>
+                                {% else %}
+                                <p>No license Détails for this syndic.</p>
+                                {% endif %}
+                            </td>
+                            <!-- Add Delete Button -->
+                            <td>
+                                <form method="post" action="{% url 'delete-syndic' syndic.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <!--<button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Are you sure you want to delete this syndic?');">
+                                            Delete
+                                        </button>-->
+                                    <button type="submit" rel="tooltip" title="Supprimer"
+                                        class="btn btn-danger btn-link btn-sm"
+                                        onclick="return confirm('Êtes-vous sûre de vouloire supprimer syndic?');">
+                                        <i class="material-icons">close</i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Back Button dasboad-superadmin -->
+    <div class="text-center mt-3">
+        <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm">Backoffice</a>
+    </div>
+    
+</div>
+
+{% endblock %}

@@ -7,8 +7,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+
+from apps.authentication.models import CustomUser
+from apps.home.models import Coproprietaire, Prestataire, Superadmin, Syndic
 from .forms import LoginForm, SignUpForm, LicenseForm
-from .models import CustomUser, License, Superadmin, Syndic, Coproprietaire, Prestataire, Immeuble
 from django.utils import timezone
 
 # Create your views here.# auth_views.py
@@ -24,12 +26,17 @@ def redirect_based_on_role(request, user):
     }
 
     if user.role == 'Syndic':
-        try:
-            syndic = Syndic.objects.get(user=user)  # Fetch the syndic instance
-            return redirect('dashboard-syndic', syndic_id=syndic.id)  # Redirect with syndic_id
-        except Syndic.DoesNotExist:
-            messages.error(request, 'Syndic profile not found.')
-            return redirect('home')  # Redirect to home if no syndic is found
+        syndic, created = Syndic.objects.get_or_create(user=user)  # Ensure syndic instance exists
+        return redirect('dashboard-syndic', syndic_id=syndic.id)  # Redirect with syndic_id
+
+    elif user.role == 'Coproprietaire':
+        coproprietaire, created = Coproprietaire.objects.get_or_create(user=user)
+        return redirect('dashboard-coproprietaire', coproprietaire_id=coproprietaire.id)
+
+    elif user.role == 'Prestataire':
+        prestataire, created = Prestataire.objects.get_or_create(user=user)
+        return redirect('dashboard-prestataire', prestataire_id=prestataire.id)
+
 
     # For other roles, simply redirect to the appropriate dashboard
     return redirect(role_redirects.get(user.role, 'home'))
@@ -70,13 +77,15 @@ def logout_view(request):
     return redirect('home')
 
 
-#@user_passes_test(lambda user: user.role == 'Superadmin')
+#@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def register_user(request):
     msg = None
     success = False
 
     if request.method == "POST":
         form = SignUpForm(request.POST)
+        license_form = LicenseForm(request.POST)
+        
         if form.is_valid():
             #form.save()
             #username = form.cleaned_data.get("username")
@@ -102,7 +111,6 @@ def register_user(request):
             elif user.role == 'Syndic':
                 # Create a Syndic and associate the license
                 syndic = Syndic.objects.create(user=user, nom=user.nom, email=user.email)
-                print(f"Syndic created: {syndic}")
                 # Create a License instance linked to the newly created Syndic
                 license_form = LicenseForm(request.POST)
                 if license_form.is_valid():
@@ -110,9 +118,9 @@ def register_user(request):
                     license.syndic = syndic  # Link license to the Syndic
                     license.save()
 
-                    ## Assign the license to the syndic and save
-                    #syndic.license = license
-                    #syndic.save()
+                    # Assign the license to the syndic and save
+                    syndic.license = license
+                    syndic.save()
                     
                     messages.success(request, 'Syndic created successfully, Edit the License.')
                     return redirect('dashboard-superadmin')
@@ -150,11 +158,14 @@ def register_user(request):
 
     else:
         form = SignUpForm()
+        license_form = LicenseForm()
 
     context = {
         'form': form,
+        'license_form': license_form,
         'msg': msg,
         'success': success,
+        'titlePage': 'Incriptions',
         'date': timezone.now().strftime("%a %d %B %Y")
     }
 
@@ -162,7 +173,6 @@ def register_user(request):
 
 
 # Delete Syndic View
-@user_passes_test(lambda user: user.role == 'Superadmin')
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def delete_syndic(request, syndic_id):
     syndic = get_object_or_404(CustomUser, id=syndic_id, role='Syndic')
@@ -171,7 +181,6 @@ def delete_syndic(request, syndic_id):
     return redirect('dashboard-superadmin')
 
 # Delete Coproprietaire View
-@user_passes_test(lambda user: user.role == 'Superadmin')
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def delete_coproprietaire(request, coproprietaire_id):
     coproprietaire = get_object_or_404(Coproprietaire, user__id=coproprietaire_id)
@@ -181,7 +190,6 @@ def delete_coproprietaire(request, coproprietaire_id):
     return redirect('dashboard-superadmin')
 
 # Delete Prestataire View
-@user_passes_test(lambda user: user.role == 'Superadmin')
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def delete_prestataire(request, prestataire_id):
     prestataire = get_object_or_404(Prestataire, user__id=prestataire_id)
@@ -189,145 +197,3 @@ def delete_prestataire(request, prestataire_id):
     user.delete()  # Delete the CustomUser, which cascades the deletion to Prestataire
     messages.success(request, f'Prestataire {user.nom} has been deleted.')
     return redirect('dashboard-superadmin')
-
-
-# Superadmin dashboard
-@login_required
-@user_passes_test(lambda user: user.role == 'Superadmin')
-def dashboard_superadmin(request):
-    syndics = CustomUser.objects.filter(role='Syndic')
-
-    # Add a license field to each syndic
-    for syndic in syndics:
-        # Get the Syndic instance associated with the CustomUser (if exists)
-        try:
-            syndic_instance = Syndic.objects.get(user=syndic)
-            # Retrieve the most recent license for the syndic
-            syndic.license = License.objects.filter(syndic=syndic_instance).order_by('-date_debut').first()
-        except Syndic.DoesNotExist:
-            # Handle the case where the CustomUser is not associated with a Syndic
-            syndic.license = None
-
-    coproprietaires = CustomUser.objects.filter(role='Coproprietaire')
-    prestataires = CustomUser.objects.filter(role='Prestataire')
-
-    context = {
-        'syndics': syndics,
-        'coproprietaires': coproprietaires,
-        'prestataires': prestataires,
-        'username': request.user.username,
-        'date': timezone.now().strftime("%a %d %B %Y")
-    }
-
-    return render(request, 'home/dashboard-superadmin.html', context)
-
-
-# View for license customization
-@login_required
-@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
-def customize_license(request, license_id):
-    license = get_object_or_404(License, id=license_id)
-    if request.method == 'POST':
-        license_form = LicenseForm(request.POST, instance=license)
-        if license_form.is_valid():
-            license.est_personnalise = license_form.cleaned_data.get('est_personnalise', True)
-            license.save()
-            return redirect('license-detail', license_id=license.id)
-    else:
-        license_form = LicenseForm(instance=license)
-
-    context = {
-        'license_form': license_form,
-        'license': license,
-        'date': timezone.now().strftime("%a %d %B %Y")
-    }
-
-    return render(request, 'home/customize-license.html', context)
-
-
-# View to display license details
-@login_required
-def license_detail(request, license_id):
-    license = get_object_or_404(License, id=license_id)
-    syndic = license.syndic  # Access the syndic associated with this license
-    coproprietaires = syndic.coproprietaire_set.all() if syndic else []
-    prestataires = syndic.prestataire_set.all() if syndic else []
-    immeubles = syndic.immeuble_set.all() if syndic else []
-    
-    context = {
-        'license': license,
-        'syndic': syndic,
-        'coproprietaires': coproprietaires,
-        'prestataires': prestataires,
-        'immeubles': immeubles,
-        #'syndic_id': syndic.id if syndic else None,
-        'date': timezone.now().strftime("%a %d %B %Y")
-    }
-    return render(request, 'home/license-detail.html', context)
-
-
-# Syndic dashboard
-@login_required
-def dashboard_syndic(request, syndic_id):
-    try:
-        # Fetch the current logged-in user's syndic profile
-        syndic = Syndic.objects.get(id=syndic_id)
-        
-        # Retrieve relevant syndic information, such as buildings and co-owners
-        immeubles = Immeuble.objects.filter(syndic=syndic)
-        coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
-        # Retrieve the license for the logged-in syndic, handle multiple licenses if necessary
-        license = License.objects.filter(syndic__user=request.user).order_by('-date_debut').first()
-        #if not license:
-        #    messages.warning(request, 'No license found for this syndic.')
-        
-        context = {
-            'syndic': syndic,
-            'license': license,
-            'immeubles': immeubles,
-            'coproprietaires': coproprietaires,
-            'date': timezone.now().strftime("%a %d %B %Y")
-        }
-
-        return render(request, 'home/dashboard-syndic.html', context)
-
-    except Syndic.DoesNotExist:
-        # Handle the case where the syndic doesn't exist (e.g., if a user tries to access this page without being a syndic)
-        context = {
-            'message': 'Syndic profile not found.',
-            'date': timezone.now().strftime("%a %d %B %Y"),
-        }
-        return render(request, 'home/dashboard-syndic.html', context)
-
-
-@login_required
-def dashboard_coproprietaire(request):
-    """
-    View for the coproprietaire dashboard.
-    This view should display information relevant to coproprietaires, 
-    such as co-owner documents, charges, and announcements.
-    """
-    coproprietaires = Coproprietaire.objects.all()
-    context = {
-        'coproprietaires': coproprietaires,
-        'date': timezone.now().strftime("%a %d %B %Y")
-    }
-
-    return render(request, 'home/dashboard-coproprietaire.html', context)
-
-
-@login_required
-def dashboard_prestataire(request):
-    """
-    View for the prestataire dashboard.
-    This view should display information relevant to prestataires,
-    such as assigned tasks, projects, or service requests.
-    """
-    prestataires = Prestataire.objects.all()
-
-    context = {
-        'prestataires': prestataires,
-        'date': timezone.now().strftime("%a %d %B %Y")
-    }
-
-    return render(request, 'home/dashboard-prestataire.html', context)

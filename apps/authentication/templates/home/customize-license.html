@@ -17,8 +17,10 @@
 <div class="container">
 
     <div class="card">
-        <div class="card-header">
-            <h>Customize License for {{ license.syndic.user.nom|default:"Inconnu"}}</h>
+        <div class="card-header text-white">
+            <span>License ID {{ license.syndic.user.id|default:"Inconnu"}}</span>
+            <br>
+            <span>Customize License for {{ license.syndic.user.nom|default:"Inconnu"}}</span>
         </div>
 
         <div class="card-body">

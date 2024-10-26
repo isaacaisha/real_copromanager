@@ -5,7 +5,9 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser, License, LicenseBase
+
+from apps.authentication.models import CustomUser
+from apps.home.models import License
 
 
 class LoginForm(forms.Form):
@@ -19,7 +21,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "placeholder": "Password",
+                "placeholder": "Mot de passe",
                 "class": "form-control"
             }
         ))
@@ -58,14 +60,14 @@ class SignUpForm(UserCreationForm):
     password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "placeholder": "Password",
+                "placeholder": "Mot de passe",
                 "class": "form-control"
             }
         ))
     password2 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "placeholder": "Password check",
+                "placeholder": "Vérifier mot de passe",
                 "class": "form-control"
             }
         ))
