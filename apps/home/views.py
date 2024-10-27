@@ -20,12 +20,54 @@ from apps.home.models import (
 from django.utils import timezone
 
 
+@login_required
+def user_search(request):
+    query = request.GET.get('q', '')  # Get the search query from the GET request
+    print(f"Search Query: {query}")  # Debug statement
+    users = CustomUser.objects.filter(nom__icontains=query)  # Use 'nom' field to filter users
+
+    context = {
+        'users': users,
+        'query': query,
+        'titlePage': f'Résultat pour: "{query}"',
+        'date': timezone.now().strftime("%a %d %B %Y")
+    }
+    
+    html_template = loader.get_template('home/search-results.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required
+def user_profile(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    
+    # Get related data based on user role
+    related_data = {}
+    if user.role == 'Syndic':
+        related_data['syndic'] = get_object_or_404(Syndic, user=user)
+        related_data['licenses'] = License.objects.filter(syndic=related_data['syndic'])
+    elif user.role == 'Coproprietaire':
+        related_data['coproprietaire'] = get_object_or_404(Coproprietaire, user=user)
+    elif user.role == 'Prestataire':
+        related_data['prestataire'] = get_object_or_404(Prestataire, user=user)
+
+    context = {
+        'user': user,
+        'related_data': related_data,
+        'titlePage': f'Profile of {user.nom}',
+        'date': timezone.now().strftime("%a %d %B %Y"),
+    }
+
+    html_template = loader.get_template('home/user-profile.html')
+    return HttpResponse(html_template.render(context, request))
+
+
 @login_required(login_url="/login/")
 def index(request):
     context = {
         'segment': 'index',
-        'date': timezone.now().strftime("%a %d %B %Y")
-        
+        'titlePage': 'Bienvenue',
+        'date': timezone.now().strftime("%a %d %B %Y"),
         }
     
     try:
@@ -259,8 +301,8 @@ def dashboard_coproprietaire(request, coproprietaire_id):
         # Query by user__id when accessed by Superadmin
         coproprietaire = get_object_or_404(Coproprietaire, user__id=coproprietaire_id)
     else:
-        # Query by id when accessed by Prestataire
-        coproprietaire = get_object_or_404(Coproprietaire, id=coproprietaire_id)
+        # Restrict to the currently logged-in coproprietaire
+        coproprietaire = get_object_or_404(Coproprietaire, user=request.user)
 
     # Retrieve the syndic associated with this prestataire
     syndic = coproprietaire.syndic if hasattr(coproprietaire, 'syndic') else None
@@ -268,13 +310,18 @@ def dashboard_coproprietaire(request, coproprietaire_id):
     # Retrieve the license associated with the syndic
     license = syndic.licence if syndic and hasattr(syndic, 'licence') else None
     
-    # Retrieve all coproprietaires (if needed for the dashboard)
-    coproprietaires = Coproprietaire.objects.all()
+     # Only fetch the coproprietaires associated with the current syndic
+    if request.user.role == 'Superadmin':
+        coproprietaires = Coproprietaire.objects.all()  # Superadmin can see all
+    else:
+        coproprietaires = Coproprietaire.objects.filter(syndic=syndic, user=request.user)  # Filter by syndic for others
     
     context = {
         'segment': 'dashboard-coproprietaire',
         'coproprietaire': coproprietaire,
         'coproprietaires': coproprietaires,
+        'syndic': syndic,
+        'license': license,
         'titlePage': 'Dashboard',
         'date': timezone.now().strftime("%a %d %B %Y")
     }
@@ -297,8 +344,8 @@ def dashboard_prestataire(request, prestataire_id):
         # Query by user__id when accessed by Superadmin
         prestataire = get_object_or_404(Prestataire, user__id=prestataire_id)
     else:
-        # Query by id when accessed by Prestataire
-        prestataire = get_object_or_404(Prestataire, id=prestataire_id)
+        # Restrict to the currently logged-in prestataire
+        prestataire = get_object_or_404(Prestataire, user=request.user)
 
     # Retrieve the syndic associated with this prestataire
     syndic = prestataire.syndic if hasattr(prestataire, 'syndic') else None
@@ -306,14 +353,19 @@ def dashboard_prestataire(request, prestataire_id):
     # Retrieve the license associated with the syndic
     license = syndic.licence if syndic and hasattr(syndic, 'licence') else None
 
-    # Retrieve all prestataires (if needed for the dashboard)
-    prestataires = Prestataire.objects.all()
+    
+    # Only fetch the prestataires associated with the current syndic
+    if request.user.role == 'Superadmin':
+        prestataires = Prestataire.objects.all()  # Superadmin can see all
+    else:
+        prestataires = Prestataire.objects.filter(syndic=syndic, user=request.user)  # Filter by syndic for others
 
     context = {
         'segment': 'dashboard-prestataire',
         'prestataire': prestataire,
-        #'prestataire_id': prestataire_id,
         'prestataires': prestataires,
+        'syndic': syndic,
+        'license': license,
         'titlePage': 'Dashboard',
         'date': timezone.now().strftime("%a %d %B %Y")
     }

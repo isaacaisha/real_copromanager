@@ -1,13 +1,13 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Login {% endblock %} 
+{% block title %} Inscription/Register {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
-  <div class="row">
+  <div class="row justify-content-center">
     <div class="col-md-5">
       <div class="card">
         <div class="card-header card-header-icon">
@@ -94,6 +94,9 @@
                   <div class="form-group">
                     <label class="bmd-label-floating"></label>
                     {{ form.password1 }}
+                    <!-- Eye icon for toggling password visibility for the first password -->
+                    <i class="fa fa-eye-slash position-absolute" id="togglePassword1"
+                      style="cursor: pointer; top: 50%; right: 10px; transform: translateY(-50%);"></i>
                   </div>
                 </div>
               </div>
@@ -106,6 +109,9 @@
                   <div class="form-group">
                     <label class="bmd-label-floating"></label>
                     {{ form.password2 }}
+                    <!-- Eye icon for toggling password visibility for the second password -->
+                    <i class="fa fa-eye-slash position-absolute" id="togglePassword2"
+                      style="cursor: pointer; top: 50%; right: 10px; transform: translateY(-50%);"></i>
                   </div>
                 </div>
               </div>
@@ -132,28 +138,6 @@
       </div>
     </div>
   </div>
-<!--
-  <h2>Register</h2>
-  <form method="post">
-    {% if msg %}
-    <div class="text-danger">{{ msg|safe }}</div>
-    {% endif %}
-
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div class="text-center mt-5 mb-5">
-      <button type="submit" class="btn btn-secondary">Register</button>
-    </div>
-  </form>
-  {% if success %}
-    <div class="success-message">{{ msg|safe }}</div>
-  {% endif %}
-
-  &nbsp; &nbsp;
-  <span class="pull-right">
-    Have an account? <a href="{% url 'login' %}" class="text-primary">Login</a>
-  </span>
--->
 
 {% endblock content %}
 

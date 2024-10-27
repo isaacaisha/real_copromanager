@@ -1,16 +1,16 @@
 <!-- templates/include/users-datas.html -->
 
 <div class="container">
-    <div class="row">
+    <div class="row justify-content-center">
         {% if syndic %}
         <!-- Syndic Information -->
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 mb-4">
             <div class="card">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
                         <i class="material-icons">person</i>
                     </div>
-                    <h3 class="card-title text-center">{{ syndic.user.nom }}</h3>
+                    <h3 class="card-title">{{ syndic.user.nom }}</h3>
                     <p class="card-category">Syndic id: {{ syndic.id }}</p>
                 </div>
                 <div class="card-body">
@@ -25,14 +25,14 @@
 
         {% if license %}
         <!-- License Information -->
-        <div class="col-lg-4 col-md-6">
+        <div class="col-lg-4 col-md-6 mb-4">
             <div class="card card-stats">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
                         <i class="material-icons">assignment</i>
                     </div>
-                    <p class="card-category text-white">License Information</p>
-                    <h3 class="card-title">{{ syndic.id }}</h3>
+                    <p class="card-title text-white">License Information</p>
+                    <h3 class="card-category">{{ syndic.id }}</h3>
                 </div>
                 <div class="card-body">
                     <strong>Date de début:</strong> {{ syndic.license.date_debut|date:"d/m/Y" }}<br>
@@ -42,77 +42,82 @@
         </div>
         {% endif %}
 
-
         {% if coproprietaires %}
         <!-- List of Co-owners (Coproprietaires) -->
-        <div class="card shadow-sm">
-            <div class="card-header card-header-icon text-white">
-                <div class="card-icon">
-                    <i class="fas fa-users"></i>
-                    <br>
-                    <i class="fas fa-handshake"></i>
-                </div>
-                <h3 class="text-center">coproprietaires</h3>
-            </div>
-            <div class="card-body">
-                <ul>
-                    {% for coproprietaire in coproprietaires %}
-                    <li>- Coproprietaire Nom: {{ coproprietaire.user.nom }}<br>
-                        - Coproprietaire Prenom: {{ coproprietaire.user.prenom }}<br>
-                        - Coproprietaire Email: <a href="#" class="a_link">{{ coproprietaire.user.email }}</a><br>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header card-header-icon text-white">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
                         <br>
-                    {% empty %}
-                    <p>Aucun copropriétaire trouvé pour cet utilisateur.</p>
-                    {% endfor %}
-                </ul>
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 class="card-title">Coproprietaires</h3>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        {% for coproprietaire in coproprietaires %}
+                        <li>- Coproprietaire Nom: {{ coproprietaire.user.nom }}<br>
+                            - Coproprietaire Prenom: {{ coproprietaire.user.prenom }}<br>
+                            - Coproprietaire Email: <a href="#" class="a_link">{{ coproprietaire.user.email }}</a><br>
+                            <br>
+                            {% empty %}
+                            <p>Aucun copropriétaire trouvé pour cet utilisateur.</p>
+                            {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
         {% endif %}
 
-        {% if prestataires %}
+        {% if prestataire %}
         <!-- List of Co-prestataires (Prestataires) -->
-        <div class="card shadow-sm">
-            <div class="card-header card-header-icon text-white">
-                <div class="card-icon">
-                    <i class="fas fa-users"></i>
-                    <br>
-                    <i class="fas fa-handshake"></i>
-                </div>
-                <h3>Associated Co-prestataires</h3>
-            </div>
-            <div class="card-body">
-                <ul>
-                    {% for prestataire in prestataires %}
-                    <li>- Prestataire Nom: {{ prestataire.user.nom }}<br>
-                        - Prestataire Prenom: {{ prestataire.user.prenom }}<br>
-                        - Prestataire Email: <a href="#" class="a_link">{{ prestataire.user.email }}</a><br>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header card-header-icon text-white">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
                         <br>
-                    {% empty %}
-                    <p>Aucun prestataire trouvée pour cet utilisateur.</p>
-                    {% endfor %}
-                </ul>
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 class="card-title">Associated Co-prestataires</h3>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        {% for prestataire in prestataires %}
+                        <li>- Prestataire Nom: {{ prestataire.user.nom }}<br>
+                            - Prestataire Prenom: {{ prestataire.user.prenom }}<br>
+                            - Prestataire Email: <a href="#" class="a_link">{{ prestataire.user.email }}</a><br>
+                            <br>
+                            {% empty %}
+                            <p>Aucun prestataire trouvée pour cet utilisateur.</p>
+                            {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
         {% endif %}
 
         {% if immeubles %}
         <!-- List of Managed Buildings (Immeubles) -->
-        <div class="card shadow-sm">
-            <div class="card-header card-header-icon text-white">
-                <div class="card-icon">
-                    <i class="fas fa-building"></i>
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header card-header-icon text-white">
+                    <div class="card-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="card-title">Managed Buildings</h3>
                 </div>
-                <h3>Managed Buildings</h3>
-            </div>
-            <div class="card-body">
-                <ul>
-                    {% for immeuble in immeubles %}
-                    <li>{{ immeuble.nom }} - {{ immeuble.adresse }}</li>
-                    <br>
-                    {% empty %}
-                    <p>Aucun immeuble trouvé pour cet utilisateur.</p>
-                    {% endfor %}
-                </ul>
+                <div class="card-body">
+                    <ul>
+                        {% for immeuble in immeubles %}
+                        <li>{{ immeuble.nom }} - {{ immeuble.adresse }}</li>
+                        <br>
+                        {% empty %}
+                        <p>Aucun immeuble trouvé pour cet utilisateur.</p>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
         {% endif %}

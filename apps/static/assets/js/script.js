@@ -31,3 +31,33 @@ window.addEventListener('load', function () {
 
 // Attach event listener for theme toggle button
 document.getElementById('theme-toggle').addEventListener('change', toggleTheme);
+// Function to toggle password visibility
+function togglePasswordVisibility(toggleElement, passwordField) {
+    toggleElement.addEventListener("click", function () {
+        const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+        passwordField.setAttribute("type", type);
+        this.classList.toggle("fa-eye");
+        this.classList.toggle("fa-eye-slash");
+    });
+}
+
+// Show the Password Field during Login
+const togglePassword = document.querySelector("#togglePassword");
+const passwordField = document.querySelector("#id_password");
+if (togglePassword && passwordField) {
+    togglePasswordVisibility(togglePassword, passwordField);
+}
+
+// Show the Password Fields during Registration
+const togglePassword1 = document.querySelector("#togglePassword1");
+const passwordField1 = document.querySelector("#id_password1");
+const togglePassword2 = document.querySelector("#togglePassword2");
+const passwordField2 = document.querySelector("#id_password2");
+
+if (togglePassword1 && passwordField1) {
+    togglePasswordVisibility(togglePassword1, passwordField1);
+}
+
+if (togglePassword2 && passwordField2) {
+    togglePasswordVisibility(togglePassword2, passwordField2);
+}

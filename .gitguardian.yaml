@@ -1,0 +1,5 @@
+secret:
+  ignored_matches:
+  - match: 96563e8e07013313f759e6587976f6d593e077d9443ec32dfae1112956857016
+    name: SMTP credentials - .env:l.15
+version: 2

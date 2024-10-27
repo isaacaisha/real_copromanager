@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'apps.authentication',
     'apps.home'  # Enable the inner home (home)
 
@@ -129,8 +130,30 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# To Reset Password
+# For Production 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+## For Developement
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
+
+LANGUAGES = [
+    ('fr', 'French'),
+    ('en', 'English'),
+    # Add other languages as needed
+]
+
+#LOCALE_PATHS = [
+#    # Add paths to your locale files if you have any
+#]
 
 LANGUAGE_CODE = 'en-us'
 

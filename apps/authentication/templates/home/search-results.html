@@ -1,0 +1,62 @@
+<!-- templates/home/search-results.html -->
+{% extends "layouts/base.html" %}
+
+{% load static %}
+
+{% block title %}User Search Results{% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block favicon %}
+<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon3.ico' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h3 class="text-center">Search Results for "<span class="card-title">{{ query }}</span>"</h3>
+    {% if users %}
+    <div class="row justify-content-center">
+        {% for user in users %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        - Nom: {{ user.nom }}<br>
+                        - Prénom: {{ user.prenom }}
+                    </h5>
+                    <br>
+                    <p class="card-text">
+                        <strong>Email:</strong> <a href="mailto:{{ user.email }}" class="a_link">
+                            {{ user.email }}
+                        </a>
+                        <br>
+                        <strong>Role:</strong> {{ user.role }}
+                    </p>
+                    <button href="{% url 'user-profile' user.id %}" class="btn btn-sm" disabled>
+                        Voir Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center">No users found.</p>
+    {% endif %}
+
+    <!-- Back Button login -->
+    <div class="text-center mt-3">
+        {% if user.is_authenticated and user.role == 'Superadmin' %}
+        <a href="{% url 'dashboard-superadmin' %}" class="btn btn-secondary btn-sm">Backoffice</a>
+        {% else %}
+        <a href="{% url 'home' %}" class="btn btn-secondary btn-sm">Retour à l'accueil</a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

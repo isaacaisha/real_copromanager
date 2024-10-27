@@ -12827,20 +12827,20 @@ Copyright (c) 2015 Daniel Eden
   width: 92px;
 }
 
+a.btn.btn-secondary.btn-sm {
+    background-color: #ccc;
+}
+
 .card {
-  background-color: #666;
+  background-color: #7a7a7a;
 }
 
 .card-title {
-  color: #008fa1 !important;
+  color: #18ce0f !important;
 }
 
 .card-body {
-  background-color: #ccc;
-}
-
-a.btn.btn-secondary.btn-sm {
-    background-color: #ccc;
+  background-color: #fff;
 }
 
 /* Dark-Mode Section */

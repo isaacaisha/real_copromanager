@@ -65,6 +65,7 @@ def login_view(request):
     context = {
         'form': form,
         'msg': msg,
+        'titlePage': 'Connexion/Login',
         'date': timezone.now().strftime("%a %d %B %Y")
     }
 
