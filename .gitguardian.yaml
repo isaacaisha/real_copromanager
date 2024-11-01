@@ -2,4 +2,16 @@ secret:
   ignored_matches:
   - match: 96563e8e07013313f759e6587976f6d593e077d9443ec32dfae1112956857016
     name: SMTP credentials - .env:l.15
+  - match: e81fdac9815bbac10f1a490fe5ec1d080320da7173d8ff0245602af944e0c1cd
+    name: SMTP credentials - core/settings.py:l.149
+  - match: 46905cd3f097507ec6a4a23fc1591febac25ae9bf5e21f0343b09f2d832098d8
+    name: Mailgun Domain Sending Key - core/settings.py:l.150
+  - match: 6bd44cfb73e670ab605fb750915357691350b94e06a6c8d1fbc8260789c53ee4
+    name: Mailgun Domain Sending Key - .env:l.22
+  - match: 2e0206cf1708a0317ec69da386c69762029c8f26c36f5afeb7f799493b67e2d7
+    name: Generic High Entropy Secret - .env:l.23
+  - match: 7006e4d642e92ba5823e4e8b8351341fb4dca8fe5af18d447373154ab01900ef
+    name: Mailgun Domain Sending Key - .env:l.23
+  - match: 55b1e75abd874950215306e65846fc1be65664eb1f615a24671a3378a1371939
+    name: SMTP credentials - .env:l.19
 version: 2

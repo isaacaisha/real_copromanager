@@ -8,6 +8,7 @@ import environ
 from decouple import config
 from unipath import Path
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).parent
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,6 +20,19 @@ env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_1122')
+
+
+## To Reset Password For Developement
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# To Reset Password For Production 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+#DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+
 
 # Set secure headers (Optional but recommended for production)
 CSRF_TRUSTED_ORIGINS = [
@@ -130,17 +144,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# To Reset Password
-# For Production 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-## For Developement
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

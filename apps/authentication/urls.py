@@ -5,10 +5,10 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.urls import path
 from .views import (
+    ResetPasswordView,
     register_user, login_view, logout_view,
     delete_syndic, delete_coproprietaire, delete_prestataire
     )
-from . import auth_views  
 from apps.home.views import (
     user_search, user_profile,
     dashboard_superadmin, customize_license, license_detail,
@@ -16,6 +16,7 @@ from apps.home.views import (
     gestion_syndic, gestion_coproprietaire, gestion_prestataire
     )
 
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
 
@@ -24,10 +25,13 @@ urlpatterns = [
     path("logout/", logout_view, name="logout"),
 
     # URLs for Password Reset
-    path('password_reset/', auth_views.CustomPasswordResetView.as_view(), name='password_reset'),
-    path('password_reset/done/', auth_views.CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', auth_views.CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('reset/done/', auth_views.CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('password_reset/', ResetPasswordView.as_view(), name='password_reset'),
+    path('password-reset-confirm/<uidb64>/<token>/',
+         auth_views.PasswordResetConfirmView.as_view(template_name='accounts/password_reset_confirm.html'),
+         name='password_reset_confirm'),
+    path('password-reset-complete/',
+         auth_views.PasswordResetCompleteView.as_view(template_name='accounts/password_reset_complete.html'),
+         name='password_reset_complete'),
 
     # URLs for Search Bar 
     path('user-search/', user_search, name='user-search'),

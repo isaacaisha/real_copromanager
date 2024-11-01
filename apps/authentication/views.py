@@ -7,11 +7,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView, PasswordResetDoneView, PasswordResetCompleteView
 
 from apps.authentication.models import CustomUser
 from apps.home.models import Coproprietaire, Prestataire, Superadmin, Syndic
 from .forms import LoginForm, SignUpForm, LicenseForm
 from django.utils import timezone
+
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
 
 # Create your views here.# auth_views.py
 
@@ -88,13 +93,6 @@ def register_user(request):
         license_form = LicenseForm(request.POST)
         
         if form.is_valid():
-            #form.save()
-            #username = form.cleaned_data.get("username")
-            #raw_password = form.cleaned_data.get("password1")
-            #user = authenticate(username=username, password=raw_password)
-
-            #msg = 'User created - please <a href="/login">login</a>.'
-            #success = True
 
             # return redirect("/login/")
             user = form.save(commit=False)
@@ -172,6 +170,18 @@ def register_user(request):
 
     return render(request, "accounts/register.html", context)
 
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'accounts/password_reset.html'
+    email_template_name = 'accounts/password_reset_email.html'
+    subject_template_name = 'accounts/password_reset_subject.txt'
+    success_message = "Un email vous à été envoyez avec les instruction à suivre, " \
+                      "Si un compte existe sur l'Email fournis, Vous allez rapidement recevoir un message." \
+                      " Si vous ne recevz pas d'email, " \
+                      "s'il vous plaît assurez vous d'avoir introduit l'addresse à laquelle vous ête enregistrez, " \
+                      "et vérifiez votre dossier spam."
+    success_url = reverse_lazy('login')
+    
 
 # Delete Syndic View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
