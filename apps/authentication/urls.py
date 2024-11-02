@@ -5,7 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.urls import path
 from .views import (
-    ResetPasswordView,
+    ResetPasswordView, CustomPasswordResetConfirmView, CustomPasswordResetCompleteView,
     register_user, login_view, logout_view,
     delete_syndic, delete_coproprietaire, delete_prestataire
     )
@@ -26,11 +26,9 @@ urlpatterns = [
 
     # URLs for Password Reset
     path('password_reset/', ResetPasswordView.as_view(), name='password_reset'),
-    path('password-reset-confirm/<uidb64>/<token>/',
-         auth_views.PasswordResetConfirmView.as_view(template_name='accounts/password_reset_confirm.html'),
+    path('password-reset-confirm/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(),
          name='password_reset_confirm'),
-    path('password-reset-complete/',
-         auth_views.PasswordResetCompleteView.as_view(template_name='accounts/password_reset_complete.html'),
+    path('password-reset-complete/', CustomPasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
 
     # URLs for Search Bar 

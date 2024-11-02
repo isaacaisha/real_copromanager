@@ -12831,18 +12831,6 @@ a.btn.btn-secondary.btn-sm {
     background-color: #ccc;
 }
 
-.card {
-  background-color: #7a7a7a;
-}
-
-.card-title {
-  color: #18ce0f !important;
-}
-
-.card-body {
-  background-color: #fff;
-}
-
 /* Dark-Mode Section */
 body.dark-mode {
   background-color: #333; /* Soft dark gray */

@@ -14,4 +14,6 @@ secret:
     name: Mailgun Domain Sending Key - .env:l.23
   - match: 55b1e75abd874950215306e65846fc1be65664eb1f615a24671a3378a1371939
     name: SMTP credentials - .env:l.19
+  - match: 71d96d2407453f434efb072a4d1e58c24bee899ab7f60ab896f23ca8848aa7df
+    name: SMTP credentials - .env:l.18
 version: 2

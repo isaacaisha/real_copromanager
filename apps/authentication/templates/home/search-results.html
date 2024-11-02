@@ -34,9 +34,11 @@
                         <br>
                         <strong>Role:</strong> {{ user.role }}
                     </p>
-                    <button href="{% url 'user-profile' user.id %}" class="btn btn-sm" disabled>
-                        Voir Profile
-                    </button>
+                    <div class="text-center">
+                        <button href="{% url 'user-profile' user.id %}" class="btn btn-sm" disabled>
+                            Voir Profile
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

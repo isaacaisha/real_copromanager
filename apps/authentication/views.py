@@ -177,10 +177,34 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     subject_template_name = 'accounts/password_reset_subject.txt'
     success_message = "Un email vous à été envoyez avec les instruction à suivre, " \
                       "Si un compte existe sur l'Email fournis, Vous allez rapidement recevoir un message." \
-                      " Si vous ne recevz pas d'email, " \
-                      "s'il vous plaît assurez vous d'avoir introduit l'addresse à laquelle vous ête enregistrez, " \
+                      " Si vous ne recevez pas d'email, " \
+                      "s'il vous plaît assurez vous d'avoir introduit l'addresse avec laquelle vous ête enregistrez, " \
                       "et vérifiez votre dossier spam."
     success_url = reverse_lazy('login')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titlePage'] = 'Réinitialisation du Mot de Passe'
+        context['date'] = timezone.now().strftime("%a %d %B %Y")
+        return context
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'accounts/password_reset_confirm.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titlePage'] = 'Confirmation du nouveau Mot de Passe'
+        context['date'] = timezone.now().strftime("%a %d %B %Y")
+        return context
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'accounts/password_reset_complete.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['titlePage'] = 'Réinitialisation Accompli'
+        context['date'] = timezone.now().strftime("%a %d %B %Y")
+        return context
     
 
 # Delete Syndic View
