@@ -41,7 +41,7 @@ function toggleCaptchaTheme(isDarkMode) {
 
   // Re-render reCAPTCHA with the new theme and compact size
   grecaptcha.render("recaptcha-container", {
-    sitekey: "6Le-XnkqAAAAAIly3KzZlfTl1sBUQeEjfPehql84", // Replace with your actual site key
+    sitekey: "6Le-wnkqAAAAAM8JF0TJqlOdajvbgLu2_niyS9v6", // Replace with your actual site key
     theme: theme,
     size: "compact", // Compact size for better UX
   });
