@@ -13,12 +13,12 @@ from unipath import Path
 BASE_DIR = Path(__file__).parent
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# SECURITY WARNING: keep the secret key used in production secret!
 # Initialize environment variables
 env = environ.Env()
 # Load environment variables from the .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='S#perS3crEt_1122')
 
 
@@ -34,14 +34,30 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 #DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 
+# To route traffic through OWASP ZAP for testing
+PROXY = {
+    'http': 'http://127.0.0.1:8080',
+    'https': 'http://127.0.0.1:8080',
+}
+
+
 # Set secure headers (Optional but recommended for production)
 CSRF_TRUSTED_ORIGINS = [
-    'https://your.copromanager.pro/',
+    'https://test-cop.copromanager.com',
+    'https://www.test-cop.copromanager.com'
+    'https://your.copromanager.pro',
     'https://www.your.copromanager.pro'
 ]
 
 SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
+
+SESSION_COOKIE_SECURE = not config('DEBUG', default=True, cast=bool)
+CSRF_COOKIE_SECURE = not config('DEBUG', default=True, cast=bool)
+SECURE_SSL_REDIRECT = not config('DEBUG', default=True, cast=bool)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 900  # 15 minutes
 
 # Other CORS settings you might use
 CORS_ALLOW_CREDENTIALS = True  # Allow cookies and HTTP authentication
@@ -51,7 +67,7 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 
 # load production server from .env
 ALLOWED_HOSTS = [
-    'test-cop.copromanager.com', 'www.test-cop.copromanager.com', 'aaa-www.test-cop.copromanager.com',
+    'test-cop.copromanager.com', 'www.test-cop.copromanager.com', '35.180.33.83',
     'your.copromanager.pro', 'www.your.copromanager.pro', '142.93.235.205',
     'localhost', '127.0.0.1', config('SERVER', default='127.0.0.1'),
     '192.168.31.182', '0.0.0.0'
@@ -68,7 +84,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'apps.authentication',
-    'apps.home'  # Enable the inner home (home)
+    'apps.home',  # Enable the inner home (home)
+
+    'django_recaptcha',
 
     #'rest_framework',
     #'corsheaders',
@@ -85,7 +103,25 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'csp.middleware.CSPMiddleware',
 ]
+
+# Content Security Policy settings
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'https://trusted.cdn.com')
+CSP_STYLE_SRC = ("'self'", 'https://trusted.cdn.com', 'https://fonts.googleapis.com')
+CSP_IMG_SRC = ("'self'", 'data:', 'https://trusted.cdn.com')
+CSP_FONT_SRC = ("'self'", 'https://fonts.gstatic.com')
+CSP_CONNECT_SRC = ("'self'",)
+CSP_FRAME_SRC = ("'none'",)  # or specify trusted domains if frames are needed
+
+
+# reCAPTCHA settings for v2 and v3
+RECAPTCHA_PUBLIC_KEY = config('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = config('RECAPTCHA_PRIVATE_KEY')
+
+RECAPTCHA_REQUIRED_SCORE = 0.85  # For reCAPTCHA v3
+
 
 ROOT_URLCONF = 'core.urls'
 LOGIN_REDIRECT_URL = "home"  # Route defined in home/urls.py

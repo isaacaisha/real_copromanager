@@ -21,12 +21,14 @@ from django.utils import timezone
 
 
 @login_required
+@user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role == 'Syndic'))
 def user_search(request):
     query = request.GET.get('q', '')  # Get the search query from the GET request
     print(f"Search Query: {query}")  # Debug statement
     users = CustomUser.objects.filter(nom__icontains=query)  # Use 'nom' field to filter users
 
     context = {
+        'dont_show_syndic_btn': True,
         'users': users,
         'query': query,
         'titlePage': f'Résultat pour: "{query}"',

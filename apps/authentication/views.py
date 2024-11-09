@@ -11,7 +11,7 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmVie
 
 from apps.authentication.models import CustomUser
 from apps.home.models import Coproprietaire, Prestataire, Superadmin, Syndic
-from .forms import LoginForm, SignUpForm, LicenseForm
+from .forms import LoginForm, SignUpForm, CustomPasswordResetConfirmForm, LicenseForm
 from django.utils import timezone
 
 from django.urls import reverse_lazy
@@ -47,43 +47,7 @@ def redirect_based_on_role(request, user):
     return redirect(role_redirects.get(user.role, 'home'))
 
 
-def login_view(request):
-    form = LoginForm(request.POST or None)
-    msg = None
-
-    if request.method == "POST":
-
-        if form.is_valid():
-            email = form.cleaned_data.get("email")
-            password = form.cleaned_data.get("password")
-            user = authenticate(email=email, password=password)
-
-            if user is not None:
-                login(request, user)
-                #return redirect("/")
-                return redirect_based_on_role(request, user)
-            else:
-                msg = 'Invalid credentials.'
-        else:
-            msg = 'Form is not valid. Please check the details.'
-        
-    context = {
-        'form': form,
-        'msg': msg,
-        'titlePage': 'Connexion/Login',
-        'date': timezone.now().strftime("%a %d %B %Y")
-    }
-
-    return render(request, "accounts/login.html", context)
-
-
-# View for user logout
-def logout_view(request):
-    logout(request)
-    return redirect('home')
-
-
-#@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def register_user(request):
     msg = None
     success = False
@@ -171,6 +135,42 @@ def register_user(request):
     return render(request, "accounts/register.html", context)
 
 
+def login_view(request):
+    form = LoginForm(request.POST or None)
+    msg = None
+
+    if request.method == "POST":
+
+        if form.is_valid():
+            email = form.cleaned_data.get("email")
+            password = form.cleaned_data.get("password")
+            user = authenticate(email=email, password=password)
+
+            if user is not None:
+                login(request, user)
+                #return redirect("/")
+                return redirect_based_on_role(request, user)
+            else:
+                msg = 'Invalid credentials.'
+        else:
+            msg = 'Form is not valid. Please check the details.'
+        
+    context = {
+        'form': form,
+        'msg': msg,
+        'titlePage': 'Connexion/Login',
+        'date': timezone.now().strftime("%a %d %B %Y")
+    }
+
+    return render(request, "accounts/login.html", context)
+
+
+# View for user logout
+def logout_view(request):
+    logout(request)
+    return redirect('home')
+
+
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'accounts/password_reset.html'
     email_template_name = 'accounts/password_reset_email.html'
@@ -190,6 +190,7 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = 'accounts/password_reset_confirm.html'
+    form_class = CustomPasswordResetConfirmForm
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

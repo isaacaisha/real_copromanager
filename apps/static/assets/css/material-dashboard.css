@@ -12827,6 +12827,13 @@ Copyright (c) 2015 Daniel Eden
   width: 92px;
 }
 
+.copyright {
+    border: 0.1rem solid #f9f9f9;
+    border-radius: 0.5rem;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: smaller;
+}
+
 a.btn.btn-secondary.btn-sm {
     background-color: #ccc;
 }
@@ -12885,7 +12892,7 @@ body.dark-mode .sidebar .nav li > a:hover {
 }
 
 /* Greetings User, <input> Tags in dark mode */
-body.dark-mode > div.wrapper > div.sidebar > div.logo > a,
+body.dark-mode > div.wrapper > div.sidebar > div.logo > a
 body.dark-mode .prenom, body.dark-mode .titlePage, body.dark-mode input, body.dark-mode select {
   color: #e7e7e7 !important;
 }
@@ -12916,7 +12923,7 @@ body.dark-mode .form-check-sign > .check  {
 }
 
 /* Dark-Mode BTN */
-body.dark-mode .togglebutton, .dark-mode-text {
+body.dark-mode .togglebutton, .dark-mode-text, .card-category {
   color: #999 !important;
   margin-top: 3px;
 }
@@ -12929,9 +12936,7 @@ body.dark-mode .copyright {
     font-size: smaller;
 }
 
-.copyright {
-    border: 0.1rem solid #f9f9f9;
-    border-radius: 0.5rem;
-    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: smaller;
+/* For reCAPTCHA container background in dark mode */
+body.dark-mode #recaptcha-container {
+  background-color: transparent; /* Ensures reCAPTCHA blends with dark theme */
 }

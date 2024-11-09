@@ -9,22 +9,10 @@ from django.contrib.auth.forms import UserCreationForm
 from apps.authentication.models import CustomUser
 from apps.home.models import License
 
-
-class LoginForm(forms.Form):
-    email = forms.EmailField(
-        widget=forms.EmailInput(
-            attrs={
-                "placeholder": "Email",
-                "class": "form-control",
-            }
-        ))
-    password = forms.CharField(
-        widget=forms.PasswordInput(
-            attrs={
-                "placeholder": "Mot de passe",
-                "class": "form-control"
-            }
-        ))
+# Import ReCaptchaField correctly
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV2Checkbox, ReCaptchaV3
+from django.contrib.auth.forms import SetPasswordForm
 
 
 class SignUpForm(UserCreationForm):
@@ -71,11 +59,48 @@ class SignUpForm(UserCreationForm):
                 "class": "form-control"
             }
         ))
+    
+    # Use reCAPTCHA v3 for registration
+    #captcha = ReCaptchaField(widget=ReCaptchaV3())
 
     class Meta:
         model = CustomUser
         fields = ('email', 'nom', 'prenom', 'role', 'password1', 'password2')
 
+
+class LoginForm(forms.Form):
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={
+                "placeholder": "Email",
+                "class": "form-control",
+            }
+        ))
+    password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "placeholder": "Mot de passe",
+                "class": "form-control"
+            }
+        ))
+    
+    # Use reCAPTCHA v2 for login
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
+
+
+class CustomPasswordResetConfirmForm(SetPasswordForm):
+    recaptcha = ReCaptchaField()
+
+    def clean_recaptcha(self):
+        # Here you can validate the ReCaptcha response if needed
+        recaptcha_response = self.cleaned_data.get('recaptcha')
+
+        # Custom validation logic for recaptcha (if required)
+        if not recaptcha_response:
+            raise forms.ValidationError("ReCAPTCHA validation failed. Please try again.")
+
+        return recaptcha_response
+    
 
 class LicenseForm(forms.ModelForm):
     class Meta:

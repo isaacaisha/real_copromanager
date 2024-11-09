@@ -64,6 +64,13 @@
               </div>
             </div>
             <span class="text-danger">{{ form.password.errors }}</span>
+            
+            <div class="form__group">
+              <div id="recaptcha-container">{{ form.captcha }}</div>
+              {% for error in form.captcha.errors %}
+              <p class="text-danger">{{ error }}</p>
+              {% endfor %}
+            </div>
 
             <br />
 
