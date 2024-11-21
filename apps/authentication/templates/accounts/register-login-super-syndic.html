@@ -1,0 +1,103 @@
+{% extends "layouts/base.html" %}
+
+{% load i18n %}
+
+{% load static %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block favicon %}
+<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon3.ico' %}">
+{% endblock %}
+
+{% block title %}
+- {{ titlePage|default:"Super User Template" }}
+{% endblock %}
+
+{% block content %}
+<main class="auth layout">
+    <div class="container my-5">
+        <div class="text-center">
+            <!--<h1>{{ titlePage|default:"Super User Access" }}</h1>-->
+            <p class="text-muted">Manage your VIP profile seamlessly.</p>
+        </div>
+
+        {% if titlePage == 'Login' %}
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow border-success">
+                    <div class="card-header bg-success text-white text-center">
+                        <h5>Super User Login</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Access your account dashboard below.</p>
+                        <div class="text-center">
+                            {% if user.role == 'SuperSyndic' %}
+                            <a href="{% url 'dashboard-super-syndic' super_syndic.id %}" class="btn btn-success btn-sm">
+                                Login
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            {% if user.role != 'SuperSyndic' %}
+            <p>Haven't signed up yet?</p>
+            <a href="{% url 'register-super-syndic' super_syndic.id %}" 
+            class="btn btn--link btn-sm">
+                Sign Up
+            </a>
+            {% endif %}
+        </div>
+        {% else %}
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-secondary text-white text-center">
+                        <h3>Super Syndic Registration</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                            {% for field in super_syndic_form %}
+                            <div class="mb-3">
+                                <label class="form-label">{{ field.label }}</label>
+                                <span class="text-primary">{{ field }}</span>
+                                {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors|join:" " }}</div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                            <div class="text-center">
+                                <button type="submit" class="btn bg-secondary btn-sm">Register</button>
+                            </div>
+                            
+                        </form>
+                        <!--<form method="post">
+                            {% csrf_token %}
+                            {{ super_syndic_form.as_p }}
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-sm">
+                                    Register
+                                </button>
+                            </div>
+                        </form>-->
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    {% if user.role == 'SuperSyndic' %}
+                    <p>Already signed up?</p>
+                    <a href="{% url 'login-super-syndic' syndic.id %}" class="btn btn--link btn-sm">
+                        Login
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

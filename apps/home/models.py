@@ -18,7 +18,9 @@ Copyright (c) 2019 - present AppSeed.us
 
 # Superadmin Model
 class Superadmin(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='superadmin_profile')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE,
+                                related_name='superadmin_profile')
     
     def __str__(self):
         return f"Superadmin: {self.user.email}"
@@ -27,7 +29,8 @@ class Superadmin(models.Model):
 # Licence Base
 class LicenseBase(models.Model):
     nom = models.CharField(max_length=255, unique=True)
-    fonctionnalites = models.JSONField()  # Contient les fonctionnalités disponibles dans cette licence de base
+    # Contient les fonctionnalités disponibles dans cette licence de base
+    fonctionnalites = models.JSONField()
     date_creation = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
@@ -36,11 +39,18 @@ class LicenseBase(models.Model):
 
 # Custom License for Syndic
 class License(models.Model):
-    syndic = models.ForeignKey('Syndic', on_delete=models.CASCADE, related_name='licenses')
-    license_base = models.ForeignKey(LicenseBase, on_delete=models.SET_NULL, null=True, blank=True, related_name='syndic')
+    syndic = models.ForeignKey(
+        'Syndic', on_delete=models.CASCADE, related_name='syndic_licenses', null=True, blank=True
+    )
+    super_syndic = models.ForeignKey(
+        'SuperSyndic', on_delete=models.CASCADE, related_name='super_syndic_licenses', null=True, blank=True
+    )
+    license_base = models.ForeignKey(
+        LicenseBase, on_delete=models.SET_NULL, null=True, blank=True, related_name='licenses'
+    )
     date_debut = models.DateField(null=True, blank=True)
     date_fin = models.DateField(null=True, blank=True)
-    fonctionnalites_personnalisees = models.JSONField(null=True, blank=True)  # Custom features for this license
+    fonctionnalites_personnalisees = models.JSONField(null=True, blank=True)
     est_personnalise = models.BooleanField(default=True)
 
     def get_fonctionnalites(self):
@@ -51,15 +61,30 @@ class License(models.Model):
         return []
 
     def __str__(self):
-        return f"Licence for {self.syndic.nom} (from {self.date_debut} to {self.date_fin})"
+        role = self.syndic or self.super_syndic
+        return f"License for {role.nom} (from {self.date_debut} to {self.date_fin})"
+
+
+class SuperSyndic(models.Model):
+    nom = models.CharField(max_length=255)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE,
+                                related_name='super_syndic_profile',
+                                null=True, blank=True)
+    email = models.EmailField()
+
+    def __str__(self):
+        return self.nom
 
 
 # Syndic Information
 class Syndic(models.Model):
     nom = models.CharField(max_length=255)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='syndic_profile', null=True, blank=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE,
+                                related_name='syndic_profile',
+                                null=True, blank=True)
     email = models.EmailField()
-    license = models.OneToOneField(License, on_delete=models.CASCADE, null=True, related_name='syndic_license')
 
     def __str__(self):
         return self.nom
@@ -68,7 +93,10 @@ class Syndic(models.Model):
 # Co-owner Information
 class Coproprietaire(models.Model):
     nom = models.CharField(max_length=255)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='coproprietaire_profile', null=True, blank=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE,
+                                related_name='coproprietaire_profile',
+                                null=True, blank=True)
     email = models.EmailField()
     syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE)
 
@@ -79,7 +107,10 @@ class Coproprietaire(models.Model):
 # Provider Information
 class Prestataire(models.Model):
     nom = models.CharField(max_length=255)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='prestataire_profile', null=True, blank=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE,
+                                related_name='prestataire_profile',
+                                null=True, blank=True)
     email = models.EmailField()
     syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE)
 

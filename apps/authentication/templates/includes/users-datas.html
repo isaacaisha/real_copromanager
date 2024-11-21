@@ -2,6 +2,13 @@
 
 <div class="container">
     <div class="row justify-content-center">
+        {% if user.role == 'Syndic' %}
+        <div class="container text-center mb-5">
+            <a href="{% url 'register-super-syndic' syndic.id %}" class="btn btn-success btn-sm">
+                Super User Inscription
+            </a>
+        </div>
+        {% endif %}
         {% if syndic %}
         <!-- Syndic Information -->
         <div class="col-lg-4 col-md-6 mb-4">
@@ -16,8 +23,31 @@
                 <div class="card-body">
                     <strong>Syndic Prenom:</strong> {{ syndic.user.prenom }}<br>
                     <strong>Syndic Email:</strong> <a href="#" class="a_link">{{ syndic.user.email }}</a><br>
-                    <strong>Created at:</strong> {{ syndic.user.date_debut|date:"d/m/Y" }}<br>
-                    <strong>Updated at:</strong> {{ syndic.user.updated_at|date:"d/m/Y" }}<br>
+                    <strong>Syndic Role:</strong> {{ syndic.user.role }}<br>
+                    <!--<strong>Created at:</strong> {{ syndic.user.date_debut|date:"d/m/Y" }}<br>
+                    <strong>Updated at:</strong> {{ syndic.user.updated_at|date:"d/m/Y" }}<br>-->
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if super_syndic %}
+        <!-- Syndic Information -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header card-header-icon">
+                    <div class="card-icon">
+                        <i class="material-icons">person</i>
+                    </div>
+                    <h3 class="card-title">{{ super_syndic.user.nom }}</h3>
+                    <p class="card-category">Syndic id: {{ super_syndic.id }}</p>
+                </div>
+                <div class="card-body">
+                    <strong>Syndic Prenom:</strong> {{ super_syndic.user.prenom }}<br>
+                    <strong>Syndic Email:</strong> <a href="#" class="a_link">{{ super_syndic.user.email }}</a><br>
+                    <strong>Syndic Role:</strong> {{ super_syndic.user.role }}<br>
+                    <!--<strong>Created at:</strong> {{ syndic.user.date_debut|date:"d/m/Y" }}<br>
+                            <strong>Updated at:</strong> {{ syndic.user.updated_at|date:"d/m/Y" }}<br>-->
                 </div>
             </div>
         </div>
@@ -32,11 +62,16 @@
                         <i class="material-icons">assignment</i>
                     </div>
                     <p class="card-title">License Information</p>
-                    <h3 class="card-category">{{ syndic.id }}</h3>
+                    <h3 class="card-category">{{ syndic.id }}{{ super_syndic.id }}</h3>
                 </div>
                 <div class="card-body">
-                    <strong>Date de début:</strong> {{ syndic.license.date_debut|date:"d/m/Y" }}<br>
-                    <strong>Date de fin:</strong> {{ syndic.license.date_fin|date:"d/m/Y" }}<br>
+                    <strong>Date de début:</strong> 
+                    {{ syndic.license.date_debut|date:"d/m/Y" }}
+                    {{ super_syndic.license.date_debut|date:"d/m/Y" }}
+                    <br>
+                    <strong>Date de fin:</strong> 
+                    {{ syndic.license.date_fin|date:"d/m/Y" }}
+                    {{ super_syndic.license.date_fin|date:"d/m/Y" }}<br>
                 </div>
             </div>
         </div>

@@ -1,9 +1,9 @@
-<!-- templates/home/gestion-syndic.html -->
+<!-- templates/home/gestion-super-syndic.html -->
 {% extends "layouts/base.html" %}
 
 {% load static %}
 
-{% block title %} Syndic Dashboard {% endblock %}
+{% block title %} Super Syndic Dashboard {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -11,6 +11,8 @@
 {% block favicon %}
 <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon3.ico' %}">
 {% endblock %}
+
+{{ titlePage }}
 
 {% block content %}
 <div class="container">
@@ -23,7 +25,7 @@
     
     <div class="card">
         <div class="card-header">
-            <h3>Backoffice - Gestion des Syndics</h3>
+            <h3>Backoffice - Gestion des Super Syndics</h3>
         </div>
         <div class="card-body">
 
@@ -36,7 +38,7 @@
                                 <i class="material-icons">group</i>
                             </div>
                             <p class="card-category">Syndics</p>
-                            <h3 class="card-title">{{ syndics.count }}</h3>
+                            <h3 class="card-title">{{ super_syndics.count }}</h3>
                         </div>
                         <div class="card-footer">
                             <div class="stats">
@@ -60,22 +62,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for syndic in syndics %}
+                        {% for super_syndic in super_syndics %}
                         <tr>
-                            <td>{{ syndic.nom }}</td>
-                            <td>{{ syndic.email }}</td>
+                            <td>{{ super_syndic.nom }}</td>
+                            <td>{{ super_syndic.email }}</td>
                             <td>
-                                {% if syndic.license %}
-                                {{ syndic.license.statut }}
-                                ({{ syndic.license.date_debut|date:"D, d M Y" }} -
-                                {{ syndic.license.date_fin|date:"D, d M Y" }})
+                                {% if super_syndic.license %}
+                                {{ super_syndic.license.statut }}
+                                ({{ super_syndic.license.date_debut|date:"D, d M Y" }} -
+                                {{ super_syndic.license.date_fin|date:"D, d M Y" }})
                                 {% else %}
                                 Pas de license
                                 {% endif %}
                             </td>
                             <td>
-                                {% if syndic.license %}
-                                <a href="{% url 'customize-license' syndic.license.id %}" class="a_link">
+                                {% if super_syndic.license %}
+                                <a href="{% url 'customize-license' super_syndic.license.id %}" class="a_link">
                                     <button type="su" rel="tooltip" title="Configurer"
                                         class="btn btn-primary btn-link btn-sm">
                                         <i class="material-icons">edit</i>
@@ -86,15 +88,15 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if syndic.license %}
-                                <a href="{% url 'dashboard-syndic' syndic.id %}" class="btn btn-sm">Voir Détails</a>
+                                {% if super_syndic.license %}
+                                <a href="{% url 'dashboard-super-syndic' super_syndic.license.id %}" class="btn btn-sm">Voir Détails</a>
                                 {% else %}
                                 <p>No license Détails for this syndic.</p>
                                 {% endif %}
                             </td>
                             <!-- Add Delete Button -->
                             <td>
-                                <form method="post" action="{% url 'delete-syndic' syndic.id %}" style="display:inline;">
+                               <!--<form method="post" action="{% url 'delete-super-syndic' syndic.id }" style="display:inline;">-->
                                     {% csrf_token %}
                                     <!--<button type="submit" class="btn btn-danger btn-sm"
                                             onclick="return confirm('Are you sure you want to delete this syndic?');">

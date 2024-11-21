@@ -7,7 +7,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from apps.authentication.models import CustomUser
-from apps.home.models import License
+from apps.home.models import License, SuperSyndic
 
 # Import ReCaptchaField correctly
 from django_recaptcha.fields import ReCaptchaField
@@ -38,7 +38,8 @@ class SignUpForm(UserCreationForm):
             }
         ))
     role = forms.ChoiceField(
-        choices=[('Superadmin', 'Superadmin'), ('Syndic', 'Syndic'), ('Coproprietaire', 'Coproprietaire'), ('Prestataire', 'Prestataire')],
+        choices=[('Superadmin', 'Superadmin'), ('SuperSyndic', 'SuperSyndic'), ('Syndic', 'Syndic'),
+                 ('Coproprietaire', 'Coproprietaire'), ('Prestataire', 'Prestataire')],
         widget=forms.Select(
             attrs={
                 "placeholder": "Role:",
@@ -119,3 +120,21 @@ class LicenseForm(forms.ModelForm):
     #    super().__init__(*args, **kwargs)
     #    # Ensure the license_base queryset is active licenses
     #    self.fields['license_base'].queryset = LicenseBase.objects.all()
+
+
+class SuperSyndicForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['email', 'nom', 'prenom', 'password']
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])
+        user.role = 'SuperSyndic'
+        if commit:
+            user.save()
+            SuperSyndic.objects.create(user=user)  # Automatically link the user to SuperSyndic
+        return user

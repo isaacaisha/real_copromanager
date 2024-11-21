@@ -12844,6 +12844,15 @@ body.dark-mode {
   color: #999 !important;
 }
 
+.prenom {
+  font-weight: bolder;
+  font-family: 'Arial', sans-serif;
+}
+
+body.dark-mode .prenom {
+  color: rgb(231, 231, 231);
+}
+
 /* Dark Mode for Table */
 body.dark-mode .table {
   background-color: #3339 !important; /* Dark table background */
@@ -12854,6 +12863,12 @@ body.dark-mode .table {
 body.dark-mode .table thead {
   background-color: #4449 !important; /* Darker background for headers */
   color: #eee; /* Light text color */
+}
+
+body.dark-mode #id_auth-username, body.dark-mode #id_auth-password, body.dark-mode #id_nom, 
+body.dark-mode #id_token-otp_token, body.dark-mode #id_email,
+body.dark-mode #id_prenom, body.dark-mode #id_password {
+  background-color: #282828 !important;
 }
 
 /* Dark Mode for Striped Rows */
@@ -12897,7 +12912,7 @@ body.dark-mode .prenom, body.dark-mode .titlePage, body.dark-mode input, body.da
   color: #e7e7e7 !important;
 }
 
-body.dark-mode .card-body {
+body.dark-mode .card-body, body.dark-mode form > div.mb-3 > table > tbody > tr {
   background-color: #222 !important;
 }
 
@@ -12936,7 +12951,45 @@ body.dark-mode .copyright {
     font-size: smaller;
 }
 
-/* For reCAPTCHA container background in dark mode */
-body.dark-mode #recaptcha-container {
-  background-color: transparent; /* Ensures reCAPTCHA blends with dark theme */
+/*==============================
+=>  2AF Authentication Section
+================================*/
+
+/* Custom CSS for QR Code Size */
+.qr-code-img {  
+    width: 100px !important;  /* Adjust to your desired width */
+    height: 100px !important; /* Adjust to your desired height */
+}
+
+#content > div:nth-child(4) {
+  text-align: center !important;
+}
+
+#id_auth-username, #id_token-otp_token, #id_generator-token, #id_validation-token {
+  margin-bottom: 1rem !important;
+  color: #000;
+}
+
+#id_method-method > div {
+  margin: 1rem;
+  text-align: left !important;
+}
+
+#id_generator-token {
+  width: max-content; /* Ensures the width is based on the content */
+  font-size: 1.5em; /* Increases the font size */
+  padding: 10px; /* Adds extra space inside the element */
+  margin: 10px; /* Adds space around the element */
+  border: 1px solid #ccc; /* Optional: to make the size more noticeable */
+  display: inline-block; /* Ensures it respects the max-content width */
+}
+
+/* footer btn */
+#content > div > form > table {
+  margin-bottom: 5rem !important;
+}
+
+label {
+    padding-right: 10px;
+    text-align: left;
 }

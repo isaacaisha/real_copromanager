@@ -3,20 +3,20 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView, PasswordResetDoneView, PasswordResetCompleteView
-
-from apps.authentication.models import CustomUser
-from apps.home.models import Coproprietaire, Prestataire, Superadmin, Syndic
-from .forms import LoginForm, SignUpForm, CustomPasswordResetConfirmForm, LicenseForm
-from django.utils import timezone
+from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.contrib.messages.views import SuccessMessageMixin
 
 from django.urls import reverse_lazy
-from django.contrib.auth.views import PasswordResetView
-from django.contrib.messages.views import SuccessMessageMixin
+from django.utils import timezone
+
+from apps.authentication.models import CustomUser
+from apps.home.models import License, Superadmin, Syndic, SuperSyndic, Coproprietaire, Prestataire
+from .forms import LoginForm, SignUpForm, CustomPasswordResetConfirmForm, LicenseForm, SuperSyndicForm
 
 # Create your views here.# auth_views.py
 
@@ -28,6 +28,7 @@ def redirect_based_on_role(request, user):
         'Syndic': 'dashboard-syndic',
         'Coproprietaire': 'dashboard-coproprietaire',
         'Prestataire': 'dashboard-prestataire',
+        'SuperSyndic': 'SuperSyndic',
     }
 
     if user.role == 'Syndic':
@@ -42,12 +43,16 @@ def redirect_based_on_role(request, user):
         prestataire, created = Prestataire.objects.get_or_create(user=user)
         return redirect('dashboard-prestataire', prestataire_id=prestataire.id)
 
+    elif user.role == 'SuperSyndic':
+        super_syndic, created = SuperSyndic.objects.get_or_create(user=user)
+        return redirect('dashboard-super-syndic', super_syndic_id=super_syndic.id)
+
 
     # For other roles, simply redirect to the appropriate dashboard
     return redirect(role_redirects.get(user.role, 'home'))
 
 
-@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+#@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def register_user(request):
     msg = None
     success = False
@@ -233,3 +238,83 @@ def delete_prestataire(request, prestataire_id):
     user.delete()  # Delete the CustomUser, which cascades the deletion to Prestataire
     messages.success(request, f'Prestataire {user.nom} has been deleted.')
     return redirect('dashboard-superadmin')
+
+
+# View for the register Super Syndic, requiring 2FAfrom django.db import transaction
+@login_required
+def register_super_syndic(request, syndic_id):
+    titlePage = 'Register Super Syndic'
+    super_syndic_form = SuperSyndicForm(request.POST or None)
+    syndic = get_object_or_404(Syndic, id=syndic_id)
+    super_syndic = None
+    #super_syndic, created = SuperSyndic.objects.get_or_create(user=request.user)
+    #super_syndic = Syndic.objects.create(user=user, nom=user.nom, email=user.email)
+
+    if request.method == "POST":
+        super_syndic_form = SuperSyndicForm(request.POST, instance=syndic.user)  # Load the existing user instance
+        if super_syndic_form.is_valid():
+            try:
+                with transaction.atomic():
+                    # Update the user's role to SuperSyndic
+                    user = super_syndic_form.save(commit=False)
+                    user.role = 'SuperSyndic'
+                    user.save()
+
+                    # Create or get a SuperSyndic instance for this user
+                    super_syndic, created = SuperSyndic.objects.get_or_create(user=user)
+
+                    # Handle the license transfer
+                    # Assuming that a syndic can have multiple licenses, we fetch the latest one
+                    license = License.objects.filter(syndic=syndic).order_by('-date_debut').first()
+                    if license:
+                        # Assign the license to the SuperSyndic (if needed)
+                        license.super_syndic = super_syndic
+                        license.syndic = None  # Remove the license from the old syndic
+                        license.save()
+
+                    messages.success(request, 'User successfully upgraded to Super Syndic!')
+                    return redirect('two_factor:setup')  # Or your desired next step
+
+            except Exception as e:
+                messages.error(request, f"An error occurred: {e}")
+        else:
+            messages.error(request, 'Form is not valid.')
+    else:
+        # Pre-fill the form with the current user's data
+        super_syndic_form = SuperSyndicForm(instance=syndic.user)
+
+    context = {
+        'titlePage': titlePage,
+        'syndic': syndic,
+        'super_syndic': super_syndic,
+        'super_syndic_form': super_syndic_form,
+        'date': timezone.now().strftime("%a %d %B %Y"),
+        'message': 'Upgrade your profile to Super Syndic!',
+    }
+    return render(request, 'accounts/register-login-super-syndic.html', context)
+
+
+# View for the login VIP page, requiring 2FA
+@login_required
+def login_super_syndic(request, super_syndic_id):
+    titlePage = 'Login'
+
+    # Fetch the current logged-in user's syndic profile
+    #syndic = Syndic.objects.get(id=syndic_id)
+    #syndic = get_object_or_404(Syndic, id=syndic_id)
+    try:
+        super_syndic = SuperSyndic.objects.get(id=super_syndic_id)
+        #super_syndic, created = SuperSyndic.objects.get_or_create(user=request.user)
+    except SuperSyndic.DoesNotExist:
+        super_syndic = None
+
+    context = {
+        'titlePage': titlePage,
+        #'syndic': syndic,
+        'super_syndic': super_syndic,
+        'date': timezone.now().strftime("%a %d %B %Y"),
+        'message': 'Welcome to the VIP User Page!',
+    }
+    return render(request, 'accounts/register-login-super-syndic.html', context)
+    
+    #return redirect('two_factor:login')

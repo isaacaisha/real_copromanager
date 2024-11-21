@@ -40,6 +40,7 @@ class CustomUser(AbstractUser):
         ('Syndic', 'Syndic'),
         ('Coproprietaire', 'Coproprietaire'),
         ('Prestataire', 'Prestataire'),
+        ('SuperSyndic', 'SuperSyndic'),
     )
 
     # Remove username field

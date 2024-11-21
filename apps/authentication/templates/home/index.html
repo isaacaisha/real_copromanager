@@ -7,6 +7,14 @@
 
 {% block content %}
 
+    {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+    <div class="container text-center mb-5">
+      <a href="{% url 'login-super-syndic' super_syndic.id %}" class="btn btn-success btn-sm">
+        SE connecter à Super User
+      </a>
+    </div>
+    {% endif %}
+    
     <div class="row">
       <div class="col-lg-3 col-md-6 col-sm-6">
         <div class="card card-stats">
