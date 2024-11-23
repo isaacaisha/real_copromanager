@@ -90,7 +90,7 @@ def register_user(request):
                     syndic.license = license
                     syndic.save()
                     
-                    messages.success(request, 'Syndic created successfully, Edit the License.')
+                    messages.success(request, 'Syndic created successfully.')
                     return redirect('dashboard-superadmin')
                 else:
                     print("License form is not valid:", license_form.errors)
@@ -219,7 +219,15 @@ def delete_syndic(request, syndic_id):
     syndic = get_object_or_404(CustomUser, id=syndic_id, role='Syndic')
     syndic.delete()
     messages.success(request, f'Syndic {syndic.nom} has been deleted.')
-    return redirect('dashboard-superadmin')
+    return redirect('gestion-syndic')
+
+# Delete SuperSyndic View
+@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+def delete_super_syndic(request, super_syndic_id):
+    super_syndic = get_object_or_404(CustomUser, id=super_syndic_id)
+    super_syndic.delete()
+    messages.success(request, f'SuperSyndic {super_syndic.nom} has been deleted.')
+    return redirect('/gestion-super-syndic')
 
 # Delete Coproprietaire View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
@@ -228,7 +236,7 @@ def delete_coproprietaire(request, coproprietaire_id):
     user = coproprietaire.user  # Access the linked CustomUser
     user.delete()  # Delete the CustomUser, which cascades the deletion to Coproprietaire
     messages.success(request, f'Coproprietaire {user.nom} has been deleted.')
-    return redirect('dashboard-superadmin')
+    return redirect('/gestion-coproprietaire')
 
 # Delete Prestataire View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
@@ -237,7 +245,7 @@ def delete_prestataire(request, prestataire_id):
     user = prestataire.user  # Access the linked CustomUser
     user.delete()  # Delete the CustomUser, which cascades the deletion to Prestataire
     messages.success(request, f'Prestataire {user.nom} has been deleted.')
-    return redirect('dashboard-superadmin')
+    return redirect('/gestion-prestataire')
 
 
 # View for the register Super Syndic, requiring 2FAfrom django.db import transaction
@@ -303,14 +311,14 @@ def login_super_syndic(request, super_syndic_id):
     #syndic = Syndic.objects.get(id=syndic_id)
     #syndic = get_object_or_404(Syndic, id=syndic_id)
     try:
-        super_syndic = SuperSyndic.objects.get(id=super_syndic_id)
-        #super_syndic, created = SuperSyndic.objects.get_or_create(user=request.user)
+        #super_syndic = SuperSyndic.objects.get(id=super_syndic_id)
+        #super_syndic = get_object_or_404(SuperSyndic, id=super_syndic_id)
+        super_syndic, created = SuperSyndic.objects.get_or_create(user=request.user)
     except SuperSyndic.DoesNotExist:
         super_syndic = None
 
     context = {
         'titlePage': titlePage,
-        #'syndic': syndic,
         'super_syndic': super_syndic,
         'date': timezone.now().strftime("%a %d %B %Y"),
         'message': 'Welcome to the VIP User Page!',

@@ -12865,12 +12865,6 @@ body.dark-mode .table thead {
   color: #eee; /* Light text color */
 }
 
-body.dark-mode #id_auth-username, body.dark-mode #id_auth-password, body.dark-mode #id_nom, 
-body.dark-mode #id_token-otp_token, body.dark-mode #id_email,
-body.dark-mode #id_prenom, body.dark-mode #id_password {
-  background-color: #282828 !important;
-}
-
 /* Dark Mode for Striped Rows */
 body.dark-mode .table-striped tbody tr:nth-of-type(odd) {
   background-color: #3339 !important; /* Darker background for odd rows */
@@ -12912,7 +12906,9 @@ body.dark-mode .prenom, body.dark-mode .titlePage, body.dark-mode input, body.da
   color: #e7e7e7 !important;
 }
 
-body.dark-mode .card-body, body.dark-mode form > div.mb-3 > table > tbody > tr {
+body.dark-mode .card-body, body.dark-mode form > div.mb-3 > table > tbody > tr,
+body.dark-mode input#id_email, body.dark-mode input#id_nom,
+body.dark-mode input#id_prenom, body.dark-mode input#id_password {
   background-color: #222 !important;
 }
 
@@ -12955,24 +12951,40 @@ body.dark-mode .copyright {
 =>  2AF Authentication Section
 ================================*/
 
+h1.mb-0 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: large;
+}
+
 /* Custom CSS for QR Code Size */
 .qr-code-img {  
     width: 100px !important;  /* Adjust to your desired width */
     height: 100px !important; /* Adjust to your desired height */
 }
 
-#content > div:nth-child(4) {
-  text-align: center !important;
+#content td, .enable-twofactor {
+  white-space: nowrap; /* Prevent text from wrapping if necessary */
+  overflow: hidden; /* Hide overflow if it exists */
 }
 
-#id_auth-username, #id_token-otp_token, #id_generator-token, #id_validation-token {
+/* li error message from 'account/login/' form */
+td > ul > li, .enable-twofactor {
+  color: crimson;
+  display: list-item; /* Ensures it's displayed as a list item */
+  word-wrap: break-word; /* Prevents long words from breaking the layout */
+  white-space: normal; /* Allows the text to wrap */
+}
+
+#chat-input, #id_auth-username, #id_auth-password, #id_backup-otp_token,
+#id_token-otp_token, #id_generator-token, #id_validation-token, .enable-twofactor {
+  background-color: #fff;
+  color: #333 !important;
   margin-bottom: 1rem !important;
-  color: #000;
-}
-
-#id_method-method > div {
-  margin: 1rem;
-  text-align: left !important;
+  table-layout: fixed; /* Ensures table cells don't stretch unnaturally */
+  width: 100%; /* Optional: Make the table responsive */
+  box-sizing: border-box; /* Ensures padding doesn't cause overflow */
+  max-width: 100%; /* Prevents overflow beyond container */
+  word-wrap: break-word; /* Breaks long words to avoid overflow */
 }
 
 #id_generator-token {

@@ -26,7 +26,10 @@ from django.utils import timezone
 
 
 @login_required
-@user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role == 'Syndic'))
+@user_passes_test(lambda u: u.is_active and 
+                  (u.role == 'Superadmin' 
+                   or u.role == 'Syndic' 
+                   or u.role == 'SuperSyndic'))
 def user_search(request):
     query = request.GET.get('q', '').strip()  # Get the search query from the GET request
     print(f"Search Query: {query}")  # Debug statement
@@ -329,36 +332,52 @@ def license_detail(request, license_id):
 @otp_required
 @user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role == 'SuperSyndic'))
 def dashboard_super_syndic(request, super_syndic_id):
-    titlePage = 'Super User Dashboard'
+    titlePage = 'Super Syndic Dashboard'
 
     # Fetch the current logged-in user's syndic profile
-    super_syndic = get_object_or_404(SuperSyndic, id=super_syndic_id)
+    try:
+        # Fetch the current syndic profile
+        if request.user.role == 'Superadmin':
+            # Query by user__id when accessed by Superadmin
+            super_syndic = get_object_or_404(SuperSyndic, user__id=super_syndic_id)
+        else:
+            # Restrict to the currently logged-in syndic
+            super_syndic = get_object_or_404(SuperSyndic, user=request.user)
 
-    ## Retrieve relevant syndic information, such as buildings and co-owners
-    #immeubles = Immeuble.objects.filter(super_syndic=super_syndic)
-    #coproprietaires = Coproprietaire.objects.filter(super_syndic=super_syndic)
-    # Retrieve the license for the logged-in syndic, handle multiple licenses if necessary
-    license = License.objects.filter(super_syndic=super_syndic).order_by('-date_debut').first()
-    if not license:
-        messages.warning(request, 'No license found for this syndic.')
+        ## Retrieve relevant syndic information, such as buildings and co-owners
+        #immeubles = Immeuble.objects.filter(super_syndic=super_syndic)
+        #coproprietaires = Coproprietaire.objects.filter(super_syndic=super_syndic)
+            
+        # Retrieve the license for the logged-in syndic, handle multiple licenses if necessary
+        license = License.objects.filter(super_syndic=super_syndic).order_by('-date_debut').first()
+        if not license:
+            messages.warning(request, 'No license found for this syndic.')
+        
+        context = {
+            'segment': 'dashboard-super-syndic',
+            'super_syndic': super_syndic,
+            'super_syndic_id': super_syndic_id,
+            'license': license,
+            #'immeubles': immeubles,
+            #'coproprietaires': coproprietaires,
+            'titlePage': titlePage,
+            'date': timezone.now().strftime("%a %d %B %Y")
+        }
 
-    if not request.user.is_verified():
-        messages.warning(request, "Please complete two-factor authentication.")
-        # Redirect to two_factor login
-        return redirect('two_factor:login')
-    
-    context = {
-        'titlePage': titlePage,
-        'super_syndic': super_syndic,
-        'license': license,
-        #'immeubles': immeubles,
-        #'coproprietaires': coproprietaires,
-        'date': timezone.now().strftime("%a %d %B %Y"),
-        'message': 'Welcome to the Super User Page!',
-    }
+        html_template = loader.get_template('home/dashboard-super-syndic.html')
+        return HttpResponse(html_template.render(context, request))
 
-    html_template = loader.get_template('home/dashboard-super-syndic.html')
-    return HttpResponse(html_template.render(context, request))
+    except SuperSyndic.DoesNotExist:
+        # Handle the case where the syndic doesn't exist (e.g., if a user tries to access this page without being a syndic)
+        context = {
+            'segment': 'dashboard-super-syndic',
+            'message': 'Super Syndic profile not found.',
+            'titlePage': 'Dashboard',
+            'date': timezone.now().strftime("%a %d %B %Y"),
+        }
+        
+        html_template = loader.get_template('home/dashboard-super-syndic.html')
+        return HttpResponse(html_template.render(context, request))
 
 
 # Syndic dashboard
@@ -389,7 +408,6 @@ def dashboard_syndic(request, syndic_id):
         context = {
             'segment': 'dashboard-syndic',
             'syndic': syndic,
-            #'syndic_id': syndic_id,
             'license': license,
             'immeubles': immeubles,
             'coproprietaires': coproprietaires,

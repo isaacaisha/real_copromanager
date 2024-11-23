@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 
 <head>
@@ -54,7 +55,7 @@
   {% block stylesheets %}{% endblock stylesheets %}
 
   <!-- Specific favicon goes HERE  -->
-  {% block favicon %}{% endblock %}
+  {% block favicon %}<link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/img/copro-logo.png' %}">{% endblock %}
 
 </head>
 
@@ -77,13 +78,13 @@
 
       <!-- End Navbar -->
       <div class="content">
-        <div class="text-center mb-5">
+        <div class="text-center">
         {% if user.is_authenticated and user.role == 'Superadmin' %}
           <img class="img-container" src="/static/assets/img/shark.png" />
         {% endif %}
-          {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
           <h5 class="prenom">-¡!¡- Welcome, {{ user.prenom }} -¡!¡-</h5>
-          {% endif %}
+        {% endif %}
           
           {% if messages %}
           <div>

@@ -65,7 +65,7 @@
                         {% for super_syndic in super_syndics %}
                         <tr>
                             <td>{{ super_syndic.nom }}</td>
-                            <td>{{ super_syndic.email }}</td>
+                            <td><a href="#" class="a_link">{{ super_syndic.email }}</a></td>
                             <td>
                                 {% if super_syndic.license %}
                                 {{ super_syndic.license.statut }}
@@ -96,7 +96,7 @@
                             </td>
                             <!-- Add Delete Button -->
                             <td>
-                               <!--<form method="post" action="{% url 'delete-super-syndic' syndic.id }" style="display:inline;">-->
+                               <form method="post" action="{% url 'delete-super-syndic' super_syndic.id }" style="display:inline;">
                                     {% csrf_token %}
                                     <!--<button type="submit" class="btn btn-danger btn-sm"
                                             onclick="return confirm('Are you sure you want to delete this syndic?');">
@@ -104,7 +104,7 @@
                                         </button>-->
                                     <button type="submit" rel="tooltip" title="Supprimer"
                                         class="btn btn-danger btn-link btn-sm"
-                                        onclick="return confirm('Êtes-vous sûre de vouloire supprimer syndic?');">
+                                        onclick="return confirm('Êtes-vous sûre de vouloire supprimer super syndic?');">
                                         <i class="material-icons">close</i>
                                     </button>
                                 </form>

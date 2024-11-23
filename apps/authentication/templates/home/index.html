@@ -7,11 +7,14 @@
 
 {% block content %}
 
-    {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+    {% if user.role == 'SuperSyndic' %}
     <div class="container text-center mb-5">
-      <a href="{% url 'login-super-syndic' super_syndic.id %}" class="btn btn-success btn-sm">
-        SE connecter à Super User
-      </a>
+      <span class="nav-item {% if 'dashboard_superadmin' in segment %} active {% endif %}">
+        <a class="nav-link a_link" href="{% url 'login-super-syndic' super_syndic.id %}">
+          <i class="material-icons">person</i>
+          <p>Dashboard SuperSyndic</p>
+        </a>
+      </span>
     </div>
     {% endif %}
     

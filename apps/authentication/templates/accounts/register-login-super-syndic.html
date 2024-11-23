@@ -28,7 +28,7 @@
             <div class="col-md-6">
                 <div class="card shadow border-success">
                     <div class="card-header bg-success text-white text-center">
-                        <h5>Super User Login</h5>
+                        <h5>Super Syndic Login</h5>
                     </div>
                     <div class="card-body">
                         <p class="text-muted">Access your account dashboard below.</p>
@@ -43,14 +43,9 @@
                 </div>
             </div>
         </div>
-        <div class="text-center mt-4">
-            {% if user.role != 'SuperSyndic' %}
-            <p>Haven't signed up yet?</p>
-            <a href="{% url 'register-super-syndic' super_syndic.id %}" 
-            class="btn btn--link btn-sm">
-                Sign Up
-            </a>
-            {% endif %}
+        <div class="text-center">
+            <a href="{% url 'login' %}" class="btn btn-sm btn-secondary"
+                onclick="window.history.back(); return false;">Annuler</a>
         </div>
         {% else %}
         <div class="row justify-content-center">
@@ -94,6 +89,10 @@
                         Login
                     </a>
                     {% endif %}
+                    <div>
+                        <a href="{% url 'login' %}" class="btn btn-sm btn-secondary"
+                            onclick="window.history.back(); return false;">Annuler</a>
+                    </div>
                 </div>
             </div>
         </div>
