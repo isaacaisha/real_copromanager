@@ -7,10 +7,6 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
-{% block favicon %}
-<link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon3.ico' %}">
-{% endblock %}
-
 {% block title %}
 - {{ titlePage|default:"Super User Template" }}
 {% endblock %}
@@ -71,15 +67,6 @@
                             </div>
                             
                         </form>
-                        <!--<form method="post">
-                            {% csrf_token %}
-                            {{ super_syndic_form.as_p }}
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-sm">
-                                    Register
-                                </button>
-                            </div>
-                        </form>-->
                     </div>
                 </div>
                 <div class="text-center mt-4">
@@ -99,4 +86,5 @@
         {% endif %}
     </div>
 </main>
+
 {% endblock %}

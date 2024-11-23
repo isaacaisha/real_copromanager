@@ -8,10 +8,6 @@
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
-{% block favicon %}
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon5.ico' %}">
-{% endblock %}
-
 {% block content %}
     <div class="d-flex justify-content-center mb-3">
         <a href="{% url 'customize-license' license.id %}" class="btn btn-warning btn-sm pull-left">
