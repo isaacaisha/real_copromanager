@@ -42,8 +42,8 @@ class License(models.Model):
     syndic = models.ForeignKey(
         'Syndic', on_delete=models.CASCADE, related_name='syndic_licenses', null=True, blank=True
     )
-    super_syndic = models.ForeignKey(
-        'SuperSyndic', on_delete=models.CASCADE, related_name='super_syndic_licenses', null=True, blank=True
+    supersyndic = models.ForeignKey(
+        'SuperSyndic', on_delete=models.CASCADE, related_name='supersyndic_licenses', null=True, blank=True
     )
     license_base = models.ForeignKey(
         LicenseBase, on_delete=models.SET_NULL, null=True, blank=True, related_name='licenses'
@@ -61,7 +61,7 @@ class License(models.Model):
         return []
 
     def __str__(self):
-        role = self.syndic or self.super_syndic
+        role = self.syndic or self.supersyndic
         return f"License for {role.nom} (from {self.date_debut} to {self.date_fin})"
 
 
@@ -69,7 +69,7 @@ class SuperSyndic(models.Model):
     nom = models.CharField(max_length=255)
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE,
-                                related_name='super_syndic_profile',
+                                related_name='supersyndic_profile',
                                 null=True, blank=True)
     email = models.EmailField()
 

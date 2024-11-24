@@ -24,7 +24,7 @@
         </div>
         {% endif %}
 
-        {% if super_syndic %}
+        {% if supersyndic %}
         <!-- Syndic Information -->
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card">
@@ -32,13 +32,13 @@
                     <div class="card-icon">
                         <i class="material-icons">person</i>
                     </div>
-                    <h3 class="card-title">{{ super_syndic.user.nom }}</h3>
-                    <p class="card-category">Super Syndic id: {{ super_syndic.id }}</p>
+                    <h3 class="card-title">{{ supersyndic.user.nom }}</h3>
+                    <p class="card-category">Super Syndic id: {{ supersyndic.id }}</p>
                 </div>
                 <div class="card-body">
-                    <strong>Super Syndic Prenom:</strong> {{ super_syndic.user.prenom }}<br>
-                    <strong>Super Syndic Email:</strong> <a href="#" class="a_link">{{ super_syndic.user.email }}</a><br>
-                    <strong>Super Syndic Role:</strong> {{ super_syndic.user.role }}<br>
+                    <strong>Super Syndic Prenom:</strong> {{ supersyndic.user.prenom }}<br>
+                    <strong>Super Syndic Email:</strong> <a href="#" class="a_link">{{ supersyndic.user.email }}</a><br>
+                    <strong>Super Syndic Role:</strong> {{ supersyndic.user.role }}<br>
                     <strong>Created at:</strong> {{ license.date_debut|date:"d/m/Y" }}<br>
                     <strong>Updated at:</strong> {{ license.date_fin|date:"d/m/Y" }}<br>
                 </div>
@@ -55,7 +55,7 @@
                         <i class="material-icons">assignment</i>
                     </div>
                     <p class="card-title">License Information</p>
-                    <h3 class="card-category">{{ syndic.id }}{{ super_syndic.id }}</h3>
+                    <h3 class="card-category">{{ syndic.id }}{{ supersyndic.id }}</h3>
                 </div>
                 <div class="card-body">
                     <strong>Date de début:</strong> 

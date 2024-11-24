@@ -44,8 +44,8 @@ def redirect_based_on_role(request, user):
         return redirect('dashboard-prestataire', prestataire_id=prestataire.id)
 
     elif user.role == 'SuperSyndic':
-        super_syndic, created = SuperSyndic.objects.get_or_create(user=user)
-        return redirect('dashboard-super-syndic', super_syndic_id=super_syndic.id)
+        supersyndic, created = SuperSyndic.objects.get_or_create(user=user)
+        return redirect('dashboard-supersyndic', supersyndic_id=supersyndic.id)
 
 
     # For other roles, simply redirect to the appropriate dashboard
@@ -75,6 +75,28 @@ def register_user(request):
                 msg = 'Superadmin-User created - please <a href="/login">login</a>.'
                 success = True
                 return redirect('login')
+
+            elif user.role == 'SuperSyndic':
+                # Create a Syndic and associate the license
+                supersyndic = SuperSyndic.objects.create(user=user, nom=user.nom, email=user.email)
+                # Create a License instance linked to the newly created Syndic
+                license_form = LicenseForm(request.POST)
+                if license_form.is_valid():
+                    license = license_form.save(commit=False)
+                    license.supersyndic = supersyndic  # Link license to the Syndic
+                    license.save()
+
+                    # Assign the license to the syndic and save
+                    supersyndic.license = license
+                    supersyndic.save()
+                    
+                    messages.success(request, 'SuperSyndic created successfully.')
+                    return redirect('dashboard-superadmin')
+                else:
+                    print("License form is not valid:", license_form.errors)
+                    messages.error(request, 'License form is not valid.')
+                    supersyndic.delete()  # Rollback syndic creation if license creation fails
+                    return redirect('register')
 
             elif user.role == 'Syndic':
                 # Create a Syndic and associate the license
@@ -223,11 +245,11 @@ def delete_syndic(request, syndic_id):
 
 # Delete SuperSyndic View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
-def delete_super_syndic(request, super_syndic_id):
-    super_syndic = get_object_or_404(CustomUser, id=super_syndic_id)
-    super_syndic.delete()
-    messages.success(request, f'SuperSyndic {super_syndic.nom} has been deleted.')
-    return redirect('/gestion-super-syndic')
+def delete_supersyndic(request, supersyndic_id):
+    supersyndic = get_object_or_404(CustomUser, id=supersyndic_id)
+    supersyndic.delete()
+    messages.success(request, f'SuperSyndic {supersyndic.nom} has been deleted.')
+    return redirect('/gestion-supersyndic')
 
 # Delete Coproprietaire View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
@@ -250,37 +272,37 @@ def delete_prestataire(request, prestataire_id):
 
 # View for the register Super Syndic, requiring 2FAfrom django.db import transaction
 @login_required
-def register_super_syndic(request, syndic_id):
+def register_supersyndic(request, syndic_id):
     titlePage = 'Register Super Syndic'
-    super_syndic_form = SuperSyndicForm(request.POST or None)
+    supersyndic_form = SuperSyndicForm(request.POST or None)
     syndic = get_object_or_404(Syndic, id=syndic_id)
-    super_syndic = None
+    supersyndic = None
     #super_syndic, created = SuperSyndic.objects.get_or_create(user=request.user)
     #super_syndic = Syndic.objects.create(user=user, nom=user.nom, email=user.email)
 
     if request.method == "POST":
-        super_syndic_form = SuperSyndicForm(request.POST, instance=syndic.user)  # Load the existing user instance
-        if super_syndic_form.is_valid():
+        supersyndic_form = SuperSyndicForm(request.POST, instance=syndic.user)  # Load the existing user instance
+        if supersyndic_form.is_valid():
             try:
                 with transaction.atomic():
                     # Update the user's role to SuperSyndic
-                    user = super_syndic_form.save(commit=False)
+                    user = supersyndic_form.save(commit=False)
                     user.role = 'SuperSyndic'
                     user.save()
 
                     # Create or get a SuperSyndic instance for this user
-                    super_syndic, created = SuperSyndic.objects.get_or_create(user=user)
+                    supersyndic, created = SuperSyndic.objects.get_or_create(user=user)
 
                     # Handle the license transfer
                     # Assuming that a syndic can have multiple licenses, we fetch the latest one
                     license = License.objects.filter(syndic=syndic).order_by('-date_debut').first()
                     if license:
                         # Assign the license to the SuperSyndic (if needed)
-                        license.super_syndic = super_syndic
+                        license.supersyndic = supersyndic
                         license.syndic = None  # Remove the license from the old syndic
                         license.save()
 
-                    messages.success(request, 'User successfully upgraded to Super Syndic!')
+                    messages.success(request, 'Please fill the form below for upgrade to Super Syndic!')
                     return redirect('two_factor:setup')  # Or your desired next step
 
             except Exception as e:
@@ -289,33 +311,33 @@ def register_super_syndic(request, syndic_id):
             messages.error(request, 'Form is not valid.')
     else:
         # Pre-fill the form with the current user's data
-        super_syndic_form = SuperSyndicForm(instance=syndic.user)
+        supersyndic_form = SuperSyndicForm(instance=syndic.user)
 
     context = {
         'titlePage': titlePage,
         'syndic': syndic,
-        'super_syndic': super_syndic,
-        'super_syndic_form': super_syndic_form,
+        'supersyndic': supersyndic,
+        'supersyndic_form': supersyndic_form,
         'date': timezone.now().strftime("%a %d %B %Y"),
         'message': 'Upgrade your profile to Super Syndic!',
     }
-    return render(request, 'accounts/register-login-super-syndic.html', context)
+    return render(request, 'accounts/register-login-supersyndic.html', context)
 
 
 # View for the login VIP page, requiring 2FA
 @login_required
-def login_super_syndic(request, super_syndic_id):
+def login_supersyndic(request, supersyndic_id):
     titlePage = 'Login'
 
     try:
-        super_syndic = get_object_or_404(CustomUser, id=super_syndic_id)
+        supersyndic = get_object_or_404(CustomUser, id=supersyndic_id)
     except SuperSyndic.DoesNotExist:
-        super_syndic = None
+        supersyndic = None
 
     context = {
         'titlePage': titlePage,
-        'super_syndic': super_syndic,
+        'supersyndic': supersyndic,
         'date': timezone.now().strftime("%a %d %B %Y"),
         'message': 'Welcome to the VIP User Page!',
     }
-    return render(request, 'accounts/register-login-super-syndic.html', context)
+    return render(request, 'accounts/register-login-supersyndic.html', context)

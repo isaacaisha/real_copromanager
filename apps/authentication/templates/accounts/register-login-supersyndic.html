@@ -30,7 +30,7 @@
                         <p class="text-muted">Access your account dashboard below.</p>
                         <div class="text-center">
                             {% if user.role == 'SuperSyndic' %}
-                            <a href="{% url 'dashboard-super-syndic' super_syndic.id %}" class="btn btn-success btn-sm">
+                            <a href="{% url 'dashboard-supersyndic' supersyndic.id %}" class="btn btn-success btn-sm">
                                 Login
                             </a>
                             {% endif %}
@@ -53,7 +53,7 @@
                     <div class="card-body">
                         <form method="POST" action="">
                             {% csrf_token %}
-                            {% for field in super_syndic_form %}
+                            {% for field in supersyndic_form %}
                             <div class="mb-3">
                                 <label class="form-label">{{ field.label }}</label>
                                 <span class="text-primary">{{ field }}</span>
@@ -72,7 +72,7 @@
                 <div class="text-center mt-4">
                     {% if user.role == 'SuperSyndic' %}
                     <p>Already signed up?</p>
-                    <a href="{% url 'login-super-syndic' syndic.id %}" class="btn btn--link btn-sm">
+                    <a href="{% url 'login-supersyndic' syndic.id %}" class="btn btn--link btn-sm">
                         Login
                     </a>
                     {% endif %}

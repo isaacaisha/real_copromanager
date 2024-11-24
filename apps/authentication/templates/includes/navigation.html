@@ -7,8 +7,10 @@
             {% if titlePage %}
             <a class="navbar-brand titlePage" href="#">
               {{ titlePage }}
-              {% if license and license.syndic and license.syndic.user %}
+              {% if syndic %}
               {{ syndic.user.nom }}
+              {% elif supersyndic %}
+              <!--{{ supersyndic.user.nom }}-->
               {% elif coproprietaire %}
               {{ coproprietaire.user.nom }}
               {% elif prestataire %}

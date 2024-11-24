@@ -34,7 +34,7 @@
                                 <i class="material-icons">group</i>
                             </div>
                             <p class="card-category">Syndics</p>
-                            <h3 class="card-title">{{ super_syndics.count }}</h3>
+                            <h3 class="card-title">{{ supersyndics.count }}</h3>
                         </div>
                         <div class="card-footer">
                             <div class="stats">
@@ -53,27 +53,27 @@
                             <th>Email</th>
                             <th>Licence</th>
                             <th>Configurer</th>
-                            <th>Syndic infos</th>
+                            <th>Super Syndic infos</th>
                             <th>Supprimer</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for super_syndic in super_syndics %}
+                        {% for supersyndic in supersyndics %}
                         <tr>
-                            <td>{{ super_syndic.nom }}</td>
-                            <td><a href="#" class="a_link">{{ super_syndic.email }}</a></td>
+                            <td>{{ supersyndic.nom }}</td>
+                            <td><a href="#" class="a_link">{{ supersyndic.email }}</a></td>
                             <td>
-                                {% if super_syndic.license %}
-                                {{ super_syndic.license.statut }}
-                                ({{ super_syndic.license.date_debut|date:"D, d M Y" }} -
-                                {{ super_syndic.license.date_fin|date:"D, d M Y" }})
+                                {% if supersyndic.license %}
+                                {{ supersyndic.license.statut }}
+                                ({{ supersyndic.license.date_debut|date:"D, d M Y" }} -
+                                {{ supersyndic.license.date_fin|date:"D, d M Y" }})
                                 {% else %}
                                 Pas de license
                                 {% endif %}
                             </td>
                             <td>
-                                {% if super_syndic.license %}
-                                <a href="{% url 'customize-license' super_syndic.license.id %}" class="a_link">
+                                {% if supersyndic.license %}
+                                <a href="{% url 'customize-license' supersyndic.license.id %}" class="a_link">
                                     <button type="su" rel="tooltip" title="Configurer"
                                         class="btn btn-primary btn-link btn-sm">
                                         <i class="material-icons">edit</i>
@@ -84,15 +84,15 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if super_syndic.license %}
-                                <a href="{% url 'dashboard-super-syndic' super_syndic.license.id %}" class="btn btn-sm">Voir Détails</a>
+                                {% if supersyndic.license %}
+                                <a href="{% url 'dashboard-supersyndic' supersyndic.license.id %}" class="btn btn-sm">Voir Détails</a>
                                 {% else %}
                                 <p>No license Détails for this syndic.</p>
                                 {% endif %}
                             </td>
                             <!-- Add Delete Button -->
                             <td>
-                               <form method="post" action="{% url 'delete-super-syndic' super_syndic.id }" style="display:inline;">
+                               <form method="post" action="{% url 'delete-supersyndic' supersyndic.id }" style="display:inline;">
                                     {% csrf_token %}
                                     <!--<button type="submit" class="btn btn-danger btn-sm"
                                             onclick="return confirm('Are you sure you want to delete this syndic?');">

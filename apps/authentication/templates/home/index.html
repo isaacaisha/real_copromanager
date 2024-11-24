@@ -9,8 +9,8 @@
 
     {% if user.role == 'SuperSyndic' %}
     <div class="container text-center mb-5">
-      <span class="nav-item {% if 'dashboard_super_syndic' in segment %} active {% endif %}">
-        <a class="nav-link a_link" href="{% url 'login-super-syndic' super_syndic.id %}">
+      <span class="nav-item {% if 'dashboard_supersyndic' in segment %} active {% endif %}">
+        <a class="nav-link a_link" href="{% url 'login-supersyndic' supersyndic.id %}">
           <i class="material-icons">person</i>
           <p>Dashboard SuperSyndic</p>
         </a>
