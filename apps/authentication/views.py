@@ -307,13 +307,8 @@ def register_super_syndic(request, syndic_id):
 def login_super_syndic(request, super_syndic_id):
     titlePage = 'Login'
 
-    # Fetch the current logged-in user's syndic profile
-    #syndic = Syndic.objects.get(id=syndic_id)
-    #syndic = get_object_or_404(Syndic, id=syndic_id)
     try:
-        #super_syndic = SuperSyndic.objects.get(id=super_syndic_id)
-        #super_syndic = get_object_or_404(SuperSyndic, id=super_syndic_id)
-        super_syndic, created = SuperSyndic.objects.get_or_create(user=request.user)
+        super_syndic = get_object_or_404(CustomUser, id=super_syndic_id)
     except SuperSyndic.DoesNotExist:
         super_syndic = None
 
@@ -324,5 +319,3 @@ def login_super_syndic(request, super_syndic_id):
         'message': 'Welcome to the VIP User Page!',
     }
     return render(request, 'accounts/register-login-super-syndic.html', context)
-    
-    #return redirect('two_factor:login')

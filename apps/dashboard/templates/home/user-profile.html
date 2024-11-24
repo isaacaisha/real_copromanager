@@ -1,0 +1,71 @@
+<!-- templates/accounts/password_reset_email.html -->
+{% extends "layouts/base.html" %}
+{% load i18n %}
+
+{% load static %}
+
+{% block title %} Password Reset Email {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="container">
+        <h1>{{ titlePage }}</h1>
+        <p>Date: {{ date }}</p>
+        <h2>User Information</h2>
+        <ul>
+            <li><strong>Name:</strong> {{ user.nom }}</li>
+            <li><strong>Email:</strong> {{ user.email }}</li>
+            <li><strong>Role:</strong> {{ user.role }}</li>
+            <!-- Add any other user fields you want to display -->
+        </ul>
+
+        {% if related_data.syndic %}
+        <h2>Syndic Information</h2>
+        <ul>
+            <li><strong>ID:</strong> {{ related_data.syndic.id }}</li>
+            <li><strong>Building Count:</strong> {{ related_data.syndic.immeuble_set.count }}</li>
+            <!-- Add more syndic-related fields if needed -->
+        </ul>
+        <h3>Licenses</h3>
+        <ul>
+            {% for license in related_data.licenses %}
+            <li>
+                <strong>License ID:</strong> {{ license.id }} <br>
+                <strong>Start Date:</strong> {{ license.date_debut }} <br>
+                <strong>End Date:</strong> {{ license.date_fin }}
+            </li>
+            {% empty %}
+            <li>No licenses found for this syndic.</li>
+            {% endfor %}
+        </ul>
+        {% elif related_data.coproprietaire %}
+        <h2>Coproprietaire Information</h2>
+        <ul>
+            <li><strong>ID:</strong> {{ related_data.coproprietaire.id }}</li>
+            <!-- Add more coproprietaire-related fields if needed -->
+        </ul>
+        {% elif related_data.prestataire %}
+        <h2>Prestataire Information</h2>
+        <ul>
+            <li><strong>ID:</strong> {{ related_data.prestataire.id }}</li>
+            <!-- Add more prestataire-related fields if needed -->
+        </ul>
+        {% endif %}
+    </div>
+
+    <!-- Back Button login -->
+    <div class="text-center mt-3">
+        {% if user.is_authenticated and user.role == 'Superadmin' %}
+        <a href="{% url 'dashboard-superadmin' %}" class="btn btn-secondary btn-sm">Backoffice</a>
+        {% else %}
+        <a href="{% url 'home' %}" class="btn btn-secondary btn-sm">Retour à l'accueil</a>
+        {% endif %}
+    </div>
+
+{% endblock %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

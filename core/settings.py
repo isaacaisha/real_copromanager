@@ -130,6 +130,7 @@ INSTALLED_APPS = [
     
     'apps.authentication',
     'apps.home',  # Enable the inner home (home)
+    #'apps.dashboard',
 
     #'rest_framework',
     #'corsheaders',
@@ -160,7 +161,10 @@ TEMPLATE_DIR = os.path.join(CORE_DIR, "apps/templates")  # ROOT dir for template
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'apps/authentication/templates')],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'apps/authentication/templates'),
+            #os.path.join(BASE_DIR, 'apps/dashboard/templates'),
+            ],
         #'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {

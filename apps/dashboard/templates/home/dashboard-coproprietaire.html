@@ -1,0 +1,20 @@
+<!-- templates/home/dashboard_coproprietaire.html -->
+{% extends "layouts/base.html" %}
+
+{% load static %}
+
+{% block title %} Copropriétaire Dashboard {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container">
+    {% include 'includes/users-datas.html' %}
+</div>
+
+{% endblock %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

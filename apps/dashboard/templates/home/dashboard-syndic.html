@@ -1,0 +1,28 @@
+<!-- templates/home/dashboard_syndic.html -->
+{% extends "layouts/base.html" %}
+
+{% load static %}
+
+{% block title %} Syndic Dashboard {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    {% if user.is_authenticated and user.role == 'Superadmin' %}
+    <div class="d-flex justify-content-center mb-3">
+        <a href="{% url 'customize-license' syndic.id %}" class="btn btn-warning btn-sm pull-left">
+            Modifier
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="container">
+        {% include 'includes/users-datas.html' %}
+    </div>
+
+{% endblock %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

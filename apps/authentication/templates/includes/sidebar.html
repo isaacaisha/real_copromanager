@@ -28,21 +28,23 @@
             </a>
           </li>
           {% endif %}
-          <!--{% if user.role == 'SuperSyndic' %}
+          {% if user.role == 'SuperSyndic' %}
           <li class="nav-item {% if 'dashboard_super_syndic' in segment %} active {% endif %}">
-            <a class="nav-link" href="/dashboard-super-syndic.html">
-            <a class="nav-link" href="{% url 'login-super-syndic' super_syndic.id }">
+            <!--<a class="nav-link" href="/dashboard-super-syndic.html">-->
+            <a class="nav-link" href="{% url 'dashboard-super-syndic' super_syndic_id=super_syndic.id }">
               <i class="material-icons">person</i>
               <p>Dashboard SuperSyndic</p>
             </a>
           </li>
-          {% endif %}-->
+          {% endif %}
           {% if user.role == 'Syndic' %}
           <li class="nav-item {% if 'dashboard_super_syndic' in segment %} active {% endif %}">
+            {% if not dont_show_syndic_btn %}
             <a class="nav-link" href="{% url 'register-super-syndic' syndic.id %}">
               <i class="material-icons">person</i>
               <p>Super Syndic Inscription</p>
             </a>
+            {% endif %}
           </li>
           {% endif %}
           {% if user.role == 'Syndic' %}
