@@ -38,7 +38,7 @@ class SignUpForm(UserCreationForm):
             }
         ))
     role = forms.ChoiceField(
-        choices=[('Superadmin', 'Superadmin'), ('SuperSyndic', 'SuperSyndic'), ('Syndic', 'Syndic'),
+        choices=[('Superadmin', 'Superadmin'), ('Syndic', 'Syndic'),
                  ('Coproprietaire', 'Coproprietaire'), ('Prestataire', 'Prestataire')],
         widget=forms.Select(
             attrs={

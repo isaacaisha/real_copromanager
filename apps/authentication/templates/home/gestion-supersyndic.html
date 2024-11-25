@@ -64,7 +64,7 @@
                             <td><a href="#" class="a_link">{{ supersyndic.email }}</a></td>
                             <td>
                                 {% if supersyndic.license %}
-                                {{ supersyndic.license.statut }}
+                                n°{{ supersyndic.license.id }}: 
                                 ({{ supersyndic.license.date_debut|date:"D, d M Y" }} -
                                 {{ supersyndic.license.date_fin|date:"D, d M Y" }})
                                 {% else %}
@@ -85,7 +85,7 @@
                             </td>
                             <td>
                                 {% if supersyndic.license %}
-                                <a href="{% url 'dashboard-supersyndic' supersyndic.license.id %}" class="btn btn-sm">Voir Détails</a>
+                                <a href="{% url 'dashboard-supersyndic' supersyndic.id %}" class="btn btn-sm">Voir Détails</a>
                                 {% else %}
                                 <p>No license Détails for this syndic.</p>
                                 {% endif %}
@@ -94,10 +94,6 @@
                             <td>
                                <form method="post" action="{% url 'delete-supersyndic' supersyndic.id }" style="display:inline;">
                                     {% csrf_token %}
-                                    <!--<button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete this syndic?');">
-                                            Delete
-                                        </button>-->
                                     <button type="submit" rel="tooltip" title="Supprimer"
                                         class="btn btn-danger btn-link btn-sm"
                                         onclick="return confirm('Êtes-vous sûre de vouloire supprimer super syndic?');">

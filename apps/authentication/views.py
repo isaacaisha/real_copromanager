@@ -28,7 +28,7 @@ def redirect_based_on_role(request, user):
         'Syndic': 'dashboard-syndic',
         'Coproprietaire': 'dashboard-coproprietaire',
         'Prestataire': 'dashboard-prestataire',
-        'SuperSyndic': 'SuperSyndic',
+        'SuperSyndic': 'dashboard-supersyndic',
     }
 
     if user.role == 'Syndic':
@@ -75,28 +75,6 @@ def register_user(request):
                 msg = 'Superadmin-User created - please <a href="/login">login</a>.'
                 success = True
                 return redirect('login')
-
-            elif user.role == 'SuperSyndic':
-                # Create a Syndic and associate the license
-                supersyndic = SuperSyndic.objects.create(user=user, nom=user.nom, email=user.email)
-                # Create a License instance linked to the newly created Syndic
-                license_form = LicenseForm(request.POST)
-                if license_form.is_valid():
-                    license = license_form.save(commit=False)
-                    license.supersyndic = supersyndic  # Link license to the Syndic
-                    license.save()
-
-                    # Assign the license to the syndic and save
-                    supersyndic.license = license
-                    supersyndic.save()
-                    
-                    messages.success(request, 'SuperSyndic created successfully.')
-                    return redirect('dashboard-superadmin')
-                else:
-                    print("License form is not valid:", license_form.errors)
-                    messages.error(request, 'License form is not valid.')
-                    supersyndic.delete()  # Rollback syndic creation if license creation fails
-                    return redirect('register')
 
             elif user.role == 'Syndic':
                 # Create a Syndic and associate the license
@@ -330,11 +308,13 @@ def login_supersyndic(request, supersyndic_id):
     titlePage = 'Login'
 
     try:
-        supersyndic = get_object_or_404(CustomUser, id=supersyndic_id)
+        supersyndic = get_object_or_404(SuperSyndic, id=supersyndic_id)
+        #supersyndic, created = SuperSyndic.objects.get_or_create(id=supersyndic_id)
     except SuperSyndic.DoesNotExist:
         supersyndic = None
 
     context = {
+        'dont_show_syndic_btn': True,
         'titlePage': titlePage,
         'supersyndic': supersyndic,
         'date': timezone.now().strftime("%a %d %B %Y"),

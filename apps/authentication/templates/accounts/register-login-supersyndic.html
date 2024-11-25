@@ -70,12 +70,6 @@
                     </div>
                 </div>
                 <div class="text-center mt-4">
-                    {% if user.role == 'SuperSyndic' %}
-                    <p>Already signed up?</p>
-                    <a href="{% url 'login-supersyndic' syndic.id %}" class="btn btn--link btn-sm">
-                        Login
-                    </a>
-                    {% endif %}
                     <div>
                         <a href="{% url 'login' %}" class="btn btn-sm btn-secondary"
                             onclick="window.history.back(); return false;">Annuler</a>

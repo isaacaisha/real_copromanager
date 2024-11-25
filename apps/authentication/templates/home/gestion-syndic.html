@@ -62,7 +62,7 @@
                             <td><a href="#" class="a_link">{{ syndic.email }}</a></td>
                             <td>
                                 {% if syndic.license %}
-                                {{ syndic.license.statut }}
+                                n°{{ syndic.license.id }}: 
                                 ({{ syndic.license.date_debut|date:"D, d M Y" }} -
                                 {{ syndic.license.date_fin|date:"D, d M Y" }})
                                 {% else %}
