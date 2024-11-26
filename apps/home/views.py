@@ -11,14 +11,12 @@ from django.contrib import messages
 from django.template import loader
 from django.urls import reverse
 
-from django_otp.decorators import otp_required
-from django_otp import user_has_device
-from functools import wraps
+from .utils import get_user_context, otp_required_for_supersyndic  # Import the helper function
 
 from apps.authentication.forms import LicenseForm, SuperSyndicForm
 from apps.authentication.models import CustomUser
 from apps.home.models import (
-    License, Superadmin, SuperSyndic,
+    License, SuperSyndic,
     Syndic, Coproprietaire, Prestataire, Immeuble
     )
 
@@ -27,112 +25,50 @@ from django.db.models import Q  # Import Q for complex queries
 from django.utils import timezone
 
 
-@login_required
-@user_passes_test(lambda u: u.is_active and 
-                  (u.role == 'Superadmin' 
-                   or u.role == 'Syndic' 
-                   or u.role == 'SuperSyndic'))
-def user_search(request):
-    query = request.GET.get('q', '').strip()  # Get the search query from the GET request
-    print(f"Search Query: {query}")  # Debug statement
-    
-    # Filter by 'nom' or 'email', case-insensitive
-    users = CustomUser.objects.filter(
-        Q(nom__icontains=query) | Q(email__icontains=query)
-    )
-
-    context = {
-        'dont_show_syndic_btn': True,
-        'users': users,
-        'query': query,
-        'titlePage': f'Résultat pour: "{query}"',
+@login_required(login_url="/login/")
+def pages(request):
+    context = get_user_context(request.user)
+    context.update({
+        'titlePage': 'Bienvenue',
         'date': timezone.now().strftime("%a %d %B %Y")
-    }
+        })
     
-    html_template = loader.get_template('home/search-results.html')
-    return HttpResponse(html_template.render(context, request))
+    # All resource paths end in .html.
+    # Pick out the html file name from the url. And load that template.
+    # Determine which template to load
+    load_template = request.path.split('/')[-1]
 
+    if load_template == 'admin':
+        return HttpResponseRedirect(reverse('admin:index'))
 
-@login_required
-def user_profile(request, user_id):
-    user = get_object_or_404(CustomUser, id=user_id)
-    
-    # Get related data based on user role
-    related_data = {}
-    if user.role == 'SuperSyndic':
-        related_data['supersyndic'] = get_object_or_404(SuperSyndic, user=user)
-        related_data['supersyndic_licenses'] = License.objects.filter(supersyndic=related_data['supersyndic'])
-    elif user.role == 'Syndic':
-        related_data['syndic'] = get_object_or_404(Syndic, user=user)
-        related_data['syndic_licenses'] = License.objects.filter(syndic=related_data['syndic'])
-    elif user.role == 'Coproprietaire':
-        related_data['coproprietaire'] = get_object_or_404(Coproprietaire, user=user)
-    elif user.role == 'Prestataire':
-        related_data['prestataire'] = get_object_or_404(Prestataire, user=user)
+    context['segment'] = load_template
 
-    context = {
-        'user': user,
-        'related_data': related_data,
-        'titlePage': f'Profile of {user.nom}',
-        'date': timezone.now().strftime("%a %d %B %Y"),
-    }
-
-    html_template = loader.get_template('home/user-profile.html')
-    return HttpResponse(html_template.render(context, request))
+    try:
+        html_template = loader.get_template('home/' + load_template)
+        return HttpResponse(html_template.render(context, request))
+    except template.TemplateDoesNotExist:
+        html_template = loader.get_template('home/page-404.html')
+        return HttpResponse(html_template.render(context, request))
+    except Exception as e:
+        html_template = loader.get_template('home/page-500.html')
+        return HttpResponse(html_template.render(context, request))
 
 
 @login_required(login_url="/login/")
 def index(request):
-    context = {
+    context = get_user_context(request.user)
+    context.update({
         'segment': 'index',
         'titlePage': 'Bienvenue',
         'date': timezone.now().strftime("%a %d %B %Y"),
-        }
-    
-    try:
-        superadmin = Superadmin.objects.get(user=request.user)
-        context['superadmin'] = superadmin
-    except Superadmin.DoesNotExist:
-        context['superadmin'] = None
-
-    try:
-        supersyndic = SuperSyndic.objects.get(user=request.user)
-        context['supersyndic'] = supersyndic
-        context['supersyndic_id'] = supersyndic.id  
-    except SuperSyndic.DoesNotExist:
-        context['supersyndic'] = None
-        context['supersyndic_id'] = None
-        
-    try:
-        syndic = Syndic.objects.get(user=request.user)
-        context['syndic'] = syndic
-        context['syndic_id'] = syndic.id
-    except Syndic.DoesNotExist:
-        context['syndic'] = None
-        context['syndic_id'] = None
-
-    try:
-        coproprietaire = Coproprietaire.objects.get(user=request.user)
-        context['coproprietaire'] = coproprietaire
-        context['coproprietaire_id'] = coproprietaire.id 
-    except Coproprietaire.DoesNotExist:
-        context['coproprietaire'] = None
-        context['coproprietaire_id'] = None
-
-    try:
-        prestataire = Prestataire.objects.get(user=request.user)
-        context['prestataire'] = prestataire
-        context['prestataire_id'] = prestataire.id
-    except Prestataire.DoesNotExist:
-        context['prestataire'] = None
-        context['prestatairee_id'] = None
+        })
 
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 
 
 # Superadmin dashboard
-@login_required
+@login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def dashboard_superadmin(request):
     # Retrieve all Super Syndics, Syndics, and other roles
@@ -186,7 +122,7 @@ def dashboard_superadmin(request):
     return HttpResponse(html_template.render(context, request))
 
 
-@login_required
+@login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def gestion_supersyndic(request):
     """
@@ -219,6 +155,7 @@ def gestion_supersyndic(request):
     return HttpResponse(html_template.render(context, request))
 
 
+@login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def gestion_syndic(request):
     form = SuperSyndicForm()
@@ -247,6 +184,7 @@ def gestion_syndic(request):
     return HttpResponse(html_template.render(context, request))
 
 
+@login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def gestion_coproprietaire(request):
     coproprietaires = CustomUser.objects.filter(role='Coproprietaire')
@@ -262,6 +200,7 @@ def gestion_coproprietaire(request):
     return HttpResponse(html_template.render(context, request))
 
 
+@login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def gestion_prestataire(request):
     prestataires = CustomUser.objects.filter(role='Prestataire')
@@ -278,7 +217,7 @@ def gestion_prestataire(request):
 
 
 # View for license customization
-@login_required
+@login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def customize_license(request, license_id):
     license = get_object_or_404(License, id=license_id)
@@ -305,7 +244,7 @@ def customize_license(request, license_id):
 
 
 # View to display license details
-@login_required
+@login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def license_detail(request, license_id):
     license = get_object_or_404(License, id=license_id)
@@ -330,22 +269,8 @@ def license_detail(request, license_id):
     html_template = loader.get_template('home/license-detail.html')
     return HttpResponse(html_template.render(context, request))
 
-
-def otp_required_for_supersyndic(view_func):
-    """
-    Custom decorator to apply @otp_required only for users with the 'SuperSyndic' role.
-    """
-    @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
-        if request.user.role == 'SuperSyndic':
-            if not user_has_device(request.user):
-                return HttpResponse("OTP device not found for this user.", status=403)
-            return otp_required(view_func)(request, *args, **kwargs)
-        return view_func(request, *args, **kwargs)
-    return _wrapped_view
-
 # View for the Super User page, requiring 2FA status
-@login_required
+@login_required(login_url="/login/")
 @otp_required_for_supersyndic
 @user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role == 'SuperSyndic'))
 def dashboard_supersyndic(request, supersyndic_id):
@@ -398,7 +323,7 @@ def dashboard_supersyndic(request, supersyndic_id):
 
 
 # Syndic dashboard
-@login_required
+@login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role == 'Syndic'))
 def dashboard_syndic(request, syndic_id):
     try:
@@ -448,7 +373,7 @@ def dashboard_syndic(request, syndic_id):
         return HttpResponse(html_template.render(context, request))
 
 
-@login_required
+@login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role == 'Coproprietaire'))
 def dashboard_coproprietaire(request, coproprietaire_id):
     """
@@ -491,7 +416,7 @@ def dashboard_coproprietaire(request, coproprietaire_id):
     return HttpResponse(html_template.render(context, request))
 
 
-@login_required
+@login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and( u.role == 'Superadmin' or u.role == 'Prestataire'))
 def dashboard_prestataire(request, prestataire_id):
     """
@@ -536,61 +461,53 @@ def dashboard_prestataire(request, prestataire_id):
 
 
 @login_required(login_url="/login/")
-def pages(request):
-    context = {'date': timezone.now().strftime("%a %d %B %Y")}
-    # All resource paths end in .html.
-    # Pick out the html file name from the url. And load that template.
-    load_template = request.path.split('/')[-1]
-
-    if load_template == 'admin':
-        return HttpResponseRedirect(reverse('admin:index'))
-
-    context['segment'] = load_template
+@user_passes_test(lambda u: u.is_active and 
+                  (u.role == 'Superadmin' 
+                   or u.role == 'Syndic' 
+                   or u.role == 'SuperSyndic'))
+def user_search(request):
+    query = request.GET.get('q', '').strip()  # Get the search query from the GET request
+    print(f"Search Query: {query}")  # Debug statement
     
-    #try:
-    #    superadmin = Superadmin.objects.get(user=request.user)
-    #    context['superadmin'] = superadmin
-    #except Superadmin.DoesNotExist:
-    #    context['superadmin'] = None
-#
-    #try:
-    #    supersyndic = SuperSyndic.objects.get(user=request.user)
-    #    context['supersyndic'] = supersyndic
-    #    context['supersyndic_id'] = supersyndic.id
-    #except SuperSyndic.DoesNotExist:
-    #    context['supersyndic'] = None
-    #    context['supersyndic_id'] = None
-#
-    #try:
-    #    syndic = Syndic.objects.get(user=request.user)
-    #    context['syndic'] = syndic
-    #    context['syndic_id'] = syndic.id
-    #except Syndic.DoesNotExist:
-    #    context['syndic'] = None
-    #    context['syndic_id'] = None
-#
-    #try:
-    #    coproprietaire = Coproprietaire.objects.get(user=request.user)
-    #    context['coproprietaire'] = coproprietaire
-    #    context['coproprietaire_id'] = coproprietaire.id
-    #except Coproprietaire.DoesNotExist:
-    #    context['coproprietaire'] = None
-    #    context['coproprietaire_id'] = None
-#
-    #try:
-    #    prestataire = Prestataire.objects.get(user=request.user)
-    #    context['prestataire'] = prestataire
-    #    context['prestataire_id'] = prestataire.id
-    #except Prestataire.DoesNotExist:
-    #    context['prestataire'] = None
-    #    context['prestatairee_id'] = None
+    # Filter by 'nom' or 'email', case-insensitive
+    users = CustomUser.objects.filter(
+        Q(nom__icontains=query) | Q(email__icontains=query)
+    )
 
-    try:
-        html_template = loader.get_template('home/' + load_template)
-        return HttpResponse(html_template.render(context, request))
-    except template.TemplateDoesNotExist:
-        html_template = loader.get_template('home/page-404.html')
-        return HttpResponse(html_template.render(context, request))
-    except Exception as e:
-        html_template = loader.get_template('home/page-500.html')
-        return HttpResponse(html_template.render(context, request))
+    context = {
+        'users': users,
+        'query': query,
+        'titlePage': f'Résultat pour: "{query}"',
+        'date': timezone.now().strftime("%a %d %B %Y")
+    }
+    
+    html_template = loader.get_template('home/search-results.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+def user_profile(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    
+    # Get related data based on user role
+    related_data = {}
+    if user.role == 'SuperSyndic':
+        related_data['supersyndic'] = get_object_or_404(SuperSyndic, user=user)
+        related_data['supersyndic_licenses'] = License.objects.filter(supersyndic=related_data['supersyndic'])
+    elif user.role == 'Syndic':
+        related_data['syndic'] = get_object_or_404(Syndic, user=user)
+        related_data['syndic_licenses'] = License.objects.filter(syndic=related_data['syndic'])
+    elif user.role == 'Coproprietaire':
+        related_data['coproprietaire'] = get_object_or_404(Coproprietaire, user=user)
+    elif user.role == 'Prestataire':
+        related_data['prestataire'] = get_object_or_404(Prestataire, user=user)
+
+    context = {
+        'user': user,
+        'related_data': related_data,
+        'titlePage': f'Profile of {user.nom}',
+        'date': timezone.now().strftime("%a %d %B %Y"),
+    }
+
+    html_template = loader.get_template('home/user-profile.html')
+    return HttpResponse(html_template.render(context, request))

@@ -64,7 +64,7 @@ CORS_ALLOW_CREDENTIALS = True  # Allow cookies and HTTP authentication
 # Login URL for authentication redirects
 LOGIN_URL = 'two_factor:login'
 #LOGIN_REDIRECT_URL = reverse_lazy('redirect-based-on-role')  # Map to the role redirection logic
-LOGIN_REDIRECT_URL = 'dashboard-super-syndic/<int:super_syndic_id>/'
+LOGIN_REDIRECT_URL = 'dashboard-supersyndic/<int:supersyndic_id>/'
 LOGOUT_REDIRECT_URL = 'home'
 
 # Optional: Customize 2FA settings

@@ -224,10 +224,22 @@ def delete_syndic(request, syndic_id):
 # Delete SuperSyndic View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def delete_supersyndic(request, supersyndic_id):
-    supersyndic = get_object_or_404(CustomUser, id=supersyndic_id)
+    """
+    View to delete a SuperSyndic and their associated user.
+    """
+    supersyndic = get_object_or_404(SuperSyndic, id=supersyndic_id)
+    user = supersyndic.user  # Get the associated CustomUser
+
+    # Delete the SuperSyndic and associated licenses
+    License.objects.filter(supersyndic=supersyndic).delete()
     supersyndic.delete()
-    messages.success(request, f'SuperSyndic {supersyndic.nom} has been deleted.')
-    return redirect('/gestion-supersyndic')
+
+    # Delete the user (optional, depending on the logic)
+    if user:
+        user.delete()
+
+    messages.success(request, f"SuperSyndic {supersyndic.nom} and their data have been deleted.")
+    return redirect('gestion_supersyndic')
 
 # Delete Coproprietaire View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')

@@ -40,7 +40,7 @@
           {% endif %}
           {% if user.role == 'Syndic' %}
           <li class="nav-item {% if 'dashboard_supersyndic' in segment %} active {% endif %}">
-            {% if not dont_show_syndic_btn %}
+            {% if syndic.id %}
             <a class="nav-link" href="{% url 'register-supersyndic' syndic.id %}">
               <i class="material-icons">person</i>
               <p>Super Syndic Inscription</p>
@@ -50,7 +50,7 @@
           {% endif %}
           {% if user.role == 'Syndic' %}
           <li class="nav-item {% if 'dashboard_syndic' in segment %} active {% endif %}">
-            {% if not dont_show_syndic_btn %}
+            {% if syndic.id %}
             <a class="nav-link" href="{% url 'dashboard-syndic' syndic_id=syndic.id %}">
               <i class="material-icons">person</i>
               <p>Dashboard Syndic</p>

@@ -9,7 +9,7 @@ from .views import (
     ResetPasswordView, CustomPasswordResetConfirmView, CustomPasswordResetCompleteView,
     register_supersyndic, login_supersyndic,
     register_user, login_view, logout_view,
-    delete_syndic, delete_supersyndic, delete_coproprietaire, delete_prestataire
+    delete_supersyndic, delete_syndic, delete_coproprietaire, delete_prestataire
     )
 
 from apps.home.views import (
@@ -53,7 +53,7 @@ urlpatterns = [
     path('dashboard-coproprietaire/<int:coproprietaire_id>/', dashboard_coproprietaire, name='dashboard-coproprietaire'),
     path('dashboard-prestataire/<int:prestataire_id>/', dashboard_prestataire, name='dashboard-prestataire'),
     
-    # Delete operations for syndic, coproprietaire, prestataire
+    # Delete operations for syndic, supersyndic, coproprietaire, prestataire
     path('delete-syndic/<int:syndic_id>/', delete_syndic, name='delete-syndic'),
     path('delete-supersyndic/<int:supersyndic_id>/', delete_supersyndic, name='delete-supersyndic'),
     path('delete/coproprietaire/<int:coproprietaire_id>/', delete_coproprietaire, name='delete-coproprietaire'),

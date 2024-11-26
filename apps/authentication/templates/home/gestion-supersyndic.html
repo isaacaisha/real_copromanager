@@ -44,7 +44,7 @@
                     </div>
                 </div>
             </div>
-            <h3>Details des Syndics</h3>
+            <h3>Details des Super Syndics</h3>
             <div class="table-responsive mb-5">
                 <table class="table table-striped">
                     <thead class="thead-dark">
@@ -85,7 +85,9 @@
                             </td>
                             <td>
                                 {% if supersyndic.license %}
-                                <a href="{% url 'dashboard-supersyndic' supersyndic.id %}" class="btn btn-sm">Voir Détails</a>
+                                <a href="{% url 'dashboard-supersyndic' supersyndic.id %}" class="btn btn-sm">
+                                    n°{{ supersyndic.id }}: Voir Détails
+                                </a>
                                 {% else %}
                                 <p>No license Détails for this syndic.</p>
                                 {% endif %}

@@ -83,7 +83,9 @@
                             </td>
                             <td>
                                 {% if syndic.license %}
-                                <a href="{% url 'dashboard-syndic' syndic.id %}" class="btn btn-sm">Voir Détails</a>
+                                <a href="{% url 'dashboard-syndic' syndic.id %}" class="btn btn-sm">
+                                    n°{{ syndic.id }}: Voir Détails
+                                </a>
                                 {% else %}
                                 <p>No license Détails for this syndic.</p>
                                 {% endif %}
