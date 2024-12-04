@@ -1,22 +1,20 @@
 {% extends "layouts/base.html" %}
 
-{% load i18n %}
+{% load static i18n %}
 
-{% load static %}
-
-<!-- Specific Page CSS goes HERE  -->
+<!-- Specific Page CSS goes HERE -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block title %}
-- {{ titlePage|default:"Super User Template" }}
+- {{ titlePage|default:_("Super User Template") }}
 {% endblock %}
 
 {% block content %}
 <main class="auth layout">
     <div class="container my-5">
         <div class="text-center">
-            <!--<h1>{{ titlePage|default:"Super User Access" }}</h1>-->
-            <p class="text-muted">Manage your VIP profile seamlessly.</p>
+            <!--<h1>{{ titlePage|default:_("Super User Access") }}</h1>-->
+            <p class="text-muted">{% trans "Manage your VIP profile seamlessly." %}</p>
         </div>
 
         {% if titlePage == 'Login' %}
@@ -24,14 +22,14 @@
             <div class="col-md-6">
                 <div class="card shadow border-success">
                     <div class="card-header bg-success text-white text-center">
-                        <h5>Super Syndic Login</h5>
+                        <h5>{% trans "Super Syndic Login" %}</h5>
                     </div>
                     <div class="card-body">
-                        <p class="text-muted">Access your account dashboard below.</p>
+                        <p class="text-muted">{% trans "Access your account dashboard below." %}</p>
                         <div class="text-center">
                             {% if user.role == 'SuperSyndic' %}
                             <a href="{% url 'dashboard-supersyndic' supersyndic.id %}" class="btn btn-success btn-sm">
-                                Login
+                                {% trans "Login" %}
                             </a>
                             {% endif %}
                         </div>
@@ -41,14 +39,14 @@
         </div>
         <div class="text-center">
             <a href="{% url 'login' %}" class="btn btn-sm btn-secondary"
-                onclick="window.history.back(); return false;">Annuler</a>
+                onclick="window.history.back(); return false;">{% trans "Cancel" %}</a>
         </div>
         {% else %}
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow">
                     <div class="card-header bg-secondary text-white text-center">
-                        <h3>Super Syndic Registration</h3>
+                        <h3>{% trans "Super Syndic Registration" %}</h3>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="">
@@ -63,16 +61,15 @@
                             </div>
                             {% endfor %}
                             <div class="text-center">
-                                <button type="submit" class="btn bg-secondary btn-sm">Register</button>
+                                <button type="submit" class="btn bg-secondary btn-sm">{% trans "Register" %}</button>
                             </div>
-                            
                         </form>
                     </div>
                 </div>
                 <div class="text-center mt-4">
                     <div>
                         <a href="{% url 'login' %}" class="btn btn-sm btn-secondary"
-                            onclick="window.history.back(); return false;">Annuler</a>
+                            onclick="window.history.back(); return false;">{% trans "Cancel" %}</a>
                     </div>
                 </div>
             </div>

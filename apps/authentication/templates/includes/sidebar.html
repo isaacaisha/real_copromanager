@@ -1,164 +1,148 @@
-    <div class="sidebar" data-color="purple" data-background-color="white" data-image="/static/assets/img/sidebar-1.jpg">
-      <div class="logo">
-        {% if titlePage %}
-        <a rel="noopener noreferrer" href="#" class="simple-text logo-normal titlePage">
-          {% if syndic %}
+{% load static i18n %}
+
+<div class="sidebar" data-color="purple" data-background-color="white" data-image="{% static 'assets/img/sidebar-1.jpg' %}">
+  <div class="logo">
+    {% if titlePage %}
+      <a rel="noopener noreferrer" href="#" class="simple-text logo-normal titlePage">
+        {% if syndic %}
           {{ syndic.user.nom }}
-          {% elif supersyndic %}
+        {% elif supersyndic %}
           {{ supersyndic.user.nom }}
-          {% elif coproprietaire %}
+        {% elif coproprietaire %}
           {{ coproprietaire.user.nom }}
-          {% elif prestataire %}
+        {% elif prestataire %}
           {{ prestataire.user.nom }}
-          {% endif %}
-          </a>
-          {% else %}
-          <a class="simple-text logo-normal titlePage" href="#">Copromanager</a>
-          {% endif %}
-      </div>
-      <div class="sidebar-wrapper">
-        <ul class="nav">
-        {% if request.user.is_authenticated %}
-
-          {% if user.role == 'Superadmin' %}
-          <li class="nav-item {% if 'dashboard_superadmin' in segment %} active {% endif %}">
-            <a class="nav-link" href="{% url 'dashboard-superadmin' %}">
-              <i class="material-icons">person</i>
-              <p>Dashboard SuperAdmin</p>
-            </a>
-          </li>
-          {% endif %}
-          {% if user.role == 'SuperSyndic' %}
-          <li class="nav-item {% if 'dashboard_supersyndic' in segment %} active {% endif %}">
-            {% if supersyndic.id %}
-            <a class="nav-link" href="{% url 'dashboard-supersyndic' supersyndic.id %}">
-              <i class="material-icons">person</i>
-              <p>Dashboard SuperSyndic</p>
-            </a>
-            {% endif %}
-          </li>
-          {% endif %}
-          {% if user.role == 'Syndic' %}
-          <li class="nav-item {% if 'dashboard_supersyndic' in segment %} active {% endif %}">
-            {% if syndic.id %}
-            <a class="nav-link" href="{% url 'register-supersyndic' syndic.id %}">
-              <i class="material-icons">person</i>
-              <p>Super Syndic Inscription</p>
-            </a>
-            {% endif %}
-          </li>
-          {% endif %}
-          {% if user.role == 'Syndic' %}
-          <li class="nav-item {% if 'dashboard_syndic' in segment %} active {% endif %}">
-            {% if syndic.id %}
-            <a class="nav-link" href="{% url 'dashboard-syndic' syndic_id=syndic.id %}">
-              <i class="material-icons">person</i>
-              <p>Dashboard Syndic</p>
-            </a>
-            {% endif %}
-          </li>
-          {% endif %}
-          {% if user.role == 'Coproprietaire' %}
-          <li class="nav-item {% if 'dashboard_coprorietaire' in segment %} active {% endif %}">
-            <a class="nav-link" href="{% url 'dashboard-coproprietaire' coproprietaire_id=coproprietaire.id %}">
-              <i class="material-icons">person</i>
-              <p>Dashboard Coproprietaire</p>
-            </a>
-          </li>
-          {% endif %}
-          {% if user.role == 'Prestataire' %}
-          <li class="nav-item {% if 'dashboard_prestataire' in segment %} active {% endif %}">
-            <a class="nav-link" href="{% url 'dashboard-prestataire' prestataire_id=prestataire.id %}">
-              <i class="material-icons">person</i>
-              <p>Dashboard Prestataire</p>
-            </a>
-          </li>
-          {% endif %}
-
-          <li class="nav-item {% if 'index' in segment %} active {% endif %}">
-            <a class="nav-link" href="/">
-              <i class="material-icons">dashboard</i>
-              <p>Dashboard</p>
-            </a>
-          </li>
-          <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
-            <a class="nav-link" href="/page-user.html">
-              <i class="material-icons">person</i>
-              <p>User Profile</p>
-            </a>
-          </li>
-          <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
-            <a class="nav-link" href="/ui-tables.html">
-              <i class="material-icons">content_paste</i>
-              <p>Table List</p>
-            </a>
-          </li>
-          <li class="nav-item {% if 'ui-typography' in segment %} active {% endif %}">
-            <a class="nav-link" href="/ui-typography.html">
-              <i class="material-icons">library_books</i>
-              <p>Typography</p>
-            </a>
-          </li>
-          <li class="nav-item {% if 'ui-icons' in segment %} active {% endif %}">
-            <a class="nav-link" href="/ui-icons.html">
-              <i class="material-icons">bubble_chart</i>
-              <p>Icons</p>
-            </a>
-          </li>
-          <li class="nav-item {% if 'ui-maps' in segment %} active {% endif %}">
-            <a class="nav-link" href="/ui-maps.html">
-              <i class="material-icons">location_ons</i>
-              <p>Maps</p>
-            </a>
-          </li>
-          <li class="nav-item {% if 'ui-notifications' in segment %} active {% endif %}">
-            <a class="nav-link" href="/ui-notifications.html">
-              <i class="material-icons">notifications</i>
-              <p>Notifications</p>
-            </a>
-          </li>
-          
-          <li class="nav-item ">
-            <a class="nav-link" href="/page-rtl-support.html">
-              <i class="material-icons">language</i>
-              <p>RTL Support</p>
-            </a>
-          </li>
-
-          <li class="nav-item ">
-            <a class="nav-link" href="{% url 'logout' %}" >
-              <i class="material-icons">directions_run</i>
-              <p>Logout</p>
-            </a>
-          </li>
-          <!--<<li class="nav-item">
-            <form method="post" action="{% url 'logout' %}">
-              {% csrf_token %}
-              <button type="submit" class="nav-link" style="background:none; border:none; color:inherit;">
-                <i class="material-icons">directions_run</i>
-                <p>Logout</p>
-              </button>
-            </form>
-          </li>-->
-
-          <li class="nav-item active-pro ">
-            <a class="nav-link" rel="noopener noreferrer" href="#">
-              <i class="material-icons">unarchive</i>
-              <p>Copromanager</p>
-            </a>
-          </li>
-
-        {% else %}
-
-          <li class="nav-item active">
-            <a class="nav-link" rel="noopener noreferrer" href="#">
-              <i class="material-icons">unarchive</i>
-              <p>Copromanager</p>
-            </a>
-          </li>          
-
         {% endif %}
-        </ul>
-      </div>
+      </a>
+    {% else %}
+      <a class="simple-text logo-normal titlePage" href="#">{% trans "Copromanager" %}</a>
+    {% endif %}
+  </div>
+  <div class="sidebar-wrapper">
+    <ul class="nav">
+      {% if request.user.is_authenticated %}
+        
+        {% if user.role == 'Superadmin' %}
+        <li class="nav-item {% if 'dashboard_superadmin' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'dashboard-superadmin' %}">
+            <i class="material-icons">person</i>
+            <p>{% trans "Dashboard SuperAdmin" %}</p>
+          </a>
+        </li>
+        {% endif %}
+        
+        {% if user.role == 'SuperSyndic' %}
+        <li class="nav-item {% if 'dashboard_supersyndic' in segment %} active {% endif %}">
+          {% if supersyndic.id %}
+          <a class="nav-link" href="{% url 'dashboard-supersyndic' supersyndic.id %}">
+            <i class="material-icons">person</i>
+            <p>{% trans "Dashboard SuperSyndic" %}</p>
+          </a>
+          {% endif %}
+        </li>
+        {% endif %}
+        
+        {% if user.role == 'Syndic' %}
+        <li class="nav-item {% if 'dashboard_supersyndic' in segment %} active {% endif %}">
+          {% if syndic.id %}
+          <a class="nav-link" href="{% url 'register-supersyndic' syndic.id %}">
+            <i class="material-icons">person</i>
+            <p>{% trans "Super Syndic Inscription" %}</p>
+          </a>
+          {% endif %}
+        </li>
+        <li class="nav-item {% if 'dashboard_syndic' in segment %} active {% endif %}">
+          {% if syndic.id %}
+          <a class="nav-link" href="{% url 'dashboard-syndic' syndic_id=syndic.id %}">
+            <i class="material-icons">person</i>
+            <p>{% trans "Dashboard Syndic" %}</p>
+          </a>
+          {% endif %}
+        </li>
+        {% endif %}
+        
+        {% if user.role == 'Coproprietaire' %}
+        <li class="nav-item {% if 'dashboard_coprorietaire' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'dashboard-coproprietaire' coproprietaire_id=coproprietaire.id %}">
+            <i class="material-icons">person</i>
+            <p>{% trans "Dashboard Coproprietaire" %}</p>
+          </a>
+        </li>
+        {% endif %}
+        
+        {% if user.role == 'Prestataire' %}
+        <li class="nav-item {% if 'dashboard_prestataire' in segment %} active {% endif %}">
+          <a class="nav-link" href="{% url 'dashboard-prestataire' prestataire_id=prestataire.id %}">
+            <i class="material-icons">person</i>
+            <p>{% trans "Dashboard Prestataire" %}</p>
+          </a>
+        </li>
+        {% endif %}
+        
+        <li class="nav-item {% if 'index' in segment %} active {% endif %}">
+          <a class="nav-link" href="/">
+            <i class="material-icons">dashboard</i>
+            <p>{% trans "Dashboard" %}</p>
+          </a>
+        </li>
+        <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
+          <a class="nav-link" href="/page-user.html">
+            <i class="material-icons">person</i>
+            <p>{% trans "User Profile" %}</p>
+          </a>
+        </li>
+        <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+          <a class="nav-link" href="/ui-tables.html">
+            <i class="material-icons">content_paste</i>
+            <p>{% trans "Table List" %}</p>
+          </a>
+        </li>
+        <li class="nav-item {% if 'ui-typography' in segment %} active {% endif %}">
+          <a class="nav-link" href="/ui-typography.html">
+            <i class="material-icons">library_books</i>
+            <p>{% trans "Typography" %}</p>
+          </a>
+        </li>
+        <li class="nav-item {% if 'ui-icons' in segment %} active {% endif %}">
+          <a class="nav-link" href="/ui-icons.html">
+            <i class="material-icons">bubble_chart</i>
+            <p>{% trans "Icons" %}</p>
+          </a>
+        </li>
+        <li class="nav-item {% if 'ui-maps' in segment %} active {% endif %}">
+          <a class="nav-link" href="/ui-maps.html">
+            <i class="material-icons">location_ons</i>
+            <p>{% trans "Maps" %}</p>
+          </a>
+        </li>
+        <li class="nav-item {% if 'ui-notifications' in segment %} active {% endif %}">
+          <a class="nav-link" href="/ui-notifications.html">
+            <i class="material-icons">notifications</i>
+            <p>{% trans "Notifications" %}</p>
+          </a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">
+            <i class="material-icons">directions_run</i>
+            <p>{% trans "Logout" %}</p>
+          </a>
+        </li>
+        <li class="nav-item active-pro">
+          <a class="nav-link" rel="noopener noreferrer" href="#">
+            <i class="material-icons">unarchive</i>
+            <p>{% trans "Copromanager" %}</p>
+          </a>
+        </li>
 
-    </div>
+      {% else %}
+        <li class="nav-item active">
+          <a class="nav-link" rel="noopener noreferrer" href="#">
+            <i class="material-icons">unarchive</i>
+            <p>{% trans "Copromanager" %}</p>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>

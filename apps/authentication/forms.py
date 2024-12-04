@@ -1,13 +1,15 @@
-# -*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*- apps/authentication/forms.py
+
 """
 Copyright (c) 2019 - present AppSeed.us
 """
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.utils.translation import gettext_lazy as _
 
 from apps.authentication.models import CustomUser
-from apps.home.models import License, SuperSyndic
+from apps.dashboard.models import License, SuperSyndic
 
 # Import ReCaptchaField correctly
 from django_recaptcha.fields import ReCaptchaField
@@ -19,44 +21,46 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
-                "placeholder": "Email",
+                "placeholder": _("Email"),
                 "class": "form-control"
             }
         ))
     nom = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Nom",
+                "placeholder": _("last name"),
                 "class": "form-control"
             }
         ))
     prenom = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                "placeholder": "Prenom",
+                "placeholder": _("first name"),
                 "class": "form-control"
             }
         ))
     role = forms.ChoiceField(
-        choices=[('Superadmin', 'Superadmin'), ('Syndic', 'Syndic'),
-                 ('Coproprietaire', 'Coproprietaire'), ('Prestataire', 'Prestataire')],
+        choices=[('Syndic', _('Syndic')), 
+                 ('Coproprietaire', _('Coproprietaire')), 
+                 ('Prestataire', _('Prestataire'))
+                 ],
         widget=forms.Select(
             attrs={
-                "placeholder": "Role:",
+                "placeholder": _("Role:"),
                 "class": "form-control"
             }
         ))
     password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "placeholder": "Mot de passe",
+                "placeholder": _("Password"),
                 "class": "form-control"
             }
         ))
     password2 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "placeholder": "Vérifier mot de passe",
+                "placeholder": _("Confirm Password"),
                 "class": "form-control"
             }
         ))
@@ -73,14 +77,14 @@ class LoginForm(forms.Form):
     email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
-                "placeholder": "Email",
+                "placeholder": _("Email"),
                 "class": "form-control",
             }
         ))
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                "placeholder": "Mot de passe",
+                "placeholder": _("Password"),
                 "class": "form-control"
             }
         ))
@@ -98,28 +102,9 @@ class CustomPasswordResetConfirmForm(SetPasswordForm):
 
         # Custom validation logic for recaptcha (if required)
         if not recaptcha_response:
-            raise forms.ValidationError("ReCAPTCHA validation failed. Please try again.")
+            raise forms.ValidationError(_("ReCAPTCHA validation failed. Please try again."))
 
         return recaptcha_response
-    
-
-class LicenseForm(forms.ModelForm):
-    class Meta:
-        model = License
-        fields = ['date_debut', 'date_fin', 'fonctionnalites_personnalisees', 'est_personnalise'] # 'license_base', 
-        
-        widgets = {
-            #'license_base': forms.Select(attrs={"class": "form-control"}),
-            'date_debut': forms.DateInput(attrs={"class": "form-control", "type": "date", "placeholder": "Start Date"}),
-            'date_fin': forms.DateInput(attrs={"class": "form-control", "type": "date", "placeholder": "End Date"}),
-            'fonctionnalites_personnalisees': forms.DateInput(attrs={"class": "form-control", "placeholder": "Customized Features (optional)"}),
-            'est_personnalise': forms.CheckboxInput(attrs={"class": "form-check-input"}),
-        }
-
-    #def __init__(self, *args, **kwargs):
-    #    super().__init__(*args, **kwargs)
-    #    # Ensure the license_base queryset is active licenses
-    #    self.fields['license_base'].queryset = LicenseBase.objects.all()
 
 
 class SuperSyndicForm(forms.ModelForm):
@@ -127,7 +112,7 @@ class SuperSyndicForm(forms.ModelForm):
         model = CustomUser
         fields = ['email', 'nom', 'prenom', 'password']
         widgets = {
-            'password': forms.PasswordInput(),
+            'password': forms.PasswordInput(attrs={"placeholder": _("Password")}),
         }
 
     def save(self, commit=True):

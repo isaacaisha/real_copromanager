@@ -1,26 +1,27 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Page 403 {% endblock %} 
+{% load static i18n %}
+
+{% block title %} {% trans "Page 403" %} {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-profile">
-                <div class="card-body">
-                    <h6 class="card-category text-gray">Error 403</h6>
-                    <h4 class="card-title">
-                        Access Denied - Please authenticate
-                    </h4>
-                    <a href="{% url 'login' %}" class="btn btn-primary btn-round">LOGIN</a>
-                </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-profile">
+            <div class="card-body">
+                <h6 class="card-category text-gray">{% trans "Error 403" %}</h6>
+                <h4 class="card-title">
+                    {% trans "Access Denied - Please authenticate" %}
+                </h4>
+                <a href="{% url 'login' %}" class="btn btn-primary btn-round">{% trans "LOGIN" %}</a>
             </div>
         </div>
     </div>
-
+</div>
 
 {% endblock content %}
 

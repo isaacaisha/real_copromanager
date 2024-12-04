@@ -1,6 +1,8 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Page 404 {% endblock %} 
+{% load i18n %}
+
+{% block title %} {% trans "Page 404" %} {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -11,16 +13,15 @@
         <div class="col-md-12">
             <div class="card card-profile">
                 <div class="card-body">
-                    <h6 class="card-category text-gray">Error 404</h6>
+                    <h6 class="card-category text-gray">{% trans "Error 404" %}</h6>
                     <h4 class="card-title">
-                        Page not found
+                        {% trans "Page not found" %}
                     </h4>
-                    <a href="/" class="btn btn-primary btn-round">Home</a>
+                    <a href="/" class="btn btn-primary btn-round">{% trans "Home" %}</a>
                 </div>
             </div>
         </div>
     </div>
-
 
 {% endblock content %}
 

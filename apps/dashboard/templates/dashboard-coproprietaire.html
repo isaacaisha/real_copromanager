@@ -1,0 +1,21 @@
+<!-- apps/dashboard/templates/dashboard-coproprietaire.html -->
+
+{% extends "layouts/base.html" %}
+
+{% load static i18n %}
+
+{% block title %} {% trans "Copropriétaire Dashboard" %} {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container">
+    {% include 'users-datas.html' %}
+</div>
+
+{% endblock %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

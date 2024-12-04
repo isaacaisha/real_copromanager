@@ -1,0 +1,26 @@
+<!-- apps/dashboard/templates/dashboard-supersyndic.html -->
+
+{% extends "layouts/base.html" %}
+
+{% load static i18n %}
+
+{% block title %} {% trans "Super User Dashboard" %} {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    {% if user.is_authenticated and user.role == 'Superadmin' %}
+    <div class="d-flex justify-content-center mb-3">
+        <a href="{% url 'customize-license' supersyndic.id %}" class="btn btn-warning btn-sm pull-left">
+            {% trans "Modify" %}
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="container">
+        {% include 'users-datas.html' %}
+    </div>
+
+{% endblock %}

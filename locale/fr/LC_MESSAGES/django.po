@@ -1,0 +1,3495 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-04 23:59+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: apps/authentication/forms.py:24 apps/authentication/forms.py:80
+#: apps/authentication/templates/accounts/password_reset.html:42
+#: apps/dashboard/models.py:89 apps/dashboard/models.py:106
+#: apps/dashboard/models.py:123 apps/dashboard/models.py:141
+#: apps/dashboard/templates/gestion-coproprietaire.html:52
+#: apps/dashboard/templates/gestion-prestataire.html:51
+#: apps/dashboard/templates/gestion-supersyndic.html:54
+#: apps/dashboard/templates/gestion-syndic.html:52
+#: apps/dashboard/templates/search-results.html:28
+#: apps/dashboard/templates/user-profile.html:20
+msgid "Email"
+msgstr "Email"
+
+#: apps/authentication/forms.py:31 apps/authentication/models.py:52
+msgid "last name"
+msgstr "Nom de famille"
+
+#: apps/authentication/forms.py:38 apps/authentication/models.py:53
+msgid "first name"
+msgstr "Prénom"
+
+#: apps/authentication/forms.py:43 apps/authentication/models.py:42
+#: apps/dashboard/models.py:42 apps/dashboard/models.py:124
+#: apps/dashboard/models.py:142 apps/dashboard/models.py:152
+msgid "Syndic"
+msgstr "Syndic"
+
+#: apps/authentication/forms.py:44 apps/authentication/models.py:43
+msgid "Coproprietaire"
+msgstr "Copropriétaire"
+
+#: apps/authentication/forms.py:45 apps/authentication/models.py:44
+msgid "Prestataire"
+msgstr "Prestataire"
+
+#: apps/authentication/forms.py:49
+#: apps/authentication/templates/accounts/register.html:85
+msgid "Role:"
+msgstr "Rôle :"
+
+#: apps/authentication/forms.py:56 apps/authentication/forms.py:87
+#: apps/authentication/forms.py:115
+msgid "Password"
+msgstr "Mot de passe"
+
+#: apps/authentication/forms.py:63
+#, fuzzy
+#| msgid "'Confirm Password"
+msgid "Confirm Password"
+msgstr "Confirmez le mot de passe"
+
+#: apps/authentication/forms.py:105
+msgid "ReCAPTCHA validation failed. Please try again."
+msgstr "La validation ReCAPTCHA a échoué. Veuillez réessayer."
+
+#: apps/authentication/models.py:19
+msgid "The Email field must be set"
+msgstr "Le champ Email doit être renseigné"
+
+#: apps/authentication/models.py:32
+msgid "Superuser must have is_staff=True."
+msgstr "Le superutilisateur doit avoir is_staff=True."
+
+#: apps/authentication/models.py:34
+msgid "Superuser must have is_superuser=True."
+msgstr "Le superutilisateur doit avoir is_superuser=True."
+
+#: apps/authentication/models.py:41
+msgid "Superadmin"
+msgstr "Superadmin"
+
+#: apps/authentication/models.py:45
+msgid "SuperSyndic"
+msgstr "SuperSyndic"
+
+#: apps/authentication/models.py:51
+msgid "email address"
+msgstr "Adresse e-mail"
+
+#: apps/authentication/models.py:54 apps/authentication/models.py:58
+msgid "role"
+msgstr "Rôle"
+
+#: apps/authentication/models.py:58
+msgid "nom"
+msgstr "Nom"
+
+#: apps/authentication/models.py:58
+msgid "prenom"
+msgstr "Prénom"
+
+#: apps/authentication/templates/accounts/login.html:5
+#: apps/authentication/templates/accounts/login.html:20
+#: apps/authentication/templates/accounts/login.html:74
+#: apps/authentication/templates/accounts/register-login-supersyndic.html:32
+#: apps/authentication/views.py:162
+msgid "Login"
+msgstr "Connexion"
+
+#: apps/authentication/templates/accounts/login.html:29
+msgid "Enter your Credentials"
+msgstr "Entrez vos identifiants"
+
+#: apps/authentication/templates/accounts/login.html:84
+msgid "Reset Password"
+msgstr "Réinitialiser le mot de passe"
+
+#: apps/authentication/templates/accounts/password_reset.html:6
+msgid "Password Reset Form"
+msgstr "Formulaire de réinitialisation de mot de passe"
+
+#: apps/authentication/templates/accounts/password_reset.html:21
+msgid "Forgot Password?"
+msgstr "Mot de passe oublié ?"
+
+#: apps/authentication/templates/accounts/password_reset.html:45
+msgid "Enter your email"
+msgstr "Entrez votre e-mail"
+
+#: apps/authentication/templates/accounts/password_reset.html:53
+msgid "Submit"
+msgstr "Soumettre"
+
+#: apps/authentication/templates/accounts/password_reset.html:62
+#: apps/authentication/templates/accounts/register-login-supersyndic.html:42
+#: apps/authentication/templates/accounts/register-login-supersyndic.html:72
+#: apps/dashboard/templates/customize-license.html:37
+msgid "Cancel"
+msgstr "Annuler"
+
+#: apps/authentication/templates/accounts/password_reset_complete.html:6
+#: apps/authentication/views.py:279
+msgid "Password Reset Complete"
+msgstr "Réinitialisation du mot de passe terminée"
+
+#: apps/authentication/templates/accounts/password_reset_complete.html:18
+msgid "Reinitialisation du Mot de Passe Réussie"
+msgstr "Réinitialisation du Mot de Passe Réussie"
+
+#: apps/authentication/templates/accounts/password_reset_complete.html:20
+msgid ""
+"Your password has been updated. You can now log in with your new password."
+msgstr ""
+"Votre mot de passe a été mis à jour. Vous pouvez maintenant vous connecter "
+"avec votre nouveau mot de passe."
+
+#: apps/authentication/templates/accounts/password_reset_complete.html:23
+msgid "Back to Login"
+msgstr "Retour à la Connexion"
+
+#: apps/authentication/templates/accounts/password_reset_confirm.html:6
+msgid "Password Reset Confirm"
+msgstr "Confirmation de Réinitialisation du Mot de Passe"
+
+#: apps/authentication/templates/accounts/password_reset_confirm.html:21
+msgid "Reset Your Password"
+msgstr "Réinitialisez votre Mot de Passe"
+
+#: apps/authentication/templates/accounts/password_reset_confirm.html:46
+msgid "Enter new password"
+msgstr "Saisissez un nouveau mot de passe"
+
+#: apps/authentication/templates/accounts/password_reset_confirm.html:60
+msgid "Confirm new password"
+msgstr "Confirmez le nouveau mot de passe"
+
+#: apps/authentication/templates/accounts/password_reset_confirm.html:86
+msgid "Confirm Reset"
+msgstr "Confirmez la Réinitialisation"
+
+#: apps/authentication/templates/accounts/password_reset_email.html:3
+msgid "Hello,"
+msgstr "Bonjour,"
+
+#: apps/authentication/templates/accounts/password_reset_email.html:4
+#, python-format
+msgid "You have requested to reset your password (%(user.email)s)."
+msgstr "Vous avez demandé à réinitialiser votre mot de passe (%(user.email)s)."
+
+#: apps/authentication/templates/accounts/password_reset_email.html:5
+msgid "To do so, click on the link below:"
+msgstr "Pour ce faire, cliquez sur le lien ci-dessous :"
+
+#: apps/authentication/templates/accounts/password_reset_email.html:9
+msgid "If the link does not work, copy the URL and paste it into your browser."
+msgstr ""
+"Si le lien ne fonctionne pas, copiez l'URL et collez-la dans votre "
+"navigateur."
+
+#: apps/authentication/templates/accounts/password_reset_email.html:10
+msgid "If you did not make this request, please ignore this email."
+msgstr ""
+"Si vous n'êtes pas à l'origine de cette demande, veuillez ignorer cet e-mail."
+
+#: apps/authentication/templates/accounts/password_reset_email.html:12
+msgid ""
+"Thank you,  \n"
+"The CoProManager Team."
+msgstr ""
+"Merci,  \n"
+"L'équipe CoProManager."
+
+#: apps/authentication/templates/accounts/password_reset_subject.txt:2
+msgid "Real Copromanager - Password Reset"
+msgstr "Real Copromanager - Réinitialisation du Mot de Passe"
+
+#: apps/authentication/templates/accounts/register-login-supersyndic.html:9
+msgid "Super User Template"
+msgstr "Modèle Utilisateur Super"
+
+#: apps/authentication/templates/accounts/register-login-supersyndic.html:16
+msgid "Super User Access"
+msgstr "Accès Super Utilisateur"
+
+#: apps/authentication/templates/accounts/register-login-supersyndic.html:17
+msgid "Manage your VIP profile seamlessly."
+msgstr "Gérez votre profil VIP sans effort."
+
+#: apps/authentication/templates/accounts/register-login-supersyndic.html:25
+msgid "Super Syndic Login"
+msgstr "Connexion Super Syndic"
+
+#: apps/authentication/templates/accounts/register-login-supersyndic.html:28
+msgid "Access your account dashboard below."
+msgstr "Accédez à votre tableau de bord ci-dessous."
+
+#: apps/authentication/templates/accounts/register-login-supersyndic.html:49
+msgid "Super Syndic Registration"
+msgstr "Inscription Super Syndic"
+
+#: apps/authentication/templates/accounts/register-login-supersyndic.html:64
+#: apps/authentication/templates/accounts/register.html:5
+#: apps/authentication/templates/accounts/register.html:126
+#: apps/dashboard/templates/dashboard-superadmin.html:17
+#: apps/dashboard/templates/gestion-coproprietaire.html:17
+msgid "Register"
+msgstr "S'inscrire"
+
+#: apps/authentication/templates/accounts/register.html:20
+msgid "Create Syndic, Co-Owner..."
+msgstr "Créer Syndic, Copropriétaire..."
+
+#: apps/authentication/templates/accounts/register.html:29
+msgid "Add Credentials"
+msgstr "Ajouter des Informations d'Identification"
+
+#: apps/authentication/templates/accounts/register.html:38
+msgid "Please"
+msgstr "Veuillez"
+
+#: apps/authentication/templates/accounts/register.html:38
+msgid "authenticate"
+msgstr "vous authentifier"
+
+#: apps/authentication/templates/accounts/register.html:38
+msgid "using the new account."
+msgstr "en utilisant le nouveau compte."
+
+#: apps/authentication/templates/accounts/register.html:130
+#: apps/dashboard/templates/gestion-coproprietaire.html:92
+#: apps/dashboard/templates/gestion-prestataire.html:89
+#: apps/dashboard/templates/gestion-supersyndic.html:119
+#: apps/dashboard/templates/search-results.html:51
+#: apps/dashboard/templates/user-profile.html:62
+#: apps/dashboard/templates/users-datas.html:157
+msgid "Backoffice"
+msgstr "Backoffice"
+
+#: apps/authentication/templates/home/index.html:5
+#: apps/authentication/templates/includes/sidebar.html:85
+#: apps/dashboard/views.py:160 apps/dashboard/views.py:201
+#: apps/dashboard/views.py:212 apps/dashboard/views.py:255
+#: apps/dashboard/views.py:299
+msgid "Dashboard"
+msgstr "Tableau de Bord"
+
+#: apps/authentication/templates/home/index.html:19
+msgid "Used Space"
+msgstr "Espace Utilisé"
+
+#: apps/authentication/templates/home/index.html:21
+msgid "GB"
+msgstr "Go"
+
+#: apps/authentication/templates/home/index.html:28
+msgid "Get More Space..."
+msgstr "Obtenez Plus d'Espace..."
+
+#: apps/authentication/templates/home/index.html:40
+msgid "Revenue"
+msgstr "Revenus"
+
+#: apps/authentication/templates/home/index.html:45
+msgid "Last 24 Hours"
+msgstr "Dernières 24 heures"
+
+#: apps/authentication/templates/home/index.html:56
+msgid "Fixed Issues"
+msgstr "Problèmes Résolus"
+
+#: apps/authentication/templates/home/index.html:61
+msgid "Tracked from Github"
+msgstr "Suivi depuis Github"
+
+#: apps/authentication/templates/home/index.html:72
+msgid "Followers"
+msgstr "Abonnés"
+
+#: apps/authentication/templates/home/index.html:77
+msgid "Just Updated"
+msgstr "Récemment Mis à Jour"
+
+#: apps/authentication/templates/home/index.html:90
+msgid "Daily Sales"
+msgstr "Ventes Quotidiennes"
+
+#: apps/authentication/templates/home/index.html:93
+msgid "increase in today sales"
+msgstr "augmentation des ventes aujourd'hui"
+
+#: apps/authentication/templates/home/index.html:98
+msgid "updated 4 minutes ago"
+msgstr "mis à jour il y a 4 minutes"
+
+#: apps/authentication/templates/home/index.html:109
+msgid "Email Subscriptions"
+msgstr "Abonnements Email"
+
+#: apps/authentication/templates/home/index.html:110
+#: apps/authentication/templates/home/index.html:126
+msgid "Last Campaign Performance"
+msgstr "Performance de la Dernière Campagne"
+
+#: apps/authentication/templates/home/index.html:114
+#: apps/authentication/templates/home/index.html:130
+msgid "campaign sent 2 days ago"
+msgstr "campagne envoyée il y a 2 jours"
+
+#: apps/authentication/templates/home/index.html:125
+msgid "Completed Tasks"
+msgstr "Tâches Terminées"
+
+#: apps/authentication/templates/home/index.html:142
+msgid "Tasks:"
+msgstr "Tâches :"
+
+#: apps/authentication/templates/home/index.html:146
+msgid "Bugs"
+msgstr "Bugs"
+
+#: apps/authentication/templates/home/index.html:152
+msgid "Website"
+msgstr "Site Web"
+
+#: apps/authentication/templates/home/index.html:158
+msgid "Server"
+msgstr "Serveur"
+
+#: apps/authentication/templates/home/index.html:182
+#: apps/authentication/templates/home/index.html:305
+msgid "Sign contract for 'What are conference organizers afraid of?'"
+msgstr ""
+"Signer un contrat pour 'De quoi les organisateurs de conférences ont-ils "
+"peur ?'"
+
+#: apps/authentication/templates/home/index.html:184
+#: apps/authentication/templates/home/index.html:207
+#: apps/authentication/templates/home/index.html:231
+#: apps/authentication/templates/home/index.html:254
+#: apps/authentication/templates/home/index.html:284
+#: apps/authentication/templates/home/index.html:307
+#: apps/authentication/templates/home/index.html:336
+#: apps/authentication/templates/home/index.html:360
+#: apps/authentication/templates/home/index.html:383
+msgid "Edit Task"
+msgstr "Modifier la Tâche"
+
+#: apps/authentication/templates/home/index.html:188
+#: apps/authentication/templates/home/index.html:211
+#: apps/authentication/templates/home/index.html:235
+#: apps/authentication/templates/home/index.html:258
+#: apps/authentication/templates/home/index.html:288
+#: apps/authentication/templates/home/index.html:311
+#: apps/authentication/templates/home/index.html:340
+#: apps/authentication/templates/home/index.html:364
+#: apps/authentication/templates/home/index.html:386
+msgid "Remove"
+msgstr "Supprimer"
+
+#: apps/authentication/templates/home/index.html:205
+#: apps/authentication/templates/home/index.html:334
+msgid "Lines From Great Russian Literature? Or E-mails From My Boss?"
+msgstr ""
+"Extraits de la Grande Littérature Russe ? Ou des E-mails de Mon Patron ?"
+
+#: apps/authentication/templates/home/index.html:252
+msgid "Create 4 Invisible User Experiences you Never Knew About"
+msgstr "Créer 4 Expériences Utilisateur Invisibles que Vous Ne Connaissiez Pas"
+
+#: apps/authentication/templates/home/index.html:381
+msgid "Sign contract for \\"
+msgstr "Signer un contrat pour \\"
+
+#: apps/authentication/templates/home/index.html:401
+msgid "Employees Stats"
+msgstr "Statistiques des Employés"
+
+#: apps/authentication/templates/home/index.html:402
+msgid "New employees on 15th September, 2016"
+msgstr "Nouveaux employés le 15 septembre 2016"
+
+#: apps/authentication/templates/home/index.html:407
+#: apps/authentication/templates/home/ui-tables.html:24
+#: apps/authentication/templates/home/ui-tables.html:99
+#: apps/dashboard/templates/gestion-coproprietaire.html:65
+#: apps/dashboard/templates/user-profile.html:28
+#: apps/dashboard/templates/user-profile.html:47
+#: apps/dashboard/templates/user-profile.html:53
+msgid "ID"
+msgstr "ID"
+
+#: apps/authentication/templates/home/index.html:408
+#: apps/authentication/templates/home/ui-tables.html:27
+#: apps/authentication/templates/home/ui-tables.html:102
+#: apps/dashboard/models.py:26 apps/dashboard/models.py:80
+#: apps/dashboard/models.py:97 apps/dashboard/models.py:114
+#: apps/dashboard/models.py:132 apps/dashboard/models.py:150
+#: apps/dashboard/templates/user-profile.html:19
+msgid "Name"
+msgstr "Nom"
+
+#: apps/authentication/templates/home/index.html:409
+#: apps/authentication/templates/home/ui-tables.html:36
+#: apps/authentication/templates/home/ui-tables.html:111
+msgid "Salary"
+msgstr "Salaire"
+
+#: apps/authentication/templates/home/index.html:410
+#: apps/authentication/templates/home/page-user.html:72
+#: apps/authentication/templates/home/ui-tables.html:30
+#: apps/authentication/templates/home/ui-tables.html:105
+msgid "Country"
+msgstr "Pays"
+
+#: apps/authentication/templates/home/index.html:415
+msgid "Dakota Rice"
+msgstr "Dakota Rice"
+
+#: apps/authentication/templates/home/index.html:417
+#: apps/authentication/templates/home/ui-tables.html:43
+#: apps/authentication/templates/home/ui-tables.html:118
+msgid "Niger"
+msgstr "Niger"
+
+#: apps/authentication/templates/home/index.html:421
+msgid "Minerva Hooper"
+msgstr "Minerva Hooper"
+
+#: apps/authentication/templates/home/index.html:423
+#: apps/authentication/templates/home/ui-tables.html:50
+#: apps/authentication/templates/home/ui-tables.html:125
+msgid "Curaçao"
+msgstr "Curaçao"
+
+#: apps/authentication/templates/home/index.html:427
+msgid "Sage Rodriguez"
+msgstr "Sage Rodriguez"
+
+#: apps/authentication/templates/home/index.html:429
+#: apps/authentication/templates/home/ui-tables.html:57
+#: apps/authentication/templates/home/ui-tables.html:132
+msgid "Netherlands"
+msgstr "Pays-Bas"
+
+#: apps/authentication/templates/home/index.html:433
+msgid "Philip Chaney"
+msgstr "Philip Chaney"
+
+#: apps/authentication/templates/home/index.html:435
+#: apps/authentication/templates/home/ui-tables.html:64
+#: apps/authentication/templates/home/ui-tables.html:139
+msgid "Korea, South"
+msgstr "Corée du Sud"
+
+#: apps/authentication/templates/home/page-403.html:5
+msgid "Page 403"
+msgstr "Page 403"
+
+#: apps/authentication/templates/home/page-403.html:16
+msgid "Error 403"
+msgstr "Erreur 403"
+
+#: apps/authentication/templates/home/page-403.html:18
+msgid "Access Denied - Please authenticate"
+msgstr "Accès refusé - Veuillez vous authentifier"
+
+#: apps/authentication/templates/home/page-403.html:20
+msgid "LOGIN"
+msgstr "CONNEXION"
+
+#: apps/authentication/templates/home/page-404.html:5
+msgid "Page 404"
+msgstr "Page 404"
+
+#: apps/authentication/templates/home/page-404.html:16
+msgid "Error 404"
+msgstr "Erreur 404"
+
+#: apps/authentication/templates/home/page-404.html:18
+msgid "Page not found"
+msgstr "Page non trouvée"
+
+#: apps/authentication/templates/home/page-404.html:20
+#: apps/authentication/templates/home/page-500.html:20
+#: apps/authentication/templates/home/page-blank.html:20
+msgid "Home"
+msgstr "Accueil"
+
+#: apps/authentication/templates/home/page-500.html:5
+msgid "Page 500"
+msgstr "Page 500"
+
+#: apps/authentication/templates/home/page-500.html:16
+msgid "Error 500"
+msgstr "Erreur 500"
+
+#: apps/authentication/templates/home/page-500.html:18
+msgid "Internal Server Error"
+msgstr "Erreur interne du serveur"
+
+#: apps/authentication/templates/home/page-blank.html:5
+#: apps/authentication/templates/home/page-blank.html:16
+msgid "Page Blank"
+msgstr "Page vierge"
+
+#: apps/authentication/templates/home/page-blank.html:18
+msgid "Add your content"
+msgstr "Ajoutez votre contenu"
+
+#: apps/authentication/templates/home/page-user.html:5
+msgid "Page User"
+msgstr "Page Utilisateur"
+
+#: apps/authentication/templates/home/page-user.html:16
+msgid "Edit Profile"
+msgstr "Modifier le profil"
+
+#: apps/authentication/templates/home/page-user.html:17
+msgid "Complete your profile"
+msgstr "Complétez votre profil"
+
+#: apps/authentication/templates/home/page-user.html:24
+msgid "UserID (disabled)"
+msgstr "Identifiant utilisateur (désactivé)"
+
+#: apps/authentication/templates/home/page-user.html:30
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+#: apps/authentication/templates/home/page-user.html:36
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1915
+msgid "Email address"
+msgstr "Adresse e-mail"
+
+#: apps/authentication/templates/home/page-user.html:44
+#: apps/dashboard/templates/search-results.html:24
+msgid "First Name"
+msgstr "Prénom"
+
+#: apps/authentication/templates/home/page-user.html:50
+#: apps/dashboard/templates/search-results.html:23
+msgid "Last Name"
+msgstr "Nom"
+
+#: apps/authentication/templates/home/page-user.html:58
+#: apps/dashboard/models.py:151
+msgid "Address"
+msgstr "Adresse"
+
+#: apps/authentication/templates/home/page-user.html:66
+#: apps/authentication/templates/home/ui-tables.html:33
+#: apps/authentication/templates/home/ui-tables.html:108
+msgid "City"
+msgstr "Ville"
+
+#: apps/authentication/templates/home/page-user.html:78
+msgid "Postal Code"
+msgstr "Code Postal"
+
+#: apps/authentication/templates/home/page-user.html:86
+msgid "About Me"
+msgstr "À Propos de Moi"
+
+#: apps/authentication/templates/home/page-user.html:88
+msgid ""
+"Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
+msgstr ""
+"Lamborghini Mercy, ta copine est tellement assoiffée, je suis dans ce Lambo "
+"deux places."
+
+#: apps/authentication/templates/home/page-user.html:94
+msgid "Modify Profile"
+msgstr "Modifier le Profil"
+
+#: apps/authentication/templates/home/page-user.html:121
+msgid ""
+"Don't be scared of the truth because we need to restart the human foundation "
+"in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design "
+"but the back is..."
+msgstr ""
+"N'ayez pas peur de la vérité, car nous devons redémarrer la base humaine "
+"dans la vérité. Et je t'aime comme Kanye aime Kanye. J'adore le design de "
+"lit de Rick Owens, mais l'arrière est..."
+
+#: apps/authentication/templates/home/page-user.html:123
+msgid "Follow"
+msgstr "Suivre"
+
+#: apps/authentication/templates/home/ui-icons.html:5
+msgid "UI Icons"
+msgstr "Icônes UI"
+
+#: apps/authentication/templates/home/ui-icons.html:15
+msgid "Material Design Icons"
+msgstr "Icônes Material Design"
+
+#: apps/authentication/templates/home/ui-icons.html:16
+msgid "Handcrafted by our friends from"
+msgstr "Fait main par nos amis de"
+
+#: apps/authentication/templates/home/ui-icons.html:25
+msgid "Your browser does not support iframes."
+msgstr "Votre navigateur ne prend pas en charge les iframes."
+
+#: apps/authentication/templates/home/ui-icons.html:29
+msgid ""
+"The icons are visible on Desktop mode inside an iframe. Since the iframe is "
+"not working on Mobile and Tablets please visit the icons on their original "
+"page on Google. Check the"
+msgstr ""
+"Les icônes sont visibles en mode bureau à l'intérieur d'une iframe. Comme "
+"l'iframe ne fonctionne pas sur mobile et tablette, veuillez visiter les "
+"icônes sur leur page originale sur Google. Consultez le"
+
+#: apps/authentication/templates/home/ui-icons.html:30
+msgid "Material Icons"
+msgstr "Icônes Material"
+
+#: apps/authentication/templates/home/ui-maps.html:5
+#: apps/authentication/templates/includes/sidebar.html:115
+msgid "Maps"
+msgstr "Cartes"
+
+#: apps/authentication/templates/home/ui-notifications.html:5
+msgid "UI Notifications"
+msgstr "Notifications UI"
+
+#: apps/authentication/templates/home/ui-notifications.html:14
+#: apps/authentication/templates/includes/sidebar.html:121
+msgid "Notifications"
+msgstr "Notifications"
+
+#: apps/authentication/templates/home/ui-notifications.html:15
+msgid "Handcrafted by our friend"
+msgstr "Fait main par notre ami"
+
+#: apps/authentication/templates/home/ui-notifications.html:16
+msgid "Please checkout the"
+msgstr "Veuillez consulter le"
+
+#: apps/authentication/templates/home/ui-notifications.html:17
+msgid "full documentation."
+msgstr "documentation complète."
+
+#: apps/authentication/templates/home/ui-notifications.html:23
+msgid "Notifications Style"
+msgstr "Style de Notifications"
+
+#: apps/authentication/templates/home/ui-notifications.html:25
+msgid "This is a plain notification"
+msgstr "Ceci est une notification simple"
+
+#: apps/authentication/templates/home/ui-notifications.html:31
+msgid "This is a notification with close button."
+msgstr "Ceci est une notification avec un bouton de fermeture."
+
+#: apps/authentication/templates/home/ui-notifications.html:38
+msgid "This is a notification with close button and icon."
+msgstr "Ceci est une notification avec un bouton de fermeture et une icône."
+
+#: apps/authentication/templates/home/ui-notifications.html:51
+msgid "Notification states"
+msgstr "États de notification"
+
+#: apps/authentication/templates/home/ui-notifications.html:57
+msgid "Info - "
+msgstr "Info - "
+
+#: apps/authentication/templates/home/ui-notifications.html:57
+msgid "This is a regular notification made with '.alert-info'"
+msgstr "Ceci est une notification régulière faite avec '.alert-info'"
+
+#: apps/authentication/templates/home/ui-notifications.html:65
+msgid "Success - "
+msgstr "Succès - "
+
+#: apps/authentication/templates/home/ui-notifications.html:65
+msgid "This is a regular notification made with '.alert-success'"
+msgstr "Ceci est une notification régulière faite avec '.alert-success'"
+
+#: apps/authentication/templates/home/ui-notifications.html:73
+msgid "Warning - "
+msgstr "Avertissement - "
+
+#: apps/authentication/templates/home/ui-notifications.html:73
+msgid "This is a regular notification made with '.alert-warning'"
+msgstr "Ceci est une notification régulière faite avec '.alert-warning'"
+
+#: apps/authentication/templates/home/ui-notifications.html:81
+msgid "Danger - "
+msgstr "Danger - "
+
+#: apps/authentication/templates/home/ui-notifications.html:81
+msgid "This is a regular notification made with '.alert-danger'"
+msgstr "Ceci est une notification régulière faite avec '.alert-danger'"
+
+#: apps/authentication/templates/home/ui-notifications.html:89
+msgid "Primary - "
+msgstr "Primaire - "
+
+#: apps/authentication/templates/home/ui-notifications.html:89
+msgid "This is a regular notification made with '.alert-primary'"
+msgstr "Ceci est une notification régulière faite avec '.alert-primary'"
+
+#: apps/authentication/templates/home/ui-notifications.html:100
+msgid "Notifications Places"
+msgstr "Emplacements des Notifications"
+
+#: apps/authentication/templates/home/ui-notifications.html:101
+msgid "Click to view notifications"
+msgstr "Cliquez pour voir les notifications"
+
+#: apps/authentication/templates/home/ui-tables.html:5
+msgid "UI Tables"
+msgstr "Tables UI"
+
+#: apps/authentication/templates/home/ui-tables.html:16
+msgid "Simple Table"
+msgstr "Table Simple"
+
+#: apps/authentication/templates/home/ui-tables.html:17
+#: apps/authentication/templates/home/ui-tables.html:92
+msgid "Here is a subtitle for this table"
+msgstr "Voici un sous-titre pour cette table"
+
+#: apps/authentication/templates/home/ui-tables.html:44
+#: apps/authentication/templates/home/ui-tables.html:119
+msgid "Oud-Turnhout"
+msgstr "Oud-Turnhout"
+
+#: apps/authentication/templates/home/ui-tables.html:51
+#: apps/authentication/templates/home/ui-tables.html:126
+msgid "Sinaai-Waas"
+msgstr "Sinaai-Waas"
+
+#: apps/authentication/templates/home/ui-tables.html:58
+#: apps/authentication/templates/home/ui-tables.html:133
+msgid "Baileux"
+msgstr "Baileux"
+
+#: apps/authentication/templates/home/ui-tables.html:65
+#: apps/authentication/templates/home/ui-tables.html:140
+msgid "Overland Park"
+msgstr "Overland Park"
+
+#: apps/authentication/templates/home/ui-tables.html:71
+#: apps/authentication/templates/home/ui-tables.html:146
+msgid "Malawi"
+msgstr "Malawi"
+
+#: apps/authentication/templates/home/ui-tables.html:72
+#: apps/authentication/templates/home/ui-tables.html:147
+msgid "Feldkirchen in Kärnten"
+msgstr "Feldkirchen in Kärnten"
+
+#: apps/authentication/templates/home/ui-tables.html:78
+#: apps/authentication/templates/home/ui-tables.html:153
+msgid "Chile"
+msgstr "Chili"
+
+#: apps/authentication/templates/home/ui-tables.html:79
+#: apps/authentication/templates/home/ui-tables.html:154
+msgid "Gloucester"
+msgstr "Gloucester"
+
+#: apps/authentication/templates/home/ui-tables.html:91
+msgid "Table on Plain Background"
+msgstr "Table sur Fond Uni"
+
+#: apps/authentication/templates/home/ui-typography.html:5
+msgid "UI Typography"
+msgstr "Typographie UI"
+
+#: apps/authentication/templates/home/ui-typography.html:14
+msgid "Material Dashboard Heading"
+msgstr "Titre du Tableau de Bord Matériel"
+
+#: apps/authentication/templates/home/ui-typography.html:15
+msgid "Created using Roboto Font Family"
+msgstr "Créé en utilisant la famille de polices Roboto"
+
+#: apps/authentication/templates/home/ui-typography.html:20
+#: apps/authentication/templates/includes/sidebar.html:103
+msgid "Typography"
+msgstr "Typographie"
+
+#: apps/authentication/templates/home/ui-typography.html:25
+msgid "Header 1"
+msgstr "Titre 1"
+
+#: apps/authentication/templates/home/ui-typography.html:25
+#: apps/authentication/templates/home/ui-typography.html:29
+#: apps/authentication/templates/home/ui-typography.html:33
+#: apps/authentication/templates/home/ui-typography.html:37
+#: apps/authentication/templates/home/ui-typography.html:41
+#: apps/authentication/templates/home/ui-typography.html:45
+msgid "The Life of Material Dashboard"
+msgstr "La Vie du Tableau de Bord Matériel"
+
+#: apps/authentication/templates/home/ui-typography.html:29
+msgid "Header 2"
+msgstr "Titre 2"
+
+#: apps/authentication/templates/home/ui-typography.html:33
+msgid "Header 3"
+msgstr "Titre 3"
+
+#: apps/authentication/templates/home/ui-typography.html:37
+msgid "Header 4"
+msgstr "Titre 4"
+
+#: apps/authentication/templates/home/ui-typography.html:41
+msgid "Header 5"
+msgstr "Titre 5"
+
+#: apps/authentication/templates/home/ui-typography.html:45
+msgid "Header 6"
+msgstr "Titre 6"
+
+#: apps/authentication/templates/home/ui-typography.html:49
+msgid "Paragraph"
+msgstr "Paragraphe"
+
+#: apps/authentication/templates/home/ui-typography.html:50
+#: apps/authentication/templates/home/ui-typography.html:56
+msgid ""
+"I will be the leader of a company that ends up being worth billions of "
+"dollars, because I got the answers. I understand culture. I am the nucleus. "
+"I think that’s a responsibility that I have, to push possibilities, to show "
+"people, this is the level that things could be at."
+msgstr ""
+"Je serai le leader d'une entreprise qui vaudra des milliards de dollars, "
+"parce que j'ai les réponses. Je comprends la culture. Je suis le noyau. Je "
+"pense que c’est une responsabilité que j’ai, de repousser les possibilités, "
+"de montrer aux gens, voici le niveau auquel les choses peuvent être."
+
+#: apps/authentication/templates/home/ui-typography.html:53
+msgid "Quote"
+msgstr "Citation"
+
+#: apps/authentication/templates/home/ui-typography.html:59
+msgid "Kanye West, Musician"
+msgstr "Kanye West, Musicien"
+
+#: apps/authentication/templates/home/ui-typography.html:64
+msgid "Muted Text"
+msgstr "Texte Atténué"
+
+#: apps/authentication/templates/home/ui-typography.html:66
+#: apps/authentication/templates/home/ui-typography.html:72
+#: apps/authentication/templates/home/ui-typography.html:77
+#: apps/authentication/templates/home/ui-typography.html:82
+#: apps/authentication/templates/home/ui-typography.html:87
+#: apps/authentication/templates/home/ui-typography.html:93
+msgid ""
+"I will be the leader of a company that ends up being worth billions of "
+"dollars, because I got the answers..."
+msgstr ""
+"Je serai le leader d'une entreprise qui vaudra des milliards de dollars, "
+"parce que j'ai les réponses..."
+
+#: apps/authentication/templates/home/ui-typography.html:70
+msgid "Primary Text"
+msgstr "Texte principal"
+
+#: apps/authentication/templates/home/ui-typography.html:75
+msgid "Info Text"
+msgstr "Texte d'information"
+
+#: apps/authentication/templates/home/ui-typography.html:80
+msgid "Success Text"
+msgstr "Texte de succès"
+
+#: apps/authentication/templates/home/ui-typography.html:85
+msgid "Warning Text"
+msgstr "Texte d'avertissement"
+
+#: apps/authentication/templates/home/ui-typography.html:91
+msgid "Danger Text"
+msgstr "Texte de danger"
+
+#: apps/authentication/templates/home/ui-typography.html:97
+msgid "Small Tag"
+msgstr "Petite étiquette"
+
+#: apps/authentication/templates/home/ui-typography.html:98
+msgid "Header with small subtitle"
+msgstr "En-tête avec petit sous-titre"
+
+#: apps/authentication/templates/home/ui-typography.html:100
+msgid "Use \\"
+msgstr "Utilisez \\"
+
+#: apps/authentication/templates/includes/fixed-plugin.html:9
+msgid "Sidebar Filters"
+msgstr "Filtres de la barre latérale"
+
+#: apps/authentication/templates/includes/fixed-plugin.html:23
+msgid "Images"
+msgstr "Images"
+
+#: apps/authentication/templates/includes/fixed-plugin.html:47
+msgid "More Templates"
+msgstr "Plus de modèles"
+
+#: apps/authentication/templates/includes/fixed-plugin.html:53
+msgid "AppSeed"
+msgstr "AppSeed"
+
+#: apps/authentication/templates/includes/footer.html:12
+#: apps/authentication/templates/includes/navigation.html:21
+#: apps/authentication/templates/includes/sidebar.html:18
+#: apps/authentication/templates/includes/sidebar.html:134
+#: apps/authentication/templates/includes/sidebar.html:142
+msgid "Copromanager"
+msgstr "Copromanager"
+
+#: apps/authentication/templates/includes/footer.html:14
+msgid "Copyright"
+msgstr "Droits d'auteur"
+
+#: apps/authentication/templates/includes/navigation.html:25
+#: apps/authentication/templates/includes/navigation.html:26
+msgid "Toggle navigation"
+msgstr "Basculer la navigation"
+
+#: apps/authentication/templates/includes/navigation.html:36
+msgid "Search..."
+msgstr "Rechercher..."
+
+#: apps/authentication/templates/includes/navigation.html:48
+msgid "Stats"
+msgstr "Statistiques"
+
+#: apps/authentication/templates/includes/navigation.html:57
+msgid "Some Actions"
+msgstr "Quelques actions"
+
+#: apps/authentication/templates/includes/navigation.html:61
+msgid "Mike John responded to your email"
+msgstr "Mike John a répondu à votre e-mail"
+
+#: apps/authentication/templates/includes/navigation.html:62
+msgid "You have 5 new tasks"
+msgstr "Vous avez 5 nouvelles tâches"
+
+#: apps/authentication/templates/includes/navigation.html:63
+msgid "You\\"
+msgstr "Vous\\"
+
+#: apps/authentication/templates/includes/navigation.html:64
+msgid "Another Notification"
+msgstr "Une autre notification"
+
+#: apps/authentication/templates/includes/navigation.html:65
+msgid "Another One"
+msgstr "Une autre"
+
+#: apps/authentication/templates/includes/navigation.html:72
+msgid "Account"
+msgstr "Compte"
+
+#: apps/authentication/templates/includes/navigation.html:76
+msgid "Profile"
+msgstr "Profil"
+
+#: apps/authentication/templates/includes/navigation.html:78
+msgid "Log out"
+msgstr "Déconnexion"
+
+#: apps/authentication/templates/includes/sidebar.html:29
+msgid "Dashboard SuperAdmin"
+msgstr "Tableau de bord SuperAdmin"
+
+#: apps/authentication/templates/includes/sidebar.html:39
+msgid "Dashboard SuperSyndic"
+msgstr "Tableau de bord SuperSyndic"
+
+#: apps/authentication/templates/includes/sidebar.html:50
+msgid "Super Syndic Inscription"
+msgstr "Inscription Super Syndic"
+
+#: apps/authentication/templates/includes/sidebar.html:58
+msgid "Dashboard Syndic"
+msgstr "Tableau de bord Syndic"
+
+#: apps/authentication/templates/includes/sidebar.html:68
+msgid "Dashboard Coproprietaire"
+msgstr "Tableau de bord Copropriétaire"
+
+#: apps/authentication/templates/includes/sidebar.html:77
+msgid "Dashboard Prestataire"
+msgstr "Tableau de bord Prestataire"
+
+#: apps/authentication/templates/includes/sidebar.html:91
+#: apps/dashboard/templates/user-profile.html:7
+msgid "User Profile"
+msgstr "Profil utilisateur"
+
+#: apps/authentication/templates/includes/sidebar.html:97
+msgid "Table List"
+msgstr "Liste des tableaux"
+
+#: apps/authentication/templates/includes/sidebar.html:109
+msgid "Icons"
+msgstr "Icônes"
+
+#: apps/authentication/templates/includes/sidebar.html:128
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: apps/authentication/templates/layouts/base.html:9
+msgid "Spain"
+msgstr "Espagne"
+
+#: apps/authentication/templates/layouts/base.html:10
+msgid "website"
+msgstr "site web"
+
+#: apps/authentication/templates/layouts/base.html:12
+msgid ""
+"Experience the power of Your Copromanager AI. Enhance productivity, "
+"streamline tasks, and get personalized assistance."
+msgstr ""
+"Découvrez la puissance de l'IA de Your Copromanager. Améliorez la "
+"productivité, optimisez les tâches et bénéficiez d'une assistance "
+"personnalisée."
+
+#: apps/authentication/templates/layouts/base.html:13
+msgid ""
+"Your Copromanager - AI Gestion des Syndics, Copropriétaires, "
+"Préstataires... ."
+msgstr ""
+"Your Copromanager - IA Gestion des Syndics, Copropriétaires, "
+"Préstataires... ."
+
+#: apps/authentication/templates/layouts/base.html:15
+msgid ""
+"Your Copromanager - Gestion des Syndics, Copropriétaires, Préstataires... . "
+"Your Copromanager AI. Increase productivity, automate tasks, and receive "
+"personalized recommendations."
+msgstr ""
+"Your Copromanager - Gestion des Syndics, Copropriétaires, Préstataires... . "
+"L'IA Your Copromanager. Augmentez la productivité, automatisez les tâches, "
+"et recevez des recommandations personnalisées."
+
+#: apps/authentication/templates/layouts/base.html:18
+msgid "summary_large_image"
+msgstr "image_grande_summary"
+
+#: apps/authentication/templates/layouts/base.html:19
+msgid ""
+"Your Copromanager - Your Copromanager AI Gestion des Syndics, "
+"Copropriétaires, Préstataires... ."
+msgstr ""
+"Your Copromanager - IA Your Copromanager Gestion des Syndics, "
+"Copropriétaires, Préstataires... ."
+
+#: apps/authentication/templates/layouts/base.html:21
+msgid ""
+"Your Copromanager - Your Copromanager AI. Increase productivity, automate "
+"tasks, and receive personalized recommendations."
+msgstr ""
+"Your Copromanager - IA Your Copromanager. Augmentez la productivité, "
+"automatisez les tâches et recevez des recommandations personnalisées."
+
+#: apps/authentication/templates/layouts/base.html:24
+msgid ""
+"Your Copromanager AI assistant, Gestion des Syndics, Copropriétaires, "
+"Préstataires, productivity, automation, personalized recommendations."
+msgstr ""
+"Assistant IA Your Copromanager, Gestion des Syndics, Copropriétaires, "
+"Préstataires, productivité, automatisation, recommandations personnalisées."
+
+#: apps/authentication/templates/layouts/base.html:25
+msgid "Developer"
+msgstr "Développeur"
+
+#: apps/authentication/templates/layouts/base.html:26
+#: apps/authentication/templates/layouts/base.html:27
+msgid "index, follow"
+msgstr "index, suivre"
+
+#: apps/authentication/templates/layouts/base.html:38
+msgid "Your Copromanager -"
+msgstr "Your Copromanager -"
+
+#: apps/authentication/templates/layouts/base.html:38
+msgid "AI"
+msgstr "IA"
+
+#: apps/authentication/templates/layouts/base.html:72
+msgid "Dark Mode"
+msgstr "Mode sombre"
+
+#: apps/authentication/templates/layouts/base.html:102
+msgid "-¡!¡- Welcome,"
+msgstr "-¡!¡- Bienvenue,"
+
+#: apps/authentication/templates/layouts/base.html:102
+msgid "-¡!¡-"
+msgstr "-¡!¡-"
+
+#: apps/authentication/views.py:76
+msgid "Superadmin created successfully."
+msgstr "Superadmin créé avec succès."
+
+#: apps/authentication/views.py:94
+msgid "Syndic created successfully."
+msgstr "Syndic créé avec succès."
+
+#: apps/authentication/views.py:98
+msgid "License form is not valid."
+msgstr "Le formulaire de licence n'est pas valide."
+
+#: apps/authentication/views.py:107
+msgid "Coproprietaire created successfully."
+msgstr "Copropriétaire créé avec succès."
+
+#: apps/authentication/views.py:109
+msgid "No syndic available to assign to Coproprietaire."
+msgstr "Aucun syndic disponible pour affecter à ce copropriétaire."
+
+#: apps/authentication/views.py:118
+msgid "Prestataire created successfully."
+msgstr "Prestataire créé avec succès."
+
+#: apps/authentication/views.py:120
+msgid "No syndic available to assign to Prestataire."
+msgstr "Aucun syndic disponible pour affecter à ce prestataire."
+
+#: apps/authentication/views.py:124
+msgid "Form is not valid"
+msgstr "Le formulaire n'est pas valide"
+
+#: apps/authentication/views.py:134
+msgid "Incriptions"
+msgstr "Inscriptions"
+
+#: apps/authentication/views.py:135 apps/authentication/views.py:217
+#: apps/authentication/views.py:236 apps/authentication/views.py:261
+#: apps/authentication/views.py:271 apps/authentication/views.py:280
+#: apps/dashboard/views.py:37 apps/dashboard/views.py:109
+#: apps/dashboard/views.py:150 apps/dashboard/views.py:161
+#: apps/dashboard/views.py:202 apps/dashboard/views.py:213
+#: apps/dashboard/views.py:256 apps/dashboard/views.py:300
+#: apps/dashboard/views.py:333 apps/dashboard/views.py:362
+#: apps/dashboard/views.py:378 apps/dashboard/views.py:394
+#: apps/dashboard/views.py:421 apps/dashboard/views.py:448
+#: apps/dashboard/views.py:473 apps/dashboard/views.py:501
+#: apps/home/views.py:23 apps/home/views.py:53 core/utils.py:36
+msgid "%a %d %B %Y"
+msgstr "%a %d %B %Y"
+
+#: apps/authentication/views.py:156
+msgid "Invalid credentials."
+msgstr "Identifiants invalides."
+
+#: apps/authentication/views.py:158
+msgid "Form is not valid. Please check the details."
+msgstr "Le formulaire n'est pas valide. Veuillez vérifier les détails."
+
+#: apps/authentication/views.py:173
+msgid "Register Super Syndic"
+msgstr "Enregistrer Super Syndic"
+
+#: apps/authentication/views.py:201
+msgid "Please fill the form below for upgrade to Super Syndic!"
+msgstr "Veuillez remplir le formulaire ci-dessous pour passer à Super Syndic !"
+
+#: apps/authentication/views.py:207
+msgid "Form is not valid."
+msgstr "Le formulaire n'est pas valide."
+
+#: apps/authentication/views.py:225
+#, fuzzy
+#| msgid "SuperSyndic"
+msgid "Login Super Syndic"
+msgstr "Connexion Super Syndic"
+
+#: apps/authentication/views.py:252
+msgid ""
+"An email has been sent with instructions to reset your password. If no email "
+"arrives, please ensure you've entered the correct email address registered "
+"with your account and check your spam folder."
+msgstr ""
+"Un email a été envoyé avec des instructions pour réinitialiser votre mot de "
+"passe. Si vous ne recevez pas l'email, veuillez vérifier que vous avez saisi "
+"l'adresse email correcte enregistrée avec votre compte et vérifiez votre "
+"dossier de spam."
+
+#: apps/authentication/views.py:260
+msgid "Password Reset"
+msgstr "Réinitialisation du mot de passe"
+
+#: apps/authentication/views.py:270
+msgid "New Password Confirmation"
+msgstr "Confirmation du nouveau mot de passe"
+
+#: apps/authentication/views.py:289
+#, python-format
+msgid "Syndic %(nom)s has been deleted."
+msgstr "Le Syndic %(nom)s a été supprimé."
+
+#: apps/authentication/views.py:309
+#, python-format
+msgid "SuperSyndic %(nom)s and their data have been deleted."
+msgstr "Le SuperSyndic %(nom)s et ses données ont été supprimés."
+
+#: apps/authentication/views.py:318
+#, python-format
+msgid "Coproprietaire %(nom)s has been deleted."
+msgstr "Le Copropriétaire %(nom)s a été supprimé."
+
+#: apps/authentication/views.py:327
+#, python-format
+msgid "Prestataire %(nom)s has been deleted."
+msgstr "Le Prestataire %(nom)s a été supprimé."
+
+#: apps/dashboard/forms.py:21 apps/dashboard/forms.py:42
+#: apps/dashboard/models.py:60 apps/dashboard/templates/user-profile.html:37
+msgid "Start Date"
+msgstr "Date de début"
+
+#: apps/dashboard/forms.py:22 apps/dashboard/forms.py:49
+#: apps/dashboard/models.py:61 apps/dashboard/templates/user-profile.html:38
+msgid "End Date"
+msgstr "Date de fin"
+
+#: apps/dashboard/forms.py:23
+msgid "Customized Features"
+msgstr "Fonctionnalités personnalisées"
+
+#: apps/dashboard/forms.py:24
+msgid "Is Customized"
+msgstr "Est personnalisé"
+
+#: apps/dashboard/forms.py:29
+msgid "Start date is required."
+msgstr "La date de début est requise."
+
+#: apps/dashboard/forms.py:32
+msgid "End date is required."
+msgstr "La date de fin est requise."
+
+#: apps/dashboard/forms.py:55
+msgid "Customized Features (optional)"
+msgstr "Fonctionnalités personnalisées (facultatif)"
+
+#: apps/dashboard/models.py:17 apps/dashboard/models.py:87
+#: apps/dashboard/models.py:104 apps/dashboard/models.py:121
+#: apps/dashboard/models.py:139 apps/dashboard/models.py:190
+msgid "User"
+msgstr "Utilisateur"
+
+#: apps/dashboard/models.py:21
+#, python-brace-format
+msgid "Superadmin: {email}"
+msgstr "Superadmin : {email}"
+
+#: apps/dashboard/models.py:27
+msgid "Features"
+msgstr "Fonctionnalités"
+
+#: apps/dashboard/models.py:28
+msgid "Creation Date"
+msgstr "Date de création"
+
+#: apps/dashboard/models.py:50
+msgid "Super Syndic"
+msgstr "Super Syndic"
+
+#: apps/dashboard/models.py:58
+msgid "Base License"
+msgstr "Licence de base"
+
+#: apps/dashboard/models.py:62
+msgid "Custom Features"
+msgstr "Fonctionnalités personnalisées"
+
+#: apps/dashboard/models.py:63
+msgid "Is Custom"
+msgstr "Est personnalisé"
+
+#: apps/dashboard/models.py:74
+#, python-brace-format
+msgid "License for {role} (from {start} to {end})"
+msgstr "Licence pour {role} (de {start} à {end})"
+
+#: apps/dashboard/models.py:153
+msgid "Number of Apartments"
+msgstr "Nombre d'appartements"
+
+#: apps/dashboard/models.py:154
+msgid "Total Area"
+msgstr "Surface totale"
+
+#: apps/dashboard/models.py:155
+msgid "Construction Date"
+msgstr "Date de construction"
+
+#: apps/dashboard/models.py:156
+msgid "Number of Floors"
+msgstr "Nombre d'étages"
+
+#: apps/dashboard/models.py:157
+msgid "Common Areas"
+msgstr "Espaces communs"
+
+#: apps/dashboard/models.py:158
+msgid "Last Inspection Date"
+msgstr "Date de dernière inspection"
+
+#: apps/dashboard/models.py:159
+msgid "Heating Type"
+msgstr "Type de chauffage"
+
+#: apps/dashboard/models.py:162
+#, python-brace-format
+msgid "Building {name} ({address})"
+msgstr "Bâtiment {name} ({address})"
+
+#: apps/dashboard/models.py:167
+msgid "Building"
+msgstr "Bâtiment"
+
+#: apps/dashboard/models.py:168
+msgid "Number"
+msgstr "Numéro"
+
+#: apps/dashboard/models.py:169
+msgid "Area"
+msgstr "Surface"
+
+#: apps/dashboard/models.py:171 apps/dashboard/models.py:176
+msgid "Owner"
+msgstr "Propriétaire"
+
+#: apps/dashboard/models.py:177
+msgid "Tenant"
+msgstr "Locataire"
+
+#: apps/dashboard/models.py:178
+msgid "Vacant"
+msgstr "Vacant"
+
+#: apps/dashboard/models.py:180
+msgid "Occupation"
+msgstr "Occupation"
+
+#: apps/dashboard/models.py:184
+#, python-brace-format
+msgid "Apartment {number} - {building}"
+msgstr "Appartement {number} - {building}"
+
+#: apps/dashboard/models.py:189
+msgid "Modified Model"
+msgstr "Modèle modifié"
+
+#: apps/dashboard/models.py:191
+msgid "Action"
+msgstr "Action"
+
+#: apps/dashboard/models.py:192 apps/dashboard/templates/user-profile.html:16
+msgid "Date"
+msgstr "Date"
+
+#: apps/dashboard/models.py:193
+msgid "Details"
+msgstr "Détails"
+
+#: apps/dashboard/models.py:196
+#, python-brace-format
+msgid "{model} modified by {user} on {date}"
+msgstr "{model} modifié par {user} le {date}"
+
+#: apps/dashboard/templates/customize-license.html:7
+#: apps/dashboard/templates/customize-license.html:21
+#: apps/dashboard/templates/customize-license.html:25
+msgid "Customize License for"
+msgstr "Personnaliser la licence pour"
+
+#: apps/dashboard/templates/customize-license.html:19
+#: apps/dashboard/templates/customize-license.html:23
+#: apps/dashboard/templates/user-profile.html:36
+msgid "License ID"
+msgstr "ID de la licence"
+
+#: apps/dashboard/templates/customize-license.html:19
+#: apps/dashboard/templates/customize-license.html:21
+#: apps/dashboard/templates/customize-license.html:23
+#: apps/dashboard/templates/customize-license.html:25
+#: env/lib/python3.10/site-packages/django/forms/widgets.py:800
+msgid "Unknown"
+msgstr "Inconnu"
+
+#: apps/dashboard/templates/customize-license.html:35
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: apps/dashboard/templates/customize-license.html:39
+#: apps/dashboard/templates/dashboard-superadmin.html:125
+#: apps/dashboard/templates/users-datas.html:159
+msgid "Return to Home"
+msgstr "Retour à l'accueil"
+
+#: apps/dashboard/templates/dashboard-coproprietaire.html:7
+msgid "Copropriétaire Dashboard"
+msgstr "Tableau de bord Copropriétaire"
+
+#: apps/dashboard/templates/dashboard-prestataire.html:7
+msgid "Prestataire Dashboard"
+msgstr "Tableau de bord Prestataire"
+
+#: apps/dashboard/templates/dashboard-superadmin.html:7
+msgid "SuperAdmin Dashboard"
+msgstr "Tableau de bord SuperAdmin"
+
+#: apps/dashboard/templates/dashboard-superadmin.html:29
+msgid "Super Syndics Information"
+msgstr "Informations sur les Super Syndics"
+
+#: apps/dashboard/templates/dashboard-superadmin.html:33
+msgid "Super Syndics"
+msgstr "Super Syndics"
+
+#: apps/dashboard/templates/dashboard-superadmin.html:34
+#: apps/dashboard/templates/dashboard-superadmin.html:59
+#: apps/dashboard/templates/dashboard-superadmin.html:84
+#: apps/dashboard/templates/dashboard-superadmin.html:109
+msgid "count"
+msgstr "compte"
+
+#: apps/dashboard/templates/dashboard-superadmin.html:40
+#: apps/dashboard/templates/dashboard-superadmin.html:65
+#: apps/dashboard/templates/dashboard-superadmin.html:90
+#: apps/dashboard/templates/dashboard-superadmin.html:115
+msgid "Click to create and/or edit"
+msgstr "Cliquez pour créer et/ou éditer"
+
+#: apps/dashboard/templates/dashboard-superadmin.html:54
+msgid "Syndics Information"
+msgstr "Informations sur les Syndics"
+
+#: apps/dashboard/templates/dashboard-superadmin.html:58
+#: apps/dashboard/templates/gestion-supersyndic.html:37
+#: apps/dashboard/templates/gestion-syndic.html:35
+msgid "Syndics"
+msgstr "Syndics"
+
+#: apps/dashboard/templates/dashboard-superadmin.html:79
+msgid "Co-owners Information"
+msgstr "Informations sur les Co-propriétaires"
+
+#: apps/dashboard/templates/dashboard-superadmin.html:83
+#: apps/dashboard/templates/gestion-coproprietaire.html:35
+#: apps/dashboard/templates/users-datas.html:83
+msgid "Co-owners"
+msgstr "Co-propriétaires"
+
+#: apps/dashboard/templates/dashboard-superadmin.html:104
+msgid "Providers Information"
+msgstr "Informations sur les Fournisseurs"
+
+#: apps/dashboard/templates/dashboard-superadmin.html:108
+#: apps/dashboard/templates/gestion-prestataire.html:34
+msgid "Providers"
+msgstr "Fournisseurs"
+
+#: apps/dashboard/templates/dashboard-supersyndic.html:7
+msgid "Super User Dashboard"
+msgstr "Tableau de bord Super Utilisateur"
+
+#: apps/dashboard/templates/dashboard-supersyndic.html:17
+#: apps/dashboard/templates/dashboard-syndic.html:17
+#: apps/dashboard/templates/license-detail.html:15
+msgid "Modify"
+msgstr "Modifier"
+
+#: apps/dashboard/templates/dashboard-syndic.html:7
+#: apps/dashboard/templates/gestion-syndic.html:7
+msgid "Syndic Dashboard"
+msgstr "Tableau de bord Syndic"
+
+#: apps/dashboard/templates/gestion-coproprietaire.html:23
+msgid "Backoffice - Management of Co-owners"
+msgstr "Backoffice - Gestion des Copropriétaires"
+
+#: apps/dashboard/templates/gestion-coproprietaire.html:40
+msgid "Total Co-owners"
+msgstr "Total des Copropriétaires"
+
+#: apps/dashboard/templates/gestion-coproprietaire.html:46
+msgid "Details of Co-owners"
+msgstr "Détails des Copropriétaires"
+
+#: apps/dashboard/templates/gestion-coproprietaire.html:51
+msgid "Co-owner Name"
+msgstr "Nom du Copropriétaire"
+
+#: apps/dashboard/templates/gestion-coproprietaire.html:53
+msgid "Co-owners Info"
+msgstr "Infos des Copropriétaires"
+
+#: apps/dashboard/templates/gestion-coproprietaire.html:54
+#: apps/dashboard/templates/gestion-coproprietaire.html:73
+#: apps/dashboard/templates/gestion-prestataire.html:53
+#: apps/dashboard/templates/gestion-prestataire.html:71
+#: apps/dashboard/templates/gestion-supersyndic.html:58
+#: apps/dashboard/templates/gestion-supersyndic.html:100
+#: apps/dashboard/templates/gestion-syndic.html:56
+#: env/lib/python3.10/site-packages/django/forms/formsets.py:499
+msgid "Delete"
+msgstr "Supprimer"
+
+#: apps/dashboard/templates/gestion-coproprietaire.html:65
+#: apps/dashboard/templates/gestion-prestataire.html:63
+#: apps/dashboard/templates/gestion-supersyndic.html:90
+#: apps/dashboard/templates/gestion-syndic.html:88
+msgid "View Details"
+msgstr "Voir les Détails"
+
+#: apps/dashboard/templates/gestion-coproprietaire.html:76
+msgid "Are you sure you want to delete this co-owner?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce copropriétaire ?"
+
+#: apps/dashboard/templates/gestion-prestataire.html:7
+msgid "SuperAdmin Dashboard Provider"
+msgstr "Tableau de bord SuperAdmin Fournisseur"
+
+#: apps/dashboard/templates/gestion-prestataire.html:17
+#: apps/dashboard/templates/gestion-supersyndic.html:19
+msgid "Sign Up"
+msgstr "Inscription"
+
+#: apps/dashboard/templates/gestion-prestataire.html:23
+msgid "Backoffice - Manage Providers"
+msgstr "Backoffice - Gérer les Fournisseurs"
+
+#: apps/dashboard/templates/gestion-prestataire.html:39
+msgid "Total Providers"
+msgstr "Total des Fournisseurs"
+
+#: apps/dashboard/templates/gestion-prestataire.html:45
+msgid "Provider Details"
+msgstr "Détails du Fournisseur"
+
+#: apps/dashboard/templates/gestion-prestataire.html:50
+msgid "Provider Name"
+msgstr "Nom du Fournisseur"
+
+#: apps/dashboard/templates/gestion-prestataire.html:52
+msgid "Provider Info"
+msgstr "Infos du Fournisseur"
+
+#: apps/dashboard/templates/gestion-prestataire.html:63
+msgid "n°"
+msgstr "n°"
+
+#: apps/dashboard/templates/gestion-prestataire.html:75
+msgid "Are you sure you want to delete this provider?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce fournisseur ?"
+
+#: apps/dashboard/templates/gestion-supersyndic.html:7
+#: apps/dashboard/views.py:121
+msgid "Super Syndic Dashboard"
+msgstr "Tableau de bord Super Syndic"
+
+#: apps/dashboard/templates/gestion-supersyndic.html:25
+msgid "Backoffice - Manage Super Syndics"
+msgstr "Backoffice - Gérer les Super Syndics"
+
+#: apps/dashboard/templates/gestion-supersyndic.html:42
+#: apps/dashboard/templates/gestion-syndic.html:40
+msgid "Total Syndics"
+msgstr "Total des Syndics"
+
+#: apps/dashboard/templates/gestion-supersyndic.html:48
+msgid "Super Syndic Details"
+msgstr "Détails du Super Syndic"
+
+#: apps/dashboard/templates/gestion-supersyndic.html:53
+#: apps/dashboard/templates/gestion-syndic.html:51
+msgid "Syndic Name"
+msgstr "Nom du Syndic"
+
+#: apps/dashboard/templates/gestion-supersyndic.html:55
+#: apps/dashboard/templates/gestion-syndic.html:53
+msgid "License"
+msgstr "Licence"
+
+#: apps/dashboard/templates/gestion-supersyndic.html:56
+#: apps/dashboard/templates/gestion-supersyndic.html:78
+#: apps/dashboard/templates/gestion-syndic.html:54
+#: apps/dashboard/templates/gestion-syndic.html:76
+msgid "Configure"
+msgstr "Configurer"
+
+#: apps/dashboard/templates/gestion-supersyndic.html:57
+msgid "Super Syndic Info"
+msgstr "Infos du Super Syndic"
+
+#: apps/dashboard/templates/gestion-supersyndic.html:72
+#: apps/dashboard/templates/gestion-syndic.html:70
+msgid "No license"
+msgstr "Aucune licence"
+
+#: apps/dashboard/templates/gestion-supersyndic.html:84
+#: apps/dashboard/templates/gestion-syndic.html:82 apps/dashboard/views.py:140
+#: apps/dashboard/views.py:192
+msgid "No license found for this syndic."
+msgstr "Aucune licence trouvée pour ce syndic."
+
+#: apps/dashboard/templates/gestion-supersyndic.html:93
+#: apps/dashboard/templates/gestion-syndic.html:91
+msgid "No license details for this syndic."
+msgstr "Aucun détail de licence pour ce syndic."
+
+#: apps/dashboard/templates/gestion-supersyndic.html:103
+msgid "Are you sure you want to delete this super syndic?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce super syndic ?"
+
+#: apps/dashboard/templates/gestion-syndic.html:17
+msgid "Inscription"
+msgstr "Inscription"
+
+#: apps/dashboard/templates/gestion-syndic.html:23
+msgid "Backoffice - Managing Syndics"
+msgstr "Backoffice - Gestion des Syndics"
+
+#: apps/dashboard/templates/gestion-syndic.html:46
+msgid "Details of Syndics"
+msgstr "Détails des Syndics"
+
+#: apps/dashboard/templates/gestion-syndic.html:55
+msgid "Syndic Info"
+msgstr "Informations sur le Syndic"
+
+#: apps/dashboard/templates/gestion-syndic.html:105
+msgid "Are you sure you want to delete this syndic?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce syndic ?"
+
+#: apps/dashboard/templates/license-detail.html:7 apps/dashboard/views.py:447
+msgid "License Details"
+msgstr "Détails de la Licence"
+
+#: apps/dashboard/templates/search-results.html:7
+msgid "Search Results"
+msgstr "Résultats de Recherche"
+
+#: apps/dashboard/templates/search-results.html:15
+msgid "Search Results for"
+msgstr "Résultats de Recherche pour"
+
+#: apps/dashboard/templates/search-results.html:32
+#: apps/dashboard/templates/user-profile.html:21
+msgid "Role"
+msgstr "Rôle"
+
+#: apps/dashboard/templates/search-results.html:36
+msgid "View Profile"
+msgstr "Voir le Profil"
+
+#: apps/dashboard/templates/search-results.html:45
+msgid "No users found."
+msgstr "Aucun utilisateur trouvé."
+
+#: apps/dashboard/templates/search-results.html:53
+#: apps/dashboard/templates/user-profile.html:64
+msgid "Back to Home"
+msgstr "Retour à l'Accueil"
+
+#: apps/dashboard/templates/user-profile.html:17
+msgid "User Information"
+msgstr "Informations sur l'Utilisateur"
+
+#: apps/dashboard/templates/user-profile.html:26
+msgid "Syndic Information"
+msgstr "Informations sur le Syndic"
+
+#: apps/dashboard/templates/user-profile.html:29
+msgid "Building Count"
+msgstr "Nombre de Bâtiments"
+
+#: apps/dashboard/templates/user-profile.html:32
+msgid "Licenses"
+msgstr "Licences"
+
+#: apps/dashboard/templates/user-profile.html:41
+msgid "No licenses found for this syndic."
+msgstr "Aucune licence trouvée pour ce syndic."
+
+#: apps/dashboard/templates/user-profile.html:45
+msgid "Coproprietaire Information"
+msgstr "Informations sur le Copropriétaire"
+
+#: apps/dashboard/templates/user-profile.html:51
+msgid "Prestataire Information"
+msgstr "Informations sur le Prestataire"
+
+#: apps/dashboard/templates/users-datas.html:16
+msgid "Syndic id:"
+msgstr "ID du Syndic :"
+
+#: apps/dashboard/templates/users-datas.html:19
+msgid "Syndic First Name:"
+msgstr "Prénom du Syndic :"
+
+#: apps/dashboard/templates/users-datas.html:20
+msgid "Syndic Email:"
+msgstr "Email du Syndic :"
+
+#: apps/dashboard/templates/users-datas.html:21
+msgid "Syndic Role:"
+msgstr "Rôle du Syndic :"
+
+#: apps/dashboard/templates/users-datas.html:22
+#: apps/dashboard/templates/users-datas.html:44
+msgid "Created at:"
+msgstr "Créé le :"
+
+#: apps/dashboard/templates/users-datas.html:23
+#: apps/dashboard/templates/users-datas.html:45
+msgid "Updated at:"
+msgstr "Mis à jour le :"
+
+#: apps/dashboard/templates/users-datas.html:38
+msgid "Super Syndic id:"
+msgstr "ID du Super Syndic :"
+
+#: apps/dashboard/templates/users-datas.html:41
+msgid "Super Syndic First Name:"
+msgstr "Prénom du Super Syndic :"
+
+#: apps/dashboard/templates/users-datas.html:42
+msgid "Super Syndic Email:"
+msgstr "Email du Super Syndic :"
+
+#: apps/dashboard/templates/users-datas.html:43
+msgid "Super Syndic Role:"
+msgstr "Rôle du Super Syndic :"
+
+#: apps/dashboard/templates/users-datas.html:59
+msgid "License Information"
+msgstr "Informations sur la Licence"
+
+#: apps/dashboard/templates/users-datas.html:63
+msgid "Start Date:"
+msgstr "Date de début :"
+
+#: apps/dashboard/templates/users-datas.html:66
+msgid "End Date:"
+msgstr "Date de fin :"
+
+#: apps/dashboard/templates/users-datas.html:88
+msgid "Co-owner Name:"
+msgstr "Nom du Copropriétaire :"
+
+#: apps/dashboard/templates/users-datas.html:89
+msgid "Co-owner First Name:"
+msgstr "Prénom du Copropriétaire :"
+
+#: apps/dashboard/templates/users-datas.html:90
+msgid "Co-owner Email:"
+msgstr "Email du copropriétaire :"
+
+#: apps/dashboard/templates/users-datas.html:93
+msgid "No co-owner found for this user."
+msgstr "Aucun copropriétaire trouvé pour cet utilisateur."
+
+#: apps/dashboard/templates/users-datas.html:111
+msgid "Associated Co-Prestataires"
+msgstr "Co-prestataires associés"
+
+#: apps/dashboard/templates/users-datas.html:116
+msgid "Prestataire Name:"
+msgstr "Nom du prestataire :"
+
+#: apps/dashboard/templates/users-datas.html:117
+msgid "Prestataire First Name:"
+msgstr "Prénom du prestataire :"
+
+#: apps/dashboard/templates/users-datas.html:118
+msgid "Prestataire Email:"
+msgstr "Email du prestataire :"
+
+#: apps/dashboard/templates/users-datas.html:121
+msgid "No prestataire found for this user."
+msgstr "Aucun prestataire trouvé pour cet utilisateur."
+
+#: apps/dashboard/templates/users-datas.html:137
+msgid "Managed Buildings"
+msgstr "Immeubles gérés"
+
+#: apps/dashboard/templates/users-datas.html:145
+msgid "No building found for this user."
+msgstr "Aucun immeuble trouvé pour cet utilisateur."
+
+#: apps/dashboard/views.py:36 apps/home/views.py:22 apps/home/views.py:52
+msgid "Welcome"
+msgstr "Bienvenue"
+
+#: apps/dashboard/views.py:108
+msgid "Super Admin Dashboard"
+msgstr "Tableau de bord Super Administrateur"
+
+#: apps/dashboard/views.py:332
+msgid "Super Syndic Gestion"
+msgstr "Gestion Super Syndic"
+
+#: apps/dashboard/views.py:361
+msgid "Syndic Gestion"
+msgstr "Gestion Syndic"
+
+#: apps/dashboard/views.py:377
+msgid "Coproprietaire Gestion"
+msgstr "Gestion Copropriétaire"
+
+#: apps/dashboard/views.py:393
+msgid "Prestataire Gestion"
+msgstr "Gestion Prestataire"
+
+#: apps/dashboard/views.py:420
+msgid "License Configuration"
+msgstr "Configuration de la licence"
+
+#: apps/dashboard/views.py:472
+#, python-format
+msgid "Result for: \"%s\""
+msgstr "Résultat pour : \"%s\""
+
+#: apps/dashboard/views.py:500
+#, python-format
+msgid "Profile of %s"
+msgstr "Profil de %s"
+
+#: core/settings.py:224
+msgid "English"
+msgstr ""
+
+#: core/settings.py:225
+msgid "French"
+msgstr ""
+
+#: core/settings.py:226
+msgid "Spanish"
+msgstr ""
+
+#: core/settings.py:227
+msgid "Portuguese"
+msgstr ""
+
+#: core/utils.py:94
+#, fuzzy
+#| msgid "No building found for this user."
+msgid "OTP device not found for this user."
+msgstr "Aucun immeuble trouvé pour cet utilisateur."
+
+#: env/lib/python3.10/site-packages/click/_termui_impl.py:518
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr "{{éditeur}} : Édition échouée"
+
+#: env/lib/python3.10/site-packages/click/_termui_impl.py:522
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr "{{éditeur}} : Édition échouée : {{e}}"
+
+#: env/lib/python3.10/site-packages/click/core.py:1120
+msgid "Aborted!"
+msgstr "Abandonné !"
+
+#: env/lib/python3.10/site-packages/click/core.py:1309
+#: env/lib/python3.10/site-packages/click/decorators.py:559
+msgid "Show this message and exit."
+msgstr "Afficher ce message et quitter."
+
+#: env/lib/python3.10/site-packages/click/core.py:1340
+#: env/lib/python3.10/site-packages/click/core.py:1370
+#, python-brace-format
+msgid "(Deprecated) {text}"
+msgstr "(Obsolète) {text}"
+
+#: env/lib/python3.10/site-packages/click/core.py:1387
+msgid "Options"
+msgstr "Options"
+
+#: env/lib/python3.10/site-packages/click/core.py:1413
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] "Argument supplémentaire inattendu ({args})"
+msgstr[1] "Arguments supplémentaires inattendus ({args})"
+
+#: env/lib/python3.10/site-packages/click/core.py:1429
+msgid "DeprecationWarning: The command {name!r} is deprecated."
+msgstr "Avertissement de dépréciation : La commande {name!r} est obsolète."
+
+#: env/lib/python3.10/site-packages/click/core.py:1636
+msgid "Commands"
+msgstr "Commandes"
+
+#: env/lib/python3.10/site-packages/click/core.py:1668
+msgid "Missing command."
+msgstr "Commande manquante."
+
+#: env/lib/python3.10/site-packages/click/core.py:1746
+msgid "No such command {name!r}."
+msgstr "Aucune commande de ce type {name!r}."
+
+#: env/lib/python3.10/site-packages/click/core.py:2310
+msgid "Value must be an iterable."
+msgstr "La valeur doit être un itérable."
+
+#: env/lib/python3.10/site-packages/click/core.py:2331
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] "Prend {nargs} valeurs mais 1 a été donnée."
+msgstr[1] "Prend {nargs} valeurs mais {len} ont été données."
+
+#: env/lib/python3.10/site-packages/click/core.py:2778
+#, python-brace-format
+msgid "env var: {var}"
+msgstr "variable d'environnement : {var}"
+
+#: env/lib/python3.10/site-packages/click/core.py:2808
+msgid "(dynamic)"
+msgstr "(dynamique)"
+
+#: env/lib/python3.10/site-packages/click/core.py:2821
+#, python-brace-format
+msgid "default: {default}"
+msgstr "par défaut : {default}"
+
+#: env/lib/python3.10/site-packages/click/core.py:2834
+msgid "required"
+msgstr "obligatoire"
+
+#: env/lib/python3.10/site-packages/click/decorators.py:465
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr "%(prog)s, version %(version)s"
+
+#: env/lib/python3.10/site-packages/click/decorators.py:528
+msgid "Show the version and exit."
+msgstr "Afficher la version et quitter."
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:44
+#: env/lib/python3.10/site-packages/click/exceptions.py:80
+#, python-brace-format
+msgid "Error: {message}"
+msgstr "Erreur : {message}"
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:72
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr "Essayez '{command} {option}' pour obtenir de l'aide."
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:121
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr "Valeur invalide : {message}"
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:123
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr "Valeur invalide pour {param_hint} : {message}"
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:179
+msgid "Missing argument"
+msgstr "Argument manquant"
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:181
+msgid "Missing option"
+msgstr "Option manquante"
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:183
+msgid "Missing parameter"
+msgstr "Paramètre manquant"
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:185
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr "Manque {param_type}"
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:192
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr "Paramètre manquant : {param_name}"
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:212
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr "Aucune option de ce type : {name}"
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:224
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] "Vouliez-vous dire {possibility} ?"
+msgstr[1] "(Options possibles : {possibilities})"
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:262
+msgid "unknown error"
+msgstr "erreur inconnue"
+
+#: env/lib/python3.10/site-packages/click/exceptions.py:269
+msgid "Could not open file {filename!r}: {message}"
+msgstr "Impossible d'ouvrir le fichier {filename!r} : {message}"
+
+#: env/lib/python3.10/site-packages/click/parser.py:231
+msgid "Argument {name!r} takes {nargs} values."
+msgstr "L'argument {name!r} prend {nargs} valeurs."
+
+#: env/lib/python3.10/site-packages/click/parser.py:413
+msgid "Option {name!r} does not take a value."
+msgstr "L'option {name!r} ne prend pas de valeur."
+
+#: env/lib/python3.10/site-packages/click/parser.py:474
+#, fuzzy
+#| msgid "Option {name!r} requires an argument."
+#| msgid_plural "L'option {name!r} nécessite {nargs} arguments."
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] "L'option {name!r} nécessite un argument."
+msgstr[1] "L'option {name!r} nécessite {nargs} arguments."
+
+#: env/lib/python3.10/site-packages/click/shell_completion.py:319
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr ""
+"La complétion shell n'est pas prise en charge pour les versions de Bash "
+"antérieures à 4.4."
+
+#: env/lib/python3.10/site-packages/click/shell_completion.py:326
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr ""
+"Impossible de détecter la version de Bash, la complétion shell n'est pas "
+"prise en charge."
+
+#: env/lib/python3.10/site-packages/click/termui.py:158
+msgid "Repeat for confirmation"
+msgstr "Répéter pour confirmation"
+
+#: env/lib/python3.10/site-packages/click/termui.py:174
+msgid "Error: The value you entered was invalid."
+msgstr "Erreur : La valeur que vous avez saisie était invalide."
+
+#: env/lib/python3.10/site-packages/click/termui.py:176
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr "Erreur : {e.message}"
+
+#: env/lib/python3.10/site-packages/click/termui.py:187
+msgid "Error: The two entered values do not match."
+msgstr "Erreur : Les deux valeurs saisies ne correspondent pas."
+
+#: env/lib/python3.10/site-packages/click/termui.py:243
+msgid "Error: invalid input"
+msgstr "Erreur : entrée invalide"
+
+#: env/lib/python3.10/site-packages/click/termui.py:773
+msgid "Press any key to continue..."
+msgstr "Appuyez sur une touche pour continuer..."
+
+#: env/lib/python3.10/site-packages/click/types.py:266
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+"Choisissez parmi :\n"
+"\t{choices}"
+
+#: env/lib/python3.10/site-packages/click/types.py:298
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] "{value!r} n'est pas {choice}."
+msgstr[1] "{value!r} n'est pas un des choix {choices}."
+
+#: env/lib/python3.10/site-packages/click/types.py:392
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] "{value!r} ne correspond pas au format {format}."
+msgstr[1] "{value!r} ne correspond pas aux formats {formats}."
+
+#: env/lib/python3.10/site-packages/click/types.py:414
+msgid "{value!r} is not a valid {number_type}."
+msgstr "{value!r} n'est pas un(e) {number_type} valide."
+
+#: env/lib/python3.10/site-packages/click/types.py:470
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr "{value} n'est pas dans la plage {range}."
+
+#: env/lib/python3.10/site-packages/click/types.py:611
+msgid "{value!r} is not a valid boolean."
+msgstr "{value!r} n'est pas un booléen valide."
+
+#: env/lib/python3.10/site-packages/click/types.py:635
+msgid "{value!r} is not a valid UUID."
+msgstr "{value!r} n'est pas un UUID valide."
+
+#: env/lib/python3.10/site-packages/click/types.py:822
+msgid "file"
+msgstr "fichier"
+
+#: env/lib/python3.10/site-packages/click/types.py:824
+msgid "directory"
+msgstr "répertoire"
+
+#: env/lib/python3.10/site-packages/click/types.py:826
+msgid "path"
+msgstr "chemin"
+
+#: env/lib/python3.10/site-packages/click/types.py:877
+msgid "{name} {filename!r} does not exist."
+msgstr "{name} {filename!r} n'existe pas."
+
+#: env/lib/python3.10/site-packages/click/types.py:886
+msgid "{name} {filename!r} is a file."
+msgstr "{name} {filename!r} est un fichier."
+
+#: env/lib/python3.10/site-packages/click/types.py:894
+#, python-brace-format
+msgid "{name} '{filename}' is a directory."
+msgstr "{name} '{filename}' est un répertoire."
+
+#: env/lib/python3.10/site-packages/click/types.py:903
+msgid "{name} {filename!r} is not readable."
+msgstr "{name} {filename!r} n'est pas lisible."
+
+#: env/lib/python3.10/site-packages/click/types.py:912
+msgid "{name} {filename!r} is not writable."
+msgstr "{name} {filename!r} n'est pas modifiable."
+
+#: env/lib/python3.10/site-packages/click/types.py:921
+msgid "{name} {filename!r} is not executable."
+msgstr "{name} {filename!r} n'est pas exécutable."
+
+#: env/lib/python3.10/site-packages/click/types.py:988
+#, python-brace-format
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] "{len_type} valeurs sont requises, mais {len_value} a été donnée."
+msgstr[1] "{len_type} valeurs sont requises, mais {len_value} ont été données."
+
+#: env/lib/python3.10/site-packages/django/contrib/messages/apps.py:16
+msgid "Messages"
+msgstr "Messages"
+
+#: env/lib/python3.10/site-packages/django/contrib/sitemaps/apps.py:8
+msgid "Site Maps"
+msgstr "Plans du site"
+
+#: env/lib/python3.10/site-packages/django/contrib/staticfiles/apps.py:9
+msgid "Static Files"
+msgstr "Fichiers statiques"
+
+#: env/lib/python3.10/site-packages/django/contrib/syndication/apps.py:7
+msgid "Syndication"
+msgstr "Syndication"
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: env/lib/python3.10/site-packages/django/core/paginator.py:30
+msgid "…"
+msgstr "…"
+
+#: env/lib/python3.10/site-packages/django/core/paginator.py:32
+msgid "That page number is not an integer"
+msgstr "Ce numéro de page n'est pas un entier"
+
+#: env/lib/python3.10/site-packages/django/core/paginator.py:33
+msgid "That page number is less than 1"
+msgstr "Ce numéro de page est inférieur à 1"
+
+#: env/lib/python3.10/site-packages/django/core/paginator.py:34
+msgid "That page contains no results"
+msgstr "Cette page ne contient aucun résultat"
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:22
+msgid "Enter a valid value."
+msgstr "Entrez une valeur valide."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:70
+msgid "Enter a valid domain name."
+msgstr "Entrez un nom de domaine valide."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:155
+#: env/lib/python3.10/site-packages/django/forms/fields.py:768
+msgid "Enter a valid URL."
+msgstr "Entrez une URL valide."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:216
+msgid "Enter a valid integer."
+msgstr "Entrez un entier valide."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:227
+msgid "Enter a valid email address."
+msgstr "Entrez une adresse e-mail valide."
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: env/lib/python3.10/site-packages/django/core/validators.py:310
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+"Entrez un “slug” valide composé de lettres, chiffres, tirets bas ou tirets."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:318
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr ""
+"Entrez un “slug” valide composé de lettres Unicode, chiffres, tirets bas ou "
+"tirets."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:330
+#: env/lib/python3.10/site-packages/django/core/validators.py:339
+#: env/lib/python3.10/site-packages/django/core/validators.py:353
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2215
+#, python-format
+msgid "Enter a valid %(protocol)s address."
+msgstr "Entrez une adresse %(protocol)s valide."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:332
+msgid "IPv4"
+msgstr "IPv4"
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:341
+#: env/lib/python3.10/site-packages/django/utils/ipv6.py:30
+msgid "IPv6"
+msgstr "IPv6"
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:355
+msgid "IPv4 or IPv6"
+msgstr "IPv4 ou IPv6"
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:396
+msgid "Enter only digits separated by commas."
+msgstr "Entrez uniquement des chiffres séparés par des virgules."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:402
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr ""
+"Assurez-vous que cette valeur est %(limit_value)s (elle est %(show_value)s)."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:437
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr ""
+"Assurez-vous que cette valeur est inférieure ou égale à %(limit_value)s."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:446
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr ""
+"Assurez-vous que cette valeur est supérieure ou égale à %(limit_value)s."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:455
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr ""
+"Assurez-vous que cette valeur est un multiple de la taille du pas "
+"%(limit_value)s."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:462
+#, python-format
+msgid ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+msgstr ""
+"Assurez-vous que cette valeur est un multiple de la taille du pas "
+"%(limit_value)s, en commençant à partir de %(offset)s, par exemple "
+"%(offset)s, %(valid_value1)s, %(valid_value2)s, et ainsi de suite."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:494
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+"Assurez-vous que cette valeur a au moins %(limit_value)d caractère (elle a "
+"%(show_value)d)."
+msgstr[1] ""
+"Assurez-vous que cette valeur a au moins %(limit_value)d caractères (elle a "
+"%(show_value)d)."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:512
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+"Assurez-vous que cette valeur a au plus %(limit_value)d caractère (elle a "
+"%(show_value)d)."
+msgstr[1] ""
+"Assurez-vous que cette valeur a au plus %(limit_value)d caractères (elle a "
+"%(show_value)d)."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:535
+#: env/lib/python3.10/site-packages/django/forms/fields.py:359
+#: env/lib/python3.10/site-packages/django/forms/fields.py:398
+msgid "Enter a number."
+msgstr "Entrez un nombre."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:537
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] "Assurez-vous qu'il n'y a pas plus de %(max)s chiffre au total."
+msgstr[1] "Assurez-vous qu'il n'y a pas plus de %(max)s chiffres au total."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:542
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] "Assurez-vous qu'il n'y a pas plus de %(max)s décimale."
+msgstr[1] "Assurez-vous qu'il n'y a pas plus de %(max)s décimales."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:547
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] ""
+"Assurez-vous qu'il n'y a pas plus de %(max)s chiffre avant la virgule."
+msgstr[1] ""
+"Assurez-vous qu'il n'y a pas plus de %(max)s chiffres avant la virgule."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:618
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+"L'extension de fichier “%(extension)s” n'est pas autorisée. Les extensions "
+"autorisées sont : %(allowed_extensions)s."
+
+#: env/lib/python3.10/site-packages/django/core/validators.py:680
+msgid "Null characters are not allowed."
+msgstr "Les caractères nuls ne sont pas autorisés."
+
+#: env/lib/python3.10/site-packages/django/db/models/base.py:1571
+#: env/lib/python3.10/site-packages/django/forms/models.py:908
+msgid "and"
+msgstr "et"
+
+#: env/lib/python3.10/site-packages/django/db/models/base.py:1573
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr "%(model_name)s avec ce %(field_labels)s existe déjà."
+
+#: env/lib/python3.10/site-packages/django/db/models/constraints.py:22
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr "La contrainte “%(name)s” est violée."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:134
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr "La valeur %(value)r n'est pas un choix valide."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:135
+msgid "This field cannot be null."
+msgstr "Ce champ ne peut pas être nul."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:136
+msgid "This field cannot be blank."
+msgstr "Ce champ ne peut pas être vide."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:137
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr "%(model_name)s avec ce %(field_label)s existe déjà."
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:141
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+"%(field_label)s doit être unique pour %(date_field_label)s %(lookup_type)s."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:180
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr "Champ de type : %(field_type)s"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1156
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr "La valeur “%(value)s” doit être soit True, soit False."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1157
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr "La valeur “%(value)s” doit être soit True, soit False, soit None."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1159
+msgid "Boolean (Either True or False)"
+msgstr "Booléen (Soit True, soit False)"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1209
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr "Chaîne (jusqu'à %(max_length)s)"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1211
+msgid "String (unlimited)"
+msgstr "Chaîne (illimitée)"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1320
+msgid "Comma-separated integers"
+msgstr "Entiers séparés par des virgules"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1421
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+"Le format de la valeur « %(value)s » est invalide. Il doit être au format "
+"YYYY-MM-DD."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1425
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1560
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+"La valeur « %(value)s » a le bon format (YYYY-MM-DD), mais c'est une date "
+"invalide."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1429
+msgid "Date (without time)"
+msgstr "Date (sans heure)"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1556
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
+"uuuuuu]][TZ] format."
+msgstr ""
+"Le format de la valeur « %(value)s » est invalide. Il doit être au format "
+"YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ]."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1564
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+msgstr ""
+"La valeur « %(value)s » a le bon format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]), mais c'est une date/heure invalide."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1569
+msgid "Date (with time)"
+msgstr "Date (avec heure)"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1696
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr "La valeur « %(value)s » doit être un nombre décimal."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1698
+msgid "Decimal number"
+msgstr "Nombre décimal"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1859
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+"uuuuuu] format."
+msgstr ""
+"Le format de la valeur « %(value)s » est invalide. Il doit être au format "
+"[DD] [[HH:]MM:]ss[.uuuuuu]."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1863
+msgid "Duration"
+msgstr "Durée"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:1940
+msgid "File path"
+msgstr "Chemin du fichier"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2018
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr "La valeur « %(value)s » doit être un nombre à virgule flottante."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2020
+msgid "Floating point number"
+msgstr "Nombre à virgule flottante"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2060
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr "La valeur « %(value)s » doit être un entier."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2062
+msgid "Integer"
+msgstr "Entier"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2158
+msgid "Big (8 byte) integer"
+msgstr "Grand entier (8 octets)"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2175
+msgid "Small integer"
+msgstr "Petit entier"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2183
+msgid "IPv4 address"
+msgstr "Adresse IPv4"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2214
+msgid "IP address"
+msgstr "Adresse IP"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2305
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2306
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr "La valeur « %(value)s » doit être None, True ou False."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2308
+msgid "Boolean (Either True, False or None)"
+msgstr "Booléen (True, False ou None)"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2359
+msgid "Positive big integer"
+msgstr "Grand entier positif"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2374
+msgid "Positive integer"
+msgstr "Entier positif"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2389
+msgid "Positive small integer"
+msgstr "Petit entier positif"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2405
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr "Slug (jusqu'à %(max_length)s)"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2441
+msgid "Text"
+msgstr "Texte"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2521
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
+"Le format de la valeur « %(value)s » est invalide. Il doit être au format HH:"
+"MM[:ss[.uuuuuu]]."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2525
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+"La valeur « %(value)s » a le bon format (HH:MM[:ss[.uuuuuu]]), mais c'est "
+"une heure invalide."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2529
+msgid "Time"
+msgstr "Heure"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2637
+msgid "URL"
+msgstr "URL"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2661
+msgid "Raw binary data"
+msgstr "Données binaires brutes"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2726
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr "“%(value)s” n'est pas un UUID valide."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/__init__.py:2728
+msgid "Universally unique identifier"
+msgstr "Identifiant universellement unique"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/files.py:244
+msgid "File"
+msgstr "Fichier"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/files.py:420
+msgid "Image"
+msgstr "Image"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/json.py:24
+msgid "A JSON object"
+msgstr "Un objet JSON"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/json.py:26
+msgid "Value must be valid JSON."
+msgstr "La valeur doit être un JSON valide."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/related.py:932
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r does not exist."
+msgstr "L'instance %(model)s avec %(field)s %(value)r n'existe pas."
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/related.py:934
+msgid "Foreign Key (type determined by related field)"
+msgstr "Clé étrangère (type déterminé par le champ lié)"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/related.py:1228
+msgid "One-to-one relationship"
+msgstr "Relation un-à-un"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/related.py:1285
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr "Relation %(from)s-%(to)s"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/related.py:1287
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr "Relations %(from)s-%(to)s"
+
+#: env/lib/python3.10/site-packages/django/db/models/fields/related.py:1335
+msgid "Many-to-many relationship"
+msgstr "Relation plusieurs-à-plusieurs"
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to the label
+#: env/lib/python3.10/site-packages/django/forms/boundfield.py:185
+msgid ":?.!"
+msgstr ":?.!"
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:95
+msgid "This field is required."
+msgstr "Ce champ est requis."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:308
+msgid "Enter a whole number."
+msgstr "Entrez un nombre entier."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:479
+#: env/lib/python3.10/site-packages/django/forms/fields.py:1260
+msgid "Enter a valid date."
+msgstr "Entrez une date valide."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:502
+#: env/lib/python3.10/site-packages/django/forms/fields.py:1261
+msgid "Enter a valid time."
+msgstr "Entrez une heure valide."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:529
+msgid "Enter a valid date/time."
+msgstr "Entrez une date/heure valide."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:563
+msgid "Enter a valid duration."
+msgstr "Entrez une durée valide."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:564
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr "Le nombre de jours doit être compris entre {min_days} et {max_days}."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:633
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr ""
+"Aucun fichier n'a été soumis. Vérifiez le type d'encodage du formulaire."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:634
+msgid "No file was submitted."
+msgstr "Aucun fichier n'a été soumis."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:635
+msgid "The submitted file is empty."
+msgstr "Le fichier soumis est vide."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:637
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:642
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+"Veuillez soumettre un fichier ou cocher la case claire, mais pas les deux."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:710
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+"Téléchargez une image valide. Le fichier que vous avez téléchargé n'est pas "
+"une image ou est une image corrompue."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:882
+#: env/lib/python3.10/site-packages/django/forms/fields.py:968
+#: env/lib/python3.10/site-packages/django/forms/models.py:1592
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+"Sélectionnez un choix valide. %(value)s n'est pas l'un des choix disponibles."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:970
+#: env/lib/python3.10/site-packages/django/forms/fields.py:1089
+#: env/lib/python3.10/site-packages/django/forms/models.py:1590
+msgid "Enter a list of values."
+msgstr "Entrez une liste de valeurs."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:1090
+msgid "Enter a complete value."
+msgstr "Entrez une valeur complète."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:1329
+msgid "Enter a valid UUID."
+msgstr "Entrez un UUID valide."
+
+#: env/lib/python3.10/site-packages/django/forms/fields.py:1359
+msgid "Enter a valid JSON."
+msgstr "Entrez un JSON valide."
+
+#. Translators: This is the default suffix added to form field labels
+#: env/lib/python3.10/site-packages/django/forms/forms.py:94
+msgid ":"
+msgstr ":"
+
+#: env/lib/python3.10/site-packages/django/forms/forms.py:230
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr "(Champ caché %(name)s) %(error)s"
+
+#: env/lib/python3.10/site-packages/django/forms/formsets.py:61
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+"Les données du formulaire de gestion sont manquantes ou ont été modifiées. "
+"Champs manquants : %(field_names)s. Vous devrez peut-être déposer un rapport "
+"de bug si le problème persiste."
+
+#: env/lib/python3.10/site-packages/django/forms/formsets.py:65
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] "Veuillez soumettre au maximum %(num)d formulaire."
+msgstr[1] "Veuillez soumettre au maximum %(num)d formulaires."
+
+#: env/lib/python3.10/site-packages/django/forms/formsets.py:70
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] "Veuillez soumettre au moins %(num)d formulaire."
+msgstr[1] "Veuillez soumettre au moins %(num)d formulaires."
+
+#: env/lib/python3.10/site-packages/django/forms/formsets.py:484
+#: env/lib/python3.10/site-packages/django/forms/formsets.py:491
+msgid "Order"
+msgstr "Ordre"
+
+#: env/lib/python3.10/site-packages/django/forms/models.py:901
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr "Veuillez corriger les données en double pour %(field)s."
+
+#: env/lib/python3.10/site-packages/django/forms/models.py:906
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+"Veuillez corriger les données en double pour %(field)s, qui doivent être "
+"uniques."
+
+#: env/lib/python3.10/site-packages/django/forms/models.py:913
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+"Veuillez corriger les données en double pour %(field_name)s, qui doivent "
+"être uniques pour %(lookup)s dans %(date_field)s."
+
+#: env/lib/python3.10/site-packages/django/forms/models.py:922
+msgid "Please correct the duplicate values below."
+msgstr "Veuillez corriger les valeurs en double ci-dessous."
+
+#: env/lib/python3.10/site-packages/django/forms/models.py:1359
+msgid "The inline value did not match the parent instance."
+msgstr "La valeur en ligne ne correspond pas à l'instance parente."
+
+#: env/lib/python3.10/site-packages/django/forms/models.py:1450
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+"Sélectionnez un choix valide. Ce choix n'est pas l'un des choix disponibles."
+
+#: env/lib/python3.10/site-packages/django/forms/models.py:1594
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr "« %(pk)s » n'est pas une valeur valide."
+
+#: env/lib/python3.10/site-packages/django/forms/utils.py:227
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+"%(datetime)s n'a pas pu être interprété dans le fuseau horaire "
+"%(current_timezone)s ; il peut être ambigu ou peut ne pas exister."
+
+#: env/lib/python3.10/site-packages/django/forms/widgets.py:461
+msgid "Clear"
+msgstr "Effacer"
+
+#: env/lib/python3.10/site-packages/django/forms/widgets.py:462
+msgid "Currently"
+msgstr "Actuellement"
+
+#: env/lib/python3.10/site-packages/django/forms/widgets.py:463
+msgid "Change"
+msgstr "Modifier"
+
+#: env/lib/python3.10/site-packages/django/forms/widgets.py:801
+msgid "Yes"
+msgstr "Oui"
+
+#: env/lib/python3.10/site-packages/django/forms/widgets.py:802
+msgid "No"
+msgstr "Non"
+
+#. Translators: Please do not add spaces around commas.
+#: env/lib/python3.10/site-packages/django/template/defaultfilters.py:873
+msgid "yes,no,maybe"
+msgstr "oui,non,peut-être"
+
+#: env/lib/python3.10/site-packages/django/template/defaultfilters.py:903
+#: env/lib/python3.10/site-packages/django/template/defaultfilters.py:920
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] "%(size)d octet"
+msgstr[1] "%(size)d octets"
+
+#: env/lib/python3.10/site-packages/django/template/defaultfilters.py:922
+#, python-format
+msgid "%s KB"
+msgstr "%s Ko"
+
+#: env/lib/python3.10/site-packages/django/template/defaultfilters.py:924
+#, python-format
+msgid "%s MB"
+msgstr "%s Mo"
+
+#: env/lib/python3.10/site-packages/django/template/defaultfilters.py:926
+#, python-format
+msgid "%s GB"
+msgstr "%s Go"
+
+#: env/lib/python3.10/site-packages/django/template/defaultfilters.py:928
+#, python-format
+msgid "%s TB"
+msgstr "%s To"
+
+#: env/lib/python3.10/site-packages/django/template/defaultfilters.py:930
+#, python-format
+msgid "%s PB"
+msgstr "%s PB"
+
+#: env/lib/python3.10/site-packages/django/utils/dateformat.py:74
+msgid "p.m."
+msgstr "p.m."
+
+#: env/lib/python3.10/site-packages/django/utils/dateformat.py:75
+msgid "a.m."
+msgstr "a.m."
+
+#: env/lib/python3.10/site-packages/django/utils/dateformat.py:80
+msgid "PM"
+msgstr "PM"
+
+#: env/lib/python3.10/site-packages/django/utils/dateformat.py:81
+msgid "AM"
+msgstr "AM"
+
+#: env/lib/python3.10/site-packages/django/utils/dateformat.py:153
+msgid "midnight"
+msgstr "minuit"
+
+#: env/lib/python3.10/site-packages/django/utils/dateformat.py:155
+msgid "noon"
+msgstr "midi"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:7
+msgid "Monday"
+msgstr "Lundi"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:8
+msgid "Tuesday"
+msgstr "Mardi"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:9
+msgid "Wednesday"
+msgstr "Mercredi"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:10
+msgid "Thursday"
+msgstr "Jeudi"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:11
+msgid "Friday"
+msgstr "Vendredi"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:12
+msgid "Saturday"
+msgstr "Samedi"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:13
+msgid "Sunday"
+msgstr "Dimanche"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:16
+msgid "Mon"
+msgstr "Lun"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:17
+msgid "Tue"
+msgstr "Mar"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:18
+msgid "Wed"
+msgstr "Mer"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:19
+msgid "Thu"
+msgstr "Jeu"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:20
+msgid "Fri"
+msgstr "Ven"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:21
+msgid "Sat"
+msgstr "Sam"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:22
+msgid "Sun"
+msgstr "Dim"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:25
+msgid "January"
+msgstr "Janvier"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:26
+msgid "February"
+msgstr "Février"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:27
+msgid "March"
+msgstr "Mars"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:28
+msgid "April"
+msgstr "Avril"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:29
+msgid "May"
+msgstr "Mai"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:30
+msgid "June"
+msgstr "Juin"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:31
+msgid "July"
+msgstr "Juillet"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:32
+msgid "August"
+msgstr "Août"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:33
+msgid "September"
+msgstr "Septembre"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:34
+msgid "October"
+msgstr "Octobre"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:35
+msgid "November"
+msgstr "Novembre"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:36
+msgid "December"
+msgstr "Décembre"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:39
+msgid "jan"
+msgstr "jan"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:40
+msgid "feb"
+msgstr "fév"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:41
+msgid "mar"
+msgstr "mar"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:42
+msgid "apr"
+msgstr "avr"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:43
+msgid "may"
+msgstr "mai"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:44
+msgid "jun"
+msgstr "juin"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:45
+msgid "jul"
+msgstr "juil"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:46
+msgid "aug"
+msgstr "août"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:47
+msgid "sep"
+msgstr "sep"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:48
+msgid "oct"
+msgstr "oct"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:49
+msgid "nov"
+msgstr "nov"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:50
+msgid "dec"
+msgstr "déc"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr "jan."
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr "févr."
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr "mars"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr "avr."
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr "mai"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr "juin"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr "juil."
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr "août"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr "sept."
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr "oct."
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr "nov."
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr "déc."
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr "janvier"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr "février"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr "mars"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr "avril"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr "mai"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr "juin"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr "juillet"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr "août"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:75
+msgctxt "alt. month"
+msgid "September"
+msgstr "septembre"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr "octobre"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:77
+msgctxt "alt. month"
+msgid "November"
+msgstr "novembre"
+
+#: env/lib/python3.10/site-packages/django/utils/dates.py:78
+msgctxt "alt. month"
+msgid "December"
+msgstr "Décembre"
+
+#: env/lib/python3.10/site-packages/django/utils/ipv6.py:8
+msgid "This is not a valid IPv6 address."
+msgstr "Ce n'est pas une adresse IPv6 valide."
+
+#: env/lib/python3.10/site-packages/django/utils/text.py:75
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr "%(truncated_text)s…"
+
+#: env/lib/python3.10/site-packages/django/utils/text.py:286
+msgid "or"
+msgstr "ou"
+
+#. Translators: This string is used as a separator between list elements
+#: env/lib/python3.10/site-packages/django/utils/text.py:305
+#: env/lib/python3.10/site-packages/django/utils/timesince.py:135
+msgid ", "
+msgstr ", "
+
+#: env/lib/python3.10/site-packages/django/utils/timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] "%(num)d an"
+msgstr[1] "%(num)d ans"
+
+#: env/lib/python3.10/site-packages/django/utils/timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] "%(num)d mois"
+msgstr[1] "%(num)d mois"
+
+#: env/lib/python3.10/site-packages/django/utils/timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] "%(num)d semaine"
+msgstr[1] "%(num)d semaines"
+
+#: env/lib/python3.10/site-packages/django/utils/timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] "%(num)d jour"
+msgstr[1] "%(num)d jours"
+
+#: env/lib/python3.10/site-packages/django/utils/timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] "%(num)d heure"
+msgstr[1] "%(num)d heures"
+
+#: env/lib/python3.10/site-packages/django/utils/timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] "%(num)d minute"
+msgstr[1] "%(num)d minutes"
+
+#: env/lib/python3.10/site-packages/django/views/csrf.py:29
+msgid "Forbidden"
+msgstr "Interdit"
+
+#: env/lib/python3.10/site-packages/django/views/csrf.py:30
+msgid "CSRF verification failed. Request aborted."
+msgstr "Échec de la vérification CSRF. Demande annulée."
+
+#: env/lib/python3.10/site-packages/django/views/csrf.py:34
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+"Vous voyez ce message parce que ce site HTTPS nécessite l'envoi d'un en-tête "
+"“Referer” par votre navigateur, mais aucun en-tête n'a été envoyé. Cet en-"
+"tête est requis pour des raisons de sécurité, afin de garantir que votre "
+"navigateur n'est pas piraté par des tiers."
+
+#: env/lib/python3.10/site-packages/django/views/csrf.py:40
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+"Si vous avez configuré votre navigateur pour désactiver les en-têtes "
+"“Referer”, veuillez les réactiver, au moins pour ce site, ou pour les "
+"connexions HTTPS, ou pour les requêtes “same-origin”."
+
+#: env/lib/python3.10/site-packages/django/views/csrf.py:45
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+msgstr ""
+"Si vous utilisez la balise <meta name=\"referrer\" content=\"no-referrer\"> "
+"ou l'en-tête “Referrer-Policy: no-referrer”, veuillez les supprimer. La "
+"protection CSRF nécessite l'en-tête “Referer” pour effectuer une "
+"vérification stricte du référent. Si vous êtes préoccupé par la "
+"confidentialité, utilisez des alternatives comme <a rel=\"noreferrer\" …> "
+"pour les liens vers des sites tiers."
+
+#: env/lib/python3.10/site-packages/django/views/csrf.py:54
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+"Vous voyez ce message parce que ce site nécessite un cookie CSRF lors de "
+"l'envoi de formulaires. Ce cookie est requis pour des raisons de sécurité, "
+"afin de garantir que votre navigateur n'est pas piraté par des tiers."
+
+#: env/lib/python3.10/site-packages/django/views/csrf.py:60
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+"Si vous avez configuré votre navigateur pour désactiver les cookies, "
+"veuillez les réactiver, au moins pour ce site, ou pour les requêtes “same-"
+"origin”."
+
+#: env/lib/python3.10/site-packages/django/views/csrf.py:66
+msgid "More information is available with DEBUG=True."
+msgstr "Plus d'informations sont disponibles avec DEBUG=True."
+
+#: env/lib/python3.10/site-packages/django/views/generic/dates.py:44
+msgid "No year specified"
+msgstr "Aucune année spécifiée"
+
+#: env/lib/python3.10/site-packages/django/views/generic/dates.py:64
+#: env/lib/python3.10/site-packages/django/views/generic/dates.py:115
+#: env/lib/python3.10/site-packages/django/views/generic/dates.py:214
+msgid "Date out of range"
+msgstr "Date hors limite"
+
+#: env/lib/python3.10/site-packages/django/views/generic/dates.py:94
+msgid "No month specified"
+msgstr "Aucun mois spécifié"
+
+#: env/lib/python3.10/site-packages/django/views/generic/dates.py:147
+msgid "No day specified"
+msgstr "Aucun jour spécifié"
+
+#: env/lib/python3.10/site-packages/django/views/generic/dates.py:194
+msgid "No week specified"
+msgstr "Aucune semaine spécifiée"
+
+#: env/lib/python3.10/site-packages/django/views/generic/dates.py:349
+#: env/lib/python3.10/site-packages/django/views/generic/dates.py:380
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr "Aucun(e) %(verbose_name_plural)s disponible"
+
+#: env/lib/python3.10/site-packages/django/views/generic/dates.py:652
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because %(class_name)s."
+"allow_future is False."
+msgstr ""
+"Les %(verbose_name_plural)s futurs ne sont pas disponibles car "
+"%(class_name)s.allow_future est Faux."
+
+#: env/lib/python3.10/site-packages/django/views/generic/dates.py:692
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr "Chaîne de date invalide « %(datestr)s » au format « %(format)s »"
+
+#: env/lib/python3.10/site-packages/django/views/generic/detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr "Aucun(e) %(verbose_name)s trouvé(e) correspondant à la requête"
+
+#: env/lib/python3.10/site-packages/django/views/generic/list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr ""
+"La page n'est pas « dernière » et ne peut pas être convertie en entier."
+
+#: env/lib/python3.10/site-packages/django/views/generic/list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr "Page invalide (%(page_number)s) : %(message)s"
+
+#: env/lib/python3.10/site-packages/django/views/generic/list.py:169
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr "Liste vide et « %(class_name)s.allow_empty » est Faux."
+
+#: env/lib/python3.10/site-packages/django/views/static.py:49
+msgid "Directory indexes are not allowed here."
+msgstr "Les index de répertoires ne sont pas autorisés ici."
+
+#: env/lib/python3.10/site-packages/django/views/static.py:51
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr "« %(path)s » n'existe pas"
+
+#: env/lib/python3.10/site-packages/django/views/static.py:68
+#: env/lib/python3.10/site-packages/django/views/templates/directory_index.html:8
+#: env/lib/python3.10/site-packages/django/views/templates/directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr "Index de %(directory)s"
+
+#: env/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:7
+#: env/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr "L'installation a réussi ! Félicitations !"
+
+#: env/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+"Consultez les <a href=\"https://docs.djangoproject.com/en/%(version)s/"
+"releases/\" target=\"_blank\" rel=\"noopener\">notes de version</a> pour "
+"Django %(version)s"
+
+#: env/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+msgstr ""
+"Vous voyez cette page car <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> est activé dans votre fichier de paramètres "
+"et vous n'avez configuré aucune URL."
+
+#: env/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:217
+msgid "Django Documentation"
+msgstr "Documentation Django"
+
+#: env/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr "Sujets, références et tutoriels"
+
+#: env/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr "Tutoriel : une application de sondage"
+
+#: env/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:227
+msgid "Get started with Django"
+msgstr "Commencez avec Django"
+
+#: env/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:235
+msgid "Django Community"
+msgstr "Communauté Django"
+
+#: env/lib/python3.10/site-packages/django/views/templates/default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr "Connectez-vous, obtenez de l'aide ou contribuez"
+
+#: env/lib/python3.10/site-packages/django_recaptcha/fields.py:20
+#: env/lib/python3.10/site-packages/django_recaptcha/fields.py:21
+msgid "Error verifying reCAPTCHA, please try again."
+msgstr "Erreur lors de la vérification du reCAPTCHA, veuillez réessayer."

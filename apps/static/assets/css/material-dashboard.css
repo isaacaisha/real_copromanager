@@ -12819,7 +12819,39 @@ Copyright (c) 2015 Daniel Eden
 
 /*# sourceMappingURL=material-dashboard.css.map */
 
-/* Custom CSS */
+/*==============================
+=>  Translate Language BTN Section
+================================*/
+.darkmode-selectlang-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+body > div.wrapper > div.darkmode-selectlang-container.mb-3 > form > select {
+  color: #000 !important;
+
+}
+
+.language-form select {
+  padding: 2px 3px; /* Smaller padding */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px; /* Smaller font size */
+  margin-right: 7px;
+  text-align: center;
+  width: auto; /* Let the width adjust dynamically */
+  height: 19; /* Adjust height for consistency */
+}
+
+.language-form {
+  margin: 0;
+}
+
+/*==============================
+=>  Translate Language BTN Section
+================================*/
 .img-container {
   border: 0.1rem solid #9368E9;
   border-radius: 37rem;
@@ -12838,7 +12870,9 @@ a.btn.btn-secondary.btn-sm {
     background-color: #ccc;
 }
 
-/* Dark-Mode Section */
+/*==============================
+=>   Dark-Mode Section 
+================================*/
 body.dark-mode {
   background-color: #333; /* Soft dark gray */
   color: #999 !important;
@@ -12950,7 +12984,6 @@ body.dark-mode .copyright {
 /*==============================
 =>  2AF Authentication Section
 ================================*/
-
 h1.mb-0 {
   font-family: Arial, Helvetica, sans-serif;
   font-size: large;

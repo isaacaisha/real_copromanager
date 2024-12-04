@@ -4,7 +4,6 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 import os
-from django.urls import reverse_lazy
 import environ
 from decouple import config
 from unipath import Path
@@ -31,7 +30,7 @@ ALLOWED_HOSTS = [
     'test-cop.copromanager.com', 'www.test-cop.copromanager.com', '35.180.33.83',
     'your.copromanager.pro', 'www.your.copromanager.pro', '142.93.235.205',
     'localhost', '127.0.0.1', config('SERVER', default='127.0.0.1'),
-    '192.168.143.182', '0.0.0.0'
+    '192.168.230.182', '0.0.0.0'
 ]
 
 # To route traffic through OWASP ZAP for testing
@@ -43,9 +42,9 @@ PROXY = {
 # Set secure headers (Optional but recommended for production)
 CSRF_TRUSTED_ORIGINS = [
     'https://test-cop.copromanager.com',
-    'https://www.test-cop.copromanager.com'
+    'https://www.test-cop.copromanager.com',
     'https://your.copromanager.pro',
-    'https://www.your.copromanager.pro'
+    'https://www.your.copromanager.pro',
 ]
 
 # Allow all origins to access the API
@@ -130,7 +129,8 @@ INSTALLED_APPS = [
     
     'apps.authentication',
     'apps.home',  # Enable the inner home (home)
-    #'apps.dashboard',
+    'apps.dashboard',
+    #'apps.dashboard.apps.DashboardConfig',
 
     #'rest_framework',
     #'corsheaders',
@@ -141,9 +141,10 @@ AUTH_USER_MODEL = 'authentication.CustomUser'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     #that detects the user's preferred language from their browser settings or session and applies it
     'django.middleware.locale.LocaleMiddleware',
+    'core.middleware.ThreadLocals',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -163,7 +164,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'apps/authentication/templates'),
-            #os.path.join(BASE_DIR, 'apps/dashboard/templates'),
+            os.path.join(BASE_DIR, 'apps/dashboard/templates'),
             ],
         #'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
@@ -173,6 +174,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
+                'django.template.context_processors.i18n',
             ],
         },
     },
@@ -226,10 +229,12 @@ LANGUAGES = [
 
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locale'),
+    BASE_DIR.child('locale'),
+    os.path.join(CORE_DIR, '..', 'locale'),
 ]
 
-#LANGUAGE_CODE = 'en-us'  # Default language
-LANGUAGE_CODE = 'fr'  # Default language
+LANGUAGE_CODE = 'en'  # Default language
+LANGUAGE_COOKIE_NAME = 'django_language'  # Default is 'django_language'
 
 TIME_ZONE = 'UTC'
 

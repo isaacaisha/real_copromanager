@@ -1,8 +1,8 @@
 {% extends "layouts/base.html" %}
 
-{% load static %}
+{% load static i18n %}
 
-{% block title %} Connexion/Login {% endblock %} 
+{% block title %} {% trans "Login" %} {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -17,7 +17,7 @@
             <i class="fas fa-house"></i>
           </div>
           <h4 class="card-title text-center">
-            Connexion
+            {% trans "Login" %}
           </h4>
         </div>
         <div class="card-body">
@@ -26,7 +26,7 @@
               {% if msg %}
                 <span class="text-danger">{{ msg | safe }}</span>
               {% else %}
-                  Entrez vos Infos
+                  {% trans "Enter your Credentials" %}
               {% endif %}  
           </h6>
           
@@ -71,7 +71,7 @@
             <br />
 
             <div class="text-center pull-left">
-              <button type="submit" name="login" class="btn btn-success btn-sm">Connexion</button>
+              <button type="submit" name="login" class="btn btn-success btn-sm">{% trans "Login" %}</button>
             </div>
 
             <!--&nbsp; &nbsp;
@@ -81,7 +81,7 @@
 
             &nbsp; &nbsp;
             <div class="text-center pull-right">
-              <a href="{% url 'password_reset' %}" class="btn btn-sm"><i>Mot de passe oublié?</i></a>
+              <a href="{% url 'password_reset' %}" class="btn btn-sm"><i>{% trans "Reset Password" %}</i></a>
             </div>
 
             <div class="clearfix"></div>

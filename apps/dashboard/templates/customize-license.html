@@ -1,0 +1,51 @@
+<!-- apps/dashboard/templates/customize_license.html -->
+
+{% extends "layouts/base.html" %}
+
+{% load static i18n %}
+
+{% block title %} - {% trans "Customize License for" %} {{ syndic.name }} {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="card">
+        <div class="card-header">
+            {% if user.role == 'Syndic' %}
+            <span>{% trans "License ID" %} {{ license.syndic.user.id|default:_("Unknown") }}</span>
+            <br>
+            <span>{% trans "Customize License for" %} {{ license.syndic.user.nom|default:_("Unknown") }}</span>
+            {% else %}
+            <span>{% trans "License ID" %} {{ license.supersyndic.user.id|default:_("Unknown") }}</span>
+            <br>
+            <span>{% trans "Customize License for" %} {{ license.supersyndic.user.nom|default:_("Unknown") }}</span>
+            {% endif %}
+        </div>
+
+        <div class="card-body">
+            <form method="POST" action="{% url 'customize-license' license.id %}">
+                {% csrf_token %}
+                {{ license_form.as_p }}
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success btn-sm pull-left">{% trans "Save" %}</button>
+                    {% if user.is_authenticated and user.role == 'Superadmin' %}
+                    <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm pull-right">{% trans "Cancel" %}</a>
+                    {% else %}
+                    <a href="{% url 'home' %}" class="btn mb-4">{% trans "Return to Home" %}</a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

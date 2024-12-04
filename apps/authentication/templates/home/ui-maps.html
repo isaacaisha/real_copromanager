@@ -1,6 +1,8 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Maps {% endblock %} 
+{% load static i18n %}
+
+{% block title %} {% trans "Maps" %} {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -15,7 +17,7 @@
 {% block javascripts %}
 
   <!--  Google Maps Plugin    -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4l0YOtd6xf5DalZby1pu8IC7EeAMscZ8"></script>
 
   <script>
     $(document).ready(function() {

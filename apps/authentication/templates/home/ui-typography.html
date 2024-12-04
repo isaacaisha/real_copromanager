@@ -1,6 +1,8 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} UI Typography {% endblock %} 
+{% load static i18n %}
+
+{% block title %} {% trans "UI Typography" %} {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -9,93 +11,93 @@
 
         <div class="card">
             <div class="card-header card-header-primary">
-              <h4 class="card-title">Material Dashboard Heading</h4>
-              <p class="card-category">Created using Roboto Font Family</p>
+              <h4 class="card-title">{% trans "Material Dashboard Heading" %}</h4>
+              <p class="card-category">{% trans "Created using Roboto Font Family" %}</p>
             </div>
             <div class="card-body">
               <div id="typography">
                 <div class="card-title">
-                  <h2>Typography</h2>
+                  <h2>{% trans "Typography" %}</h2>
                 </div>
                 <div class="row">
                   <div class="tim-typo">
                     <h1>
-                      <span class="tim-note">Header 1</span>The Life of Material Dashboard </h1>
+                      <span class="tim-note">{% trans "Header 1" %}</span>{% trans "The Life of Material Dashboard" %}</h1>
                   </div>
                   <div class="tim-typo">
                     <h2>
-                      <span class="tim-note">Header 2</span>The Life of Material Dashboard</h2>
+                      <span class="tim-note">{% trans "Header 2" %}</span>{% trans "The Life of Material Dashboard" %}</h2>
                   </div>
                   <div class="tim-typo">
                     <h3>
-                      <span class="tim-note">Header 3</span>The Life of Material Dashboard</h3>
+                      <span class="tim-note">{% trans "Header 3" %}</span>{% trans "The Life of Material Dashboard" %}</h3>
                   </div>
                   <div class="tim-typo">
                     <h4>
-                      <span class="tim-note">Header 4</span>The Life of Material Dashboard</h4>
+                      <span class="tim-note">{% trans "Header 4" %}</span>{% trans "The Life of Material Dashboard" %}</h4>
                   </div>
                   <div class="tim-typo">
                     <h5>
-                      <span class="tim-note">Header 5</span>The Life of Material Dashboard</h5>
+                      <span class="tim-note">{% trans "Header 5" %}</span>{% trans "The Life of Material Dashboard" %}</h5>
                   </div>
                   <div class="tim-typo">
                     <h6>
-                      <span class="tim-note">Header 6</span>The Life of Material Dashboard</h6>
+                      <span class="tim-note">{% trans "Header 6" %}</span>{% trans "The Life of Material Dashboard" %}</h6>
                   </div>
                   <div class="tim-typo">
                     <p>
-                      <span class="tim-note">Paragraph</span>
-                      I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at.</p>
+                      <span class="tim-note">{% trans "Paragraph" %}</span>
+                      {% trans "I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at." %}</p>
                   </div>
                   <div class="tim-typo">
-                    <span class="tim-note">Quote</span>
+                    <span class="tim-note">{% trans "Quote" %}</span>
                     <blockquote class="blockquote">
                       <p>
-                        I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at.
+                        {% trans "I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at." %}
                       </p>
                       <small>
-                        Kanye West, Musician
+                        {% trans "Kanye West, Musician" %}
                       </small>
                     </blockquote>
                   </div>
                   <div class="tim-typo">
-                    <span class="tim-note">Muted Text</span>
+                    <span class="tim-note">{% trans "Muted Text" %}</span>
                     <p class="text-muted">
-                      I will be the leader of a company that ends up being worth billions of dollars, because I got the answers...
+                      {% trans "I will be the leader of a company that ends up being worth billions of dollars, because I got the answers..." %}
                     </p>
                   </div>
                   <div class="tim-typo">
-                    <span class="tim-note">Primary Text</span>
+                    <span class="tim-note">{% trans "Primary Text" %}</span>
                     <p class="text-primary">
-                      I will be the leader of a company that ends up being worth billions of dollars, because I got the answers... </p>
+                      {% trans "I will be the leader of a company that ends up being worth billions of dollars, because I got the answers..." %} </p>
                   </div>
                   <div class="tim-typo">
-                    <span class="tim-note">Info Text</span>
+                    <span class="tim-note">{% trans "Info Text" %}</span>
                     <p class="text-info">
-                      I will be the leader of a company that ends up being worth billions of dollars, because I got the answers... </p>
+                      {% trans "I will be the leader of a company that ends up being worth billions of dollars, because I got the answers..." %} </p>
                   </div>
                   <div class="tim-typo">
-                    <span class="tim-note">Success Text</span>
+                    <span class="tim-note">{% trans "Success Text" %}</span>
                     <p class="text-success">
-                      I will be the leader of a company that ends up being worth billions of dollars, because I got the answers... </p>
+                      {% trans "I will be the leader of a company that ends up being worth billions of dollars, because I got the answers..." %} </p>
                   </div>
                   <div class="tim-typo">
-                    <span class="tim-note">Warning Text</span>
+                    <span class="tim-note">{% trans "Warning Text" %}</span>
                     <p class="text-warning">
-                      I will be the leader of a company that ends up being worth billions of dollars, because I got the answers...
+                      {% trans "I will be the leader of a company that ends up being worth billions of dollars, because I got the answers..." %}
                     </p>
                   </div>
                   <div class="tim-typo">
-                    <span class="tim-note">Danger Text</span>
+                    <span class="tim-note">{% trans "Danger Text" %}</span>
                     <p class="text-danger">
-                      I will be the leader of a company that ends up being worth billions of dollars, because I got the answers... </p>
+                      {% trans "I will be the leader of a company that ends up being worth billions of dollars, because I got the answers..." %} </p>
                   </div>
                   <div class="tim-typo">
                     <h2>
-                      <span class="tim-note">Small Tag</span>
-                      Header with small subtitle
+                      <span class="tim-note">{% trans "Small Tag" %}</span>
+                      {% trans "Header with small subtitle" %}
                       <br>
-                      <small>Use "small" tag for the headers</small>
+                      <small>{% trans "Use \"small\" tag for the headers" %}</small>
                     </h2>
                   </div>
                 </div>

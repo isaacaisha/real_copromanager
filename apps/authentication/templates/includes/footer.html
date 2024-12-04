@@ -1,16 +1,18 @@
+{% load static i18n %}
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <footer class="footer">
-      <div class="container-fluid">
-        <div class="row justify-content-center">
-          <div class="col-lg-8 col-md-10 mx-auto">
-          </div>
-          <div class="copyright p-1 mt-3 mb-3">
-            © <a rel="noopener noreferrer" href="#" class="a_link">
-                Copromanager
-              </a>
-            Copyright {{ date }}
-          </div>
-        </div>
+<footer class="footer">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10 mx-auto">
       </div>
-    </footer>
+      <div class="copyright p-1 mt-3 mb-3">
+        © <a rel="noopener noreferrer" href="#" class="a_link">
+          {% trans "Copromanager" %}
+        </a>
+        {% trans "Copyright" %} {{ date }}
+      </div>
+    </div>
+  </div>
+</footer>

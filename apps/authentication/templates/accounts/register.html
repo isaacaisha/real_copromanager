@@ -1,8 +1,8 @@
 {% extends "layouts/base.html" %}
 
-{% load static %}
+{% load static i18n %}
 
-{% block title %} Inscription/Register {% endblock %} 
+{% block title %} {% trans "Register" %} {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -17,7 +17,7 @@
             <i class="material-icons">person</i>
           </div>
           <h4 class="card-title">
-            Creer Syndic, Copro... .
+            {% trans "Create Syndic, Co-Owner..." %}
           </h4>
         </div>
         <div class="card-body">
@@ -26,7 +26,7 @@
               {% if msg %}
                 <span class="text-danger">{{ msg | safe }}</span>
               {% else %}
-                Ajouter Les Infos
+                {% trans "Add Credentials" %}
               {% endif %}  
           </h6>
           
@@ -35,7 +35,7 @@
           {% if success %}
 
             <p class="">
-              Please <a href="{% url 'login' %}" class="text-black text-small">authenticate</a> using the new account.
+              {% trans "Please" %} <a href="{% url 'login' %}" class="text-black text-small">{% trans "authenticate" %}</a> {% trans "using the new account." %}
             </p>  
 
           {% else %}
@@ -82,7 +82,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label class="bmd-label-floating">Role:</label>
+                    <label class="bmd-label-floating">{% trans "Role:" %}</label>
                     {{ form.role }}
                   </div>
                 </div>
@@ -123,11 +123,11 @@
               {{ license_form.as_p }}
               <br>
 
-              <button type="submit" name="register" class="btn btn-success btn-sm pull-left">Inscrire</button>
+              <button type="submit" name="register" class="btn btn-success btn-sm pull-left">{% trans "Register" %}</button>
 
               <!-- Back Button gestion -->
               <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm pull-right">
-               Backoffice
+               {% trans "Backoffice" %}
               </a>
 
               <div class="clearfix"></div>

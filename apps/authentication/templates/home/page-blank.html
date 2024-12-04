@@ -1,6 +1,8 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Page Blank {% endblock %} 
+{% load i18n %}
+
+{% block title %} {% trans "Page Blank" %} {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -11,11 +13,11 @@
         <div class="col-md-12">
             <div class="card card-profile">
                 <div class="card-body">
-                    <h6 class="card-category text-gray">Page Blank</h6>
+                    <h6 class="card-category text-gray">{% trans "Page Blank" %}</h6>
                     <h4 class="card-title">
-                        Add your content 
+                        {% trans "Add your content" %}
                     </h4>
-                    <a href="/" class="btn btn-primary btn-round">Home</a>
+                    <a href="/" class="btn btn-primary btn-round">{% trans "Home" %}</a>
                 </div>
             </div>
         </div>

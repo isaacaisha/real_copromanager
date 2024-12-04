@@ -1,10 +1,11 @@
-# -*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*- apps/authhentication/views.py
 """
 Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -15,8 +16,10 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 
 from apps.authentication.models import CustomUser
-from apps.home.models import License, Superadmin, Syndic, SuperSyndic, Coproprietaire, Prestataire
-from .forms import LoginForm, SignUpForm, CustomPasswordResetConfirmForm, LicenseForm, SuperSyndicForm
+from .forms import LoginForm, SignUpForm, CustomPasswordResetConfirmForm, SuperSyndicForm
+
+from apps.dashboard.models import License, Superadmin, Syndic, SuperSyndic, Coproprietaire, Prestataire
+from apps.dashboard.forms import LicenseForm
 
 # Create your views here.# auth_views.py
 
@@ -54,7 +57,6 @@ def redirect_based_on_role(request, user):
 
 #@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def register_user(request):
-    msg = None
     success = False
 
     if request.method == "POST":
@@ -71,8 +73,7 @@ def register_user(request):
             # Handle role-based logic as in your previous code
             if user.role == 'Superadmin':
                 Superadmin.objects.create(user=user)
-                messages.success(request, 'Superadmin created successfully.')
-                msg = 'Superadmin-User created - please <a href="/login">login</a>.'
+                messages.success(request, _('Superadmin created successfully.'))
                 success = True
                 return redirect('login')
 
@@ -90,11 +91,11 @@ def register_user(request):
                     syndic.license = license
                     syndic.save()
                     
-                    messages.success(request, 'Syndic created successfully.')
+                    messages.success(request, _('Syndic created successfully.'))
                     return redirect('dashboard-superadmin')
                 else:
                     print("License form is not valid:", license_form.errors)
-                    messages.error(request, 'License form is not valid.')
+                    messages.error(request, _('License form is not valid.'))
                     syndic.delete()  # Rollback syndic creation if license creation fails
                     return redirect('register')
 
@@ -103,10 +104,9 @@ def register_user(request):
                 syndic = Syndic.objects.first()
                 if syndic:
                     Coproprietaire.objects.create(user=user, syndic=syndic)
-                    messages.success(request, 'Coproprietaire created successfully.')
+                    messages.success(request, _('Coproprietaire created successfully.'))
                 else:
-                    messages.error(request, 'No syndic available to assign to Coproprietaire.')
-                msg = 'Coproprietaire-User created - please <a href="/login">login</a>.'
+                    messages.error(request, _('No syndic available to assign to Coproprietaire.'))
                 success = True
                 return redirect('dashboard-superadmin')
 
@@ -115,14 +115,13 @@ def register_user(request):
                 syndic = Syndic.objects.first()
                 if syndic:
                     Prestataire.objects.create(user=user, syndic=syndic)
-                    messages.success(request, 'Prestataire created successfully.')
+                    messages.success(request, _('Prestataire created successfully.'))
                 else:
-                    messages.error(request, 'No syndic available to assign to Prestataire.')
-                msg = 'Prestataire-User created - please <a href="/login">login</a>.'
+                    messages.error(request, _('No syndic available to assign to Prestataire.'))
                 success = True
                 return redirect('dashboard-superadmin')
         else:
-            msg = 'Form is not valid'
+            messages.error(request, _('Form is not valid'))
 
     else:
         form = SignUpForm()
@@ -131,10 +130,9 @@ def register_user(request):
     context = {
         'form': form,
         'license_form': license_form,
-        'msg': msg,
         'success': success,
-        'titlePage': 'Incriptions',
-        'date': timezone.now().strftime("%a %d %B %Y")
+        'titlePage': _('Incriptions'),
+        'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
 
     return render(request, "accounts/register.html", context)
@@ -142,7 +140,6 @@ def register_user(request):
 
 def login_view(request):
     form = LoginForm(request.POST or None)
-    msg = None
 
     if request.method == "POST":
 
@@ -156,18 +153,89 @@ def login_view(request):
                 #return redirect("/")
                 return redirect_based_on_role(request, user)
             else:
-                msg = 'Invalid credentials.'
+                messages.error(request, _('Invalid credentials.'))
         else:
-            msg = 'Form is not valid. Please check the details.'
+            messages.error(request, _('Form is not valid. Please check the details.'))
         
     context = {
         'form': form,
-        'msg': msg,
-        'titlePage': 'Connexion/Login',
+        'titlePage': _('Login'),
         'date': timezone.now().strftime("%a %d %B %Y")
     }
+    context['date'] = _(context['date']) 
 
     return render(request, "accounts/login.html", context)
+
+
+# View for the register Super Syndic, requiring 2FAfrom django.db import transaction
+@login_required
+def register_supersyndic(request, syndic_id):
+    titlePage = _('Register Super Syndic')
+    supersyndic_form = SuperSyndicForm(request.POST or None)
+    syndic = get_object_or_404(Syndic, id=syndic_id)
+    supersyndic_id = None
+    supersyndic = None
+
+    if request.method == "POST":
+        supersyndic_form = SuperSyndicForm(request.POST, instance=syndic.user)  # Load the existing user instance
+        if supersyndic_form.is_valid():
+            try:
+                with transaction.atomic():
+                    # Update the user's role to SuperSyndic
+                    user = supersyndic_form.save(commit=False)
+                    user.role = 'SuperSyndic'
+                    user.save()
+
+                    # Create or get a SuperSyndic instance for this user
+                    supersyndic, created = SuperSyndic.objects.get_or_create(user=user, id=supersyndic_id)
+
+                    # Handle the license transfer
+                    # Assuming that a syndic can have multiple licenses, we fetch the latest one
+                    license = License.objects.filter(syndic=syndic).order_by('-date_debut').first()
+                    if license:
+                        # Assign the license to the SuperSyndic (if needed)
+                        license.supersyndic = supersyndic
+                        license.syndic = None  # Remove the license from the old syndic
+                        license.save()
+
+                    messages.success(request, _('Please fill the form below for upgrade to Super Syndic!'))
+                    return redirect('two_factor:setup')  # Or your desired next step
+
+            except Exception as e:
+                messages.error(request, f"An error occurred: {e}")
+        else:
+            messages.error(request, _('Form is not valid.'))
+    else:
+        # Pre-fill the form with the current user's data
+        supersyndic_form = SuperSyndicForm(instance=syndic.user)
+
+    context = {
+        'titlePage': titlePage,
+        'syndic': syndic,
+        'supersyndic': supersyndic,
+        'supersyndic_form': supersyndic_form,
+        'date': timezone.now().strftime(_("%a %d %B %Y")),
+    }
+    return render(request, 'accounts/register-login-supersyndic.html', context)
+
+
+# View for the login VIP page, requiring 2FA
+@login_required
+def login_supersyndic(request, supersyndic_id):
+    titlePage = _('Login Super Syndic')
+
+    try:
+        supersyndic = get_object_or_404(SuperSyndic, id=supersyndic_id)
+        #supersyndic, created = SuperSyndic.objects.get_or_create(id=supersyndic_id)
+    except SuperSyndic.DoesNotExist:
+        supersyndic = None
+
+    context = {
+        'titlePage': titlePage,
+        'supersyndic': supersyndic,
+        'date': timezone.now().strftime(_("%a %d %B %Y")),
+    }
+    return render(request, 'accounts/register-login-supersyndic.html', context)
 
 
 # View for user logout
@@ -180,17 +248,17 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'accounts/password_reset.html'
     email_template_name = 'accounts/password_reset_email.html'
     subject_template_name = 'accounts/password_reset_subject.txt'
-    success_message = "Un email vous à été envoyez avec les instruction à suivre, " \
-                      "Si un compte existe sur l'Email fournis, Vous allez rapidement recevoir un message." \
-                      " Si vous ne recevez pas d'email, " \
-                      "s'il vous plaît assurez vous d'avoir introduit l'addresse avec laquelle vous ête enregistrez, " \
-                      "et vérifiez votre dossier spam."
+    success_message = _(
+        "An email has been sent with instructions to reset your password. "
+        "If no email arrives, please ensure you've entered the correct email address "
+        "registered with your account and check your spam folder."
+    )
     success_url = reverse_lazy('login')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['titlePage'] = 'Réinitialisation du Mot de Passe'
-        context['date'] = timezone.now().strftime("%a %d %B %Y")
+        context['titlePage'] = _('Password Reset')
+        context['date'] = timezone.now().strftime(_("%a %d %B %Y"))
         return context
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
@@ -199,8 +267,8 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['titlePage'] = 'Confirmation du nouveau Mot de Passe'
-        context['date'] = timezone.now().strftime("%a %d %B %Y")
+        context['titlePage'] = _('New Password Confirmation')
+        context['date'] = timezone.now().strftime(_("%a %d %B %Y"))
         return context
 
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
@@ -208,8 +276,8 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['titlePage'] = 'Réinitialisation Accompli'
-        context['date'] = timezone.now().strftime("%a %d %B %Y")
+        context['titlePage'] = _('Password Reset Complete')
+        context['date'] = timezone.now().strftime(_("%a %d %B %Y"))
         return context
     
 
@@ -218,7 +286,7 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 def delete_syndic(request, syndic_id):
     syndic = get_object_or_404(CustomUser, id=syndic_id, role='Syndic')
     syndic.delete()
-    messages.success(request, f'Syndic {syndic.nom} has been deleted.')
+    messages.success(request, _('Syndic %(nom)s has been deleted.') % {'nom': syndic.nom})
     return redirect('gestion-syndic')
 
 # Delete SuperSyndic View
@@ -238,7 +306,7 @@ def delete_supersyndic(request, supersyndic_id):
     if user:
         user.delete()
 
-    messages.success(request, f"SuperSyndic {supersyndic.nom} and their data have been deleted.")
+    messages.success(request, _('SuperSyndic %(nom)s and their data have been deleted.') % {'nom': supersyndic.nom})
     return redirect('gestion_supersyndic')
 
 # Delete Coproprietaire View
@@ -247,7 +315,7 @@ def delete_coproprietaire(request, coproprietaire_id):
     coproprietaire = get_object_or_404(Coproprietaire, user__id=coproprietaire_id)
     user = coproprietaire.user  # Access the linked CustomUser
     user.delete()  # Delete the CustomUser, which cascades the deletion to Coproprietaire
-    messages.success(request, f'Coproprietaire {user.nom} has been deleted.')
+    messages.success(request, _('Coproprietaire %(nom)s has been deleted.') % {'nom': user.nom})
     return redirect('/gestion-coproprietaire')
 
 # Delete Prestataire View
@@ -256,80 +324,5 @@ def delete_prestataire(request, prestataire_id):
     prestataire = get_object_or_404(Prestataire, user__id=prestataire_id)
     user = prestataire.user  # Access the linked CustomUser
     user.delete()  # Delete the CustomUser, which cascades the deletion to Prestataire
-    messages.success(request, f'Prestataire {user.nom} has been deleted.')
+    messages.success(request, _('Prestataire %(nom)s has been deleted.') % {'nom': user.nom})
     return redirect('/gestion-prestataire')
-
-
-# View for the register Super Syndic, requiring 2FAfrom django.db import transaction
-@login_required
-def register_supersyndic(request, syndic_id):
-    titlePage = 'Register Super Syndic'
-    supersyndic_form = SuperSyndicForm(request.POST or None)
-    syndic = get_object_or_404(Syndic, id=syndic_id)
-    supersyndic = None
-    #super_syndic, created = SuperSyndic.objects.get_or_create(user=request.user)
-    #super_syndic = Syndic.objects.create(user=user, nom=user.nom, email=user.email)
-
-    if request.method == "POST":
-        supersyndic_form = SuperSyndicForm(request.POST, instance=syndic.user)  # Load the existing user instance
-        if supersyndic_form.is_valid():
-            try:
-                with transaction.atomic():
-                    # Update the user's role to SuperSyndic
-                    user = supersyndic_form.save(commit=False)
-                    user.role = 'SuperSyndic'
-                    user.save()
-
-                    # Create or get a SuperSyndic instance for this user
-                    supersyndic, created = SuperSyndic.objects.get_or_create(user=user)
-
-                    # Handle the license transfer
-                    # Assuming that a syndic can have multiple licenses, we fetch the latest one
-                    license = License.objects.filter(syndic=syndic).order_by('-date_debut').first()
-                    if license:
-                        # Assign the license to the SuperSyndic (if needed)
-                        license.supersyndic = supersyndic
-                        license.syndic = None  # Remove the license from the old syndic
-                        license.save()
-
-                    messages.success(request, 'Please fill the form below for upgrade to Super Syndic!')
-                    return redirect('two_factor:setup')  # Or your desired next step
-
-            except Exception as e:
-                messages.error(request, f"An error occurred: {e}")
-        else:
-            messages.error(request, 'Form is not valid.')
-    else:
-        # Pre-fill the form with the current user's data
-        supersyndic_form = SuperSyndicForm(instance=syndic.user)
-
-    context = {
-        'titlePage': titlePage,
-        'syndic': syndic,
-        'supersyndic': supersyndic,
-        'supersyndic_form': supersyndic_form,
-        'date': timezone.now().strftime("%a %d %B %Y"),
-        'message': 'Upgrade your profile to Super Syndic!',
-    }
-    return render(request, 'accounts/register-login-supersyndic.html', context)
-
-
-# View for the login VIP page, requiring 2FA
-@login_required
-def login_supersyndic(request, supersyndic_id):
-    titlePage = 'Login'
-
-    try:
-        supersyndic = get_object_or_404(SuperSyndic, id=supersyndic_id)
-        #supersyndic, created = SuperSyndic.objects.get_or_create(id=supersyndic_id)
-    except SuperSyndic.DoesNotExist:
-        supersyndic = None
-
-    context = {
-        'dont_show_syndic_btn': True,
-        'titlePage': titlePage,
-        'supersyndic': supersyndic,
-        'date': timezone.now().strftime("%a %d %B %Y"),
-        'message': 'Welcome to the VIP User Page!',
-    }
-    return render(request, 'accounts/register-login-supersyndic.html', context)

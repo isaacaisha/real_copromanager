@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*- apps/authentication/urls.py
 """
 Copyright (c) 2019 - present AppSeed.us
 """
@@ -12,7 +12,7 @@ from .views import (
     delete_supersyndic, delete_syndic, delete_coproprietaire, delete_prestataire
     )
 
-from apps.home.views import (
+from apps.dashboard.views import (
     user_search, user_profile,
     dashboard_superadmin, customize_license, license_detail, dashboard_supersyndic,
     dashboard_syndic, dashboard_coproprietaire, dashboard_prestataire,
@@ -33,9 +33,15 @@ urlpatterns = [
     path('password-reset-complete/', CustomPasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
 
-    # URLs for Dashboard Super User
+    # URLs for Dashboard Super Syndic
     path('register-supersyndic/<int:syndic_id>/', register_supersyndic, name='register-supersyndic'),
     path('login-supersyndic/<int:supersyndic_id>/', login_supersyndic, name='login-supersyndic'),
+
+    # Delete operations for syndic, supersyndic, coproprietaire, prestataire
+    path('delete-syndic/<int:syndic_id>/', delete_syndic, name='delete-syndic'),
+    path('delete-supersyndic/<int:supersyndic_id>/', delete_supersyndic, name='delete-supersyndic'),
+    path('delete/coproprietaire/<int:coproprietaire_id>/', delete_coproprietaire, name='delete-coproprietaire'),
+    path('delete/prestataire/<int:prestataire_id>/', delete_prestataire, name='delete-prestataire'),
 
     # URLs for Dashboard User
     path('dashboard-superadmin/', dashboard_superadmin, name='dashboard-superadmin'),
@@ -53,12 +59,6 @@ urlpatterns = [
     path('dashboard-coproprietaire/<int:coproprietaire_id>/', dashboard_coproprietaire, name='dashboard-coproprietaire'),
     path('dashboard-prestataire/<int:prestataire_id>/', dashboard_prestataire, name='dashboard-prestataire'),
     
-    # Delete operations for syndic, supersyndic, coproprietaire, prestataire
-    path('delete-syndic/<int:syndic_id>/', delete_syndic, name='delete-syndic'),
-    path('delete-supersyndic/<int:supersyndic_id>/', delete_supersyndic, name='delete-supersyndic'),
-    path('delete/coproprietaire/<int:coproprietaire_id>/', delete_coproprietaire, name='delete-coproprietaire'),
-    path('delete/prestataire/<int:prestataire_id>/', delete_prestataire, name='delete-prestataire'),
-
     # URLs for Search Bar 
     path('user-search/', user_search, name='user-search'),
     # URLs for User Profile 

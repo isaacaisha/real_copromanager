@@ -1,0 +1,111 @@
+<!-- apps/dashboard/templates/gestion-coproprietaire.html -->
+
+{% extends "layouts/base.html" %}
+
+{% load static i18n %}
+
+{% block title %} SuperAdmin Dashboard {% endblock %}
+
+<!-- Specific Page CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="container">
+
+    <div class="container text-center mb-5">
+        {% if user.is_authenticated and user.role == 'Superadmin' %}
+        <a href="{% url 'register' %}" class="btn btn-success btn-sm">{% trans "Register" %}</a>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>{% trans "Backoffice - Management of Co-owners" %}</h3>
+        </div>
+        <div class="card-body">
+
+            <!-- Co-owners Section -->
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="card card-stats">
+                        <div class="card-header card-header-icon">
+                            <div class="card-icon">
+                                <i class="material-icons">people</i>
+                            </div>
+                            <p class="card-category">{% trans "Co-owners" %}</p>
+                            <h3 class="card-title">{{ coproprietaires.count }}</h3>
+                        </div>
+                        <div class="card-footer">
+                            <div class="stats">
+                                <i class="material-icons">info</i> {% trans "Total Co-owners" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3>{% trans "Details of Co-owners" %}</h3>
+            <div class="table-responsive mb-5">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>{% trans "Co-owner Name" %}</th>
+                            <th>{% trans "Email" %}</th>
+                            <th>{% trans "Co-owners Info" %}</th>
+                            <th>{% trans "Delete" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for coproprietaire in coproprietaires %}
+                        <tr>
+                            <td>{{ coproprietaire.nom }}</td>
+                            <td>{{ coproprietaire.email }}</td>
+                            <td>
+                                <a href="{% url 'dashboard-coproprietaire' coproprietaire_id=coproprietaire.id %}"
+                                    class="btn btn-sm">
+                                    {% trans "ID" %} {{ coproprietaire.id }}: {% trans "View Details" %}
+                                </a>
+                            </td>
+                            <!-- Co-owners Delete Button -->
+                            <td>
+                                <form method="post" action="{% url 'delete-coproprietaire' coproprietaire.id %}"
+                                    style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" rel="tooltip" title="{% trans 'Delete' %}"
+                                        class="btn btn-danger btn-link btn-sm">
+                                        <!-- 
+                                        data-confirm="{% trans 'Are you sure you want to delete this co-owner?' %}" -->
+                                        <i class="material-icons">close</i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Back Button dashboard-superadmin -->
+    <div class="text-center mt-3">
+        <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm">{% trans "Backoffice" %}</a>
+    </div>
+
+</div>
+
+{% endblock %}
+
+<!-- Specific Page JS goes HERE -->
+{% block javascripts %}
+<!--<script>
+    document.querySelectorAll('button[data-confirm]').forEach(button => {
+        button.addEventListener('click', function (event) {
+            const confirmMessage = this.getAttribute('data-confirm');
+            if (!confirm(confirmMessage)) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>-->
+{% endblock javascripts %}

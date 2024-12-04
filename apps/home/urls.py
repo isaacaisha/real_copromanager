@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*- apps/home/urls.py
 """
 Copyright (c) 2019 - present AppSeed.us
 """

@@ -1,33 +1,33 @@
 <!DOCTYPE html>
-{% load static %}
+{% load static i18n %}
 <html lang="en">
 
 <head>
 
   <meta charset="utf-8" />
 
-  <meta name="geo.place-name" content="Spain">
-  <meta property="og:type" content="website">
+  <meta name="geo.place-name" content="{% trans 'Spain' %}">
+  <meta property="og:type" content="{% trans 'website' %}">
   <meta name="description"
-    content="Experience the power of Your Copromanager AI. Enhance productivity, streamline tasks, and get personalized assistance.">
-  <meta property="og:title" content="Your Copromanager - AI  Gestion des Syndics, Copropriétaires, Préstataires... .">
+    content="{% trans 'Experience the power of Your Copromanager AI. Enhance productivity, streamline tasks, and get personalized assistance.' %}">
+  <meta property="og:title" content="{% trans 'Your Copromanager - AI Gestion des Syndics, Copropriétaires, Préstataires... .' %}">
   <meta property="og:description"
-    content="Your Copromanager -  Gestion des Syndics, Copropriétaires, Préstataires... . Your Copromanager AI. Increase productivity, automate tasks, and receive personalized recommendations.">
+    content="{% trans 'Your Copromanager - Gestion des Syndics, Copropriétaires, Préstataires... . Your Copromanager AI. Increase productivity, automate tasks, and receive personalized recommendations.' %}">
   <meta property="og:image" content="https://test-cop.copromanager.com/static/assets/img/copro-logo.png">
   <meta property="og:url" content="https://your.copromanager.pro">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Your Copromanager - Your Copromanager AI  Gestion des Syndics, Copropriétaires, Préstataires... .">
+  <meta name="twitter:card" content="{% trans 'summary_large_image' %}">
+  <meta name="twitter:title" content="{% trans 'Your Copromanager - Your Copromanager AI Gestion des Syndics, Copropriétaires, Préstataires... .' %}">
   <meta name="twitter:description"
-    content="Your Copromanager - Your Copromanager AI. Increase productivity, automate tasks, and receive personalized recommendations.">
+    content="{% trans 'Your Copromanager - Your Copromanager AI. Increase productivity, automate tasks, and receive personalized recommendations.' %}">
   <meta name="twitter:image" content="https://test-cop.copromanager.com/static/assets/img/copro-logo.png">
   <meta name="keywords"
-    content="Your Copromanager AI assistant,  Gestion des Syndics, Copropriétaires, Préstataires, productivity, automation, personalized recommendations.">
-  <meta name="author" content="Developer">
+    content="{% trans 'Your Copromanager AI assistant, Gestion des Syndics, Copropriétaires, Préstataires, productivity, automation, personalized recommendations.' %}">
+  <meta name="author" content="{% trans 'Developer' %}">
+  <meta name="robots" content="{% trans 'index, follow' %}">
+  <meta name="googlebot" content="{% trans 'index, follow' %}">
   <!-- meta for url 'www' -> https://www.test-cop.copromanager.com/ -->
   <!--<meta name="google-site-verification" content="gJqyAVIpypV09E7kseWFbfzt0l0Kw7i3RYTa6gTJDrs" />-->
   <meta name="google-site-verification" content="jabsogA0DhV_a5o5flnR_i915PtQx4zTOqlCLkHHkNQ" />
-  <meta name="robots" content="index, follow">
-  <meta name="googlebot" content="index, follow">
   
   <!--<link rel="apple-touch-icon" sizes="76x76" href="/static/assets/img/apple-icon.png">-->
   <!--<link rel="icon" type="image/png" href="/static/assets/img/favicon.png">-->
@@ -35,7 +35,7 @@
   <link rel="canonical" href="https://appseed.us/admin-dashboards/django-dashboard-material">
 
   <title>
-    Your Copromanager - {% block title %}{% endblock %} | AI
+    {% trans 'Your Copromanager -' %} {% block title %}{% endblock %} | {% trans 'AI' %}
   </title>
 
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
@@ -62,13 +62,28 @@
 <body class="">
   
   <div class="wrapper ">
-    <div class="togglebutton">
-      <label>
-        <input type="checkbox" id="theme-toggle">
-        <span id="darkMode" class="toggle"></span>
-        <span class="dark-mode-text">Dark Mode</span>
-      </label>
+    {% block darkmode&language %}
+    <div class="darkmode-selectlang-container mb-3">
+      <div class="togglebutton">
+        <label>
+          <input type="checkbox" id="theme-toggle">
+          <span id="darkMode" class="toggle"></span>
+        </label>
+        <span class="dark-mode-text">{% trans 'Dark Mode' %}</span>
+      </div>
+    
+      <form class="language-form" method="post" action="{% url 'set_language' %}">
+        {% csrf_token %}
+        <select name="language" onchange="this.form.submit()">
+          {% for lang_code, lang_name in LANGUAGES %}
+          <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>
+            {{ lang_name }}
+          </option>
+          {% endfor %}
+        </select>
+      </form>
     </div>
+    {% endblock %}
 
     {% include 'includes/sidebar.html' %}
 
@@ -79,11 +94,12 @@
       <!-- End Navbar -->
       <div class="content">
         <div class="text-center mb-5">
+          <p>current language: {{ lang_code }}{{ lang_name }}</p>
         {% if user.is_authenticated and user.role == 'Superadmin' %}
           <img class="img-container" src="/static/assets/img/shark.png" />
         {% endif %}
         {% if user.is_authenticated %}
-          <h5 class="prenom">-¡!¡- Welcome, {{ user.prenom }} -¡!¡-</h5>
+          <h5 class="prenom">{% trans '-¡!¡- Welcome,' %} {{ user.prenom }} {% trans '-¡!¡-' %}</h5>
         {% endif %}
           
           {% if messages %}
@@ -134,4 +150,5 @@
   <script src="/static/assets/js/script.js"></script>
 
 </body>
+
 </html>
