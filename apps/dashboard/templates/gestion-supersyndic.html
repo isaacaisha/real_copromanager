@@ -98,9 +98,8 @@
                                <form method="post" action="{% url 'delete-supersyndic' supersyndic.id }" style="display:inline;">
                                     {% csrf_token %}
                                     <button type="submit" rel="tooltip" title="{% trans 'Delete' %}"
-                                        class="btn btn-danger btn-link btn-sm">
-                                        <!-- 
-                                        data-confirm="{% trans 'Are you sure you want to delete this super syndic?' %}" -->
+                                        class="btn btn-danger btn-link btn-sm"
+                                        data-confirm="{% trans 'Are you sure you want to delete this super syndic?' %}">
                                         <i class="material-icons">close</i>
                                     </button>
                                 </form>
@@ -125,7 +124,7 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-<!--<script>
+<script>
     document.querySelectorAll('button[data-confirm]').forEach(button => {
         button.addEventListener('click', function (event) {
             const confirmMessage = this.getAttribute('data-confirm');
@@ -134,5 +133,5 @@
             }
         });
     });
-</script>-->
+</script>
 {% endblock javascripts %}

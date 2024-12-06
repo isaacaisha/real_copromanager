@@ -6,7 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as _
 
 from apps.authentication.models import CustomUser
 from apps.dashboard.models import License, SuperSyndic

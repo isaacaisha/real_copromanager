@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-04 23:59+0100\n"
+"POT-Creation-Date: 2024-12-05 22:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French <LL@li.org>\n"
@@ -1143,11 +1143,11 @@ msgstr "IA"
 msgid "Dark Mode"
 msgstr "Mode sombre"
 
-#: apps/authentication/templates/layouts/base.html:102
+#: apps/authentication/templates/layouts/base.html:104
 msgid "-¡!¡- Welcome,"
 msgstr "-¡!¡- Bienvenue,"
 
-#: apps/authentication/templates/layouts/base.html:102
+#: apps/authentication/templates/layouts/base.html:104
 msgid "-¡!¡-"
 msgstr "-¡!¡-"
 
@@ -1198,7 +1198,7 @@ msgstr "Inscriptions"
 #: apps/dashboard/views.py:378 apps/dashboard/views.py:394
 #: apps/dashboard/views.py:421 apps/dashboard/views.py:448
 #: apps/dashboard/views.py:473 apps/dashboard/views.py:501
-#: apps/home/views.py:23 apps/home/views.py:53 core/utils.py:36
+#: apps/home/views.py:23 apps/home/views.py:53 core/utils.py:42
 msgid "%a %d %B %Y"
 msgstr "%a %d %B %Y"
 
@@ -1884,27 +1884,25 @@ msgstr "Résultat pour : \"%s\""
 msgid "Profile of %s"
 msgstr "Profil de %s"
 
-#: core/settings.py:224
-msgid "English"
-msgstr ""
-
 #: core/settings.py:225
-msgid "French"
-msgstr ""
+msgid "English"
+msgstr "Anglais"
 
 #: core/settings.py:226
-msgid "Spanish"
-msgstr ""
+msgid "French"
+msgstr "Français"
 
 #: core/settings.py:227
-msgid "Portuguese"
-msgstr ""
+msgid "Spanish"
+msgstr "Espagnol"
 
-#: core/utils.py:94
-#, fuzzy
-#| msgid "No building found for this user."
+#: core/settings.py:228
+msgid "Portuguese"
+msgstr "Portugais"
+
+#: core/utils.py:100
 msgid "OTP device not found for this user."
-msgstr "Aucun immeuble trouvé pour cet utilisateur."
+msgstr "Aucun appareil OTP trouvé pour cet utilisateur."
 
 #: env/lib/python3.10/site-packages/click/_termui_impl.py:518
 #, python-brace-format

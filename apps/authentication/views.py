@@ -307,7 +307,7 @@ def delete_supersyndic(request, supersyndic_id):
         user.delete()
 
     messages.success(request, _('SuperSyndic %(nom)s and their data have been deleted.') % {'nom': supersyndic.nom})
-    return redirect('gestion_supersyndic')
+    return redirect('gestion-supersyndic')
 
 # Delete Coproprietaire View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
@@ -316,7 +316,7 @@ def delete_coproprietaire(request, coproprietaire_id):
     user = coproprietaire.user  # Access the linked CustomUser
     user.delete()  # Delete the CustomUser, which cascades the deletion to Coproprietaire
     messages.success(request, _('Coproprietaire %(nom)s has been deleted.') % {'nom': user.nom})
-    return redirect('/gestion-coproprietaire')
+    return redirect('gestion-coproprietaire')
 
 # Delete Prestataire View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
@@ -325,4 +325,4 @@ def delete_prestataire(request, prestataire_id):
     user = prestataire.user  # Access the linked CustomUser
     user.delete()  # Delete the CustomUser, which cascades the deletion to Prestataire
     messages.success(request, _('Prestataire %(nom)s has been deleted.') % {'nom': user.nom})
-    return redirect('/gestion-prestataire')
+    return redirect('gestion-prestataire')

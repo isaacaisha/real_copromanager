@@ -25,6 +25,15 @@ window.addEventListener("load", function () {
 
   // Render reCAPTCHA based on theme
   toggleCaptchaTheme(isDarkMode);
+
+  // Restore selected language (if applicable)
+  const selectedLanguage = localStorage.getItem("language");
+  if (selectedLanguage) {
+    const languageDropdown = document.querySelector("select[name='language']");
+    if (languageDropdown) {
+      languageDropdown.value = selectedLanguage;
+    }
+  }
 });
 
 // Function to dynamically render reCAPTCHA with the correct theme and size
@@ -80,4 +89,14 @@ if (togglePassword1 && passwordField1) {
 
 if (togglePassword2 && passwordField2) {
   togglePasswordVisibility(togglePassword2, passwordField2);
+}
+
+// Handle language switcher and persist the choice
+const languageDropdown = document.querySelector("select[name='language']");
+if (languageDropdown) {
+  languageDropdown.addEventListener("change", function () {
+    const selectedLanguage = this.value;
+    localStorage.setItem("language", selectedLanguage); // Save selected language in localStorage
+    this.form.submit(); // Submit the form to switch language
+  });
 }

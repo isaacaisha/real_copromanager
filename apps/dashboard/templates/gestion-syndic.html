@@ -100,9 +100,8 @@
                                             Delete
                                         </button>-->
                                     <button type="submit" rel="tooltip" title="Supprimer"
-                                        class="btn btn-danger btn-link btn-sm">
-                                        <!-- 
-                                        data-confirm="{% trans 'Are you sure you want to delete this syndic?' %}" -->
+                                        class="btn btn-danger btn-link btn-sm"
+                                        data-confirm="{% trans 'Are you sure you want to delete this syndic?' %}">
                                         <i class="material-icons">close</i>
                                     </button>
                                 </form>
@@ -127,7 +126,7 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-<!--<script>
+<script>
     document.querySelectorAll('button[data-confirm]').forEach(button => {
         button.addEventListener('click', function (event) {
             const confirmMessage = this.getAttribute('data-confirm');
@@ -136,5 +135,5 @@
             }
         });
     });
-</script>-->
+</script>
 {% endblock javascripts %}

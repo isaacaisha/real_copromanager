@@ -8,7 +8,7 @@ from django import forms
 
 from apps.dashboard.models import License
 
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as _
 
 
 class LicenseForm(forms.ModelForm):

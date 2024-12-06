@@ -1,30 +1,39 @@
 # core.utils.py
 
 from django.contrib import messages
-from django.shortcuts import redirect
 from django_otp.decorators import otp_required
 from django_otp import user_has_device
 from functools import wraps
 
 from django.utils import timezone
-from django.utils.translation import activate, gettext as _
+from django.utils.translation import activate, gettext as _, get_language, get_language_from_request
 
 from core.middleware import get_current_request
 
 from apps.dashboard.models import Superadmin, SuperSyndic, Syndic, Coproprietaire, Prestataire
 
 
-def activate_current_language(request):
+def debug_language_cookie(request):
+    current_language = get_language_from_request(request)
+    print(f"Detected language from request: {current_language}")
+
+def activate_current_language():
     """
     Activates the current language based on the LANGUAGE_CODE in the request.
     """
     current_request = get_current_request()
-    if current_request:
-        lang = getattr(current_request, 'LANGUAGE_CODE', None)
-        if lang:
-            activate(lang)
+    if not current_request:
+        print("No current request found.")
+        return
 
-            return redirect(request.META.get('HTTP_REFERER'))
+    lang = current_request.POST.get('language') or getattr(current_request, 'LANGUAGE_CODE', None)
+    if lang:
+        print(f"Activating language: {lang}")
+        activate(lang)
+    else:
+        print("LANGUAGE_CODE not found in the request.")
+
+    print(f"Current language after activation: {get_language()}")
 
 
 def get_user_context(user):

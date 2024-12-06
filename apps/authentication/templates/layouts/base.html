@@ -72,9 +72,10 @@
         <span class="dark-mode-text">{% trans 'Dark Mode' %}</span>
       </div>
     
-      <form class="language-form" method="post" action="{% url 'set_language' %}">
+      <form id="language-form" class="language-form" method="post" action="{% url 'set_language' %}">
         {% csrf_token %}
-        <select name="language" onchange="this.form.submit()">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <select id="language-selector" name="language"> <!--onchange="this.form.submit()">-->
           {% for lang_code, lang_name in LANGUAGES %}
           <option value="{{ lang_code }}" {% if lang_code == LANGUAGE_CODE %}selected{% endif %}>
             {{ lang_name }}
@@ -94,7 +95,7 @@
       <!-- End Navbar -->
       <div class="content">
         <div class="text-center mb-5">
-          <p>current language: {{ lang_code }}{{ lang_name }}</p>
+          
         {% if user.is_authenticated and user.role == 'Superadmin' %}
           <img class="img-container" src="/static/assets/img/shark.png" />
         {% endif %}
@@ -136,6 +137,18 @@
   
   <!-- Specific Page JS goes HERE  -->
   {% block javascripts %}{% endblock javascripts %}
+
+  <script>
+    // Ensure the element exists before adding the event listener
+      const languageSelector = document.getElementById("language-selector");
+      if (languageSelector) {
+        languageSelector.addEventListener("change", function () {
+          document.getElementById("language-form").submit();
+        });
+      } else {
+        console.warn("Language selector element not found.");
+      }
+  </script>
   
   <!-- reCAPTCHA_v3 grecaptcha.execute para todas las acciones que quieras proteger -->
   <script>

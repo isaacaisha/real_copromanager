@@ -143,7 +143,6 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     #that detects the user's preferred language from their browser settings or session and applies it
     'django.middleware.locale.LocaleMiddleware',
-    'core.middleware.ThreadLocals',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -153,6 +152,10 @@ MIDDLEWARE = [
     # 2AF Authentication
     'django_otp.middleware.OTPMiddleware',
 ]
+
+MIDDLEWARE += [
+    'core.middleware.ThreadLocals',
+    ]
 
 
 ROOT_URLCONF = 'core.urls'
@@ -174,7 +177,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.static',
                 'django.template.context_processors.i18n',
             ],
         },
@@ -228,13 +230,15 @@ LANGUAGES = [
 ]
 
 LOCALE_PATHS = [
-    os.path.join(BASE_DIR, 'locale'),
-    BASE_DIR.child('locale'),
-    os.path.join(CORE_DIR, '..', 'locale'),
+    os.path.join(CORE_DIR, 'locale'),
+    #os.path.join(CORE_DIR, '..', 'locale'),
+    #os.path.join(BASE_DIR, '..', 'env', 'lib', 'python3.10', 'site-packages', 'two_factor', 'locale')  # two_factor app's locale folder
 ]
 
-LANGUAGE_CODE = 'en'  # Default language
+LANGUAGE_CODE = 'fr'  # Default language
 LANGUAGE_COOKIE_NAME = 'django_language'  # Default is 'django_language'
+LANGUAGE_COOKIE_PATH = '/'  # Optional: Path scope for the language cookie
+LANGUAGE_COOKIE_AGE = 31536000  # 1 year
 
 TIME_ZONE = 'UTC'
 

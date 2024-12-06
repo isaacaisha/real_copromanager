@@ -6,7 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.conf import settings
 from django.db import models
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as _
 
 # Superadmin Model
 class Superadmin(models.Model):
