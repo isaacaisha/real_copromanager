@@ -232,10 +232,10 @@ LANGUAGES = [
 LOCALE_PATHS = [
     os.path.join(CORE_DIR, 'locale'),
     #os.path.join(CORE_DIR, '..', 'locale'),
-    #os.path.join(BASE_DIR, '..', 'env', 'lib', 'python3.10', 'site-packages', 'two_factor', 'locale')  # two_factor app's locale folder
+    os.path.join(BASE_DIR, 'env', 'lib', 'python3.10', 'site-packages', 'two_factor', 'locale')  # two_factor app's locale folder
 ]
 
-LANGUAGE_CODE = 'fr'  # Default language
+LANGUAGE_CODE = 'en'  # Default language
 LANGUAGE_COOKIE_NAME = 'django_language'  # Default is 'django_language'
 LANGUAGE_COOKIE_PATH = '/'  # Optional: Path scope for the language cookie
 LANGUAGE_COOKIE_AGE = 31536000  # 1 year

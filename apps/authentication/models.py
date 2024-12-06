@@ -55,7 +55,7 @@ class CustomUser(AbstractUser):
 
     # Set email as the username field
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = [_('nom'), _('prenom'), _('role')]  # Fields required besides email
+    REQUIRED_FIELDS = ['nom', 'prenom', 'role']  # do not use verbose translations here
 
     # Link the custom manager to the User model
     objects = UserManager()

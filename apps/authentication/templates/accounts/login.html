@@ -81,7 +81,10 @@
 
             &nbsp; &nbsp;
             <div class="text-center pull-right">
-              <a href="{% url 'password_reset' %}" class="btn btn-sm"><i>{% trans "Reset Password" %}</i></a>
+              <!--<a href="{% url 'password_reset' %}" class="btn btn-sm"><i>{% trans "Reset Password" %}</i></a>-->
+              <a href="{% url 'password_reset' %}" class="btn btn-sm" title="{% trans 'Reset Password' %}">
+                {% trans "Reset " %} <i class="fa fa-key"></i>
+              </a>
             </div>
 
             <div class="clearfix"></div>

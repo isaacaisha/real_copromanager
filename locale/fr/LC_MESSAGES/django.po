@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-05 22:14+0100\n"
+"POT-Creation-Date: 2024-12-06 07:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French <LL@li.org>\n"
@@ -97,17 +97,9 @@ msgstr "SuperSyndic"
 msgid "email address"
 msgstr "Adresse e-mail"
 
-#: apps/authentication/models.py:54 apps/authentication/models.py:58
+#: apps/authentication/models.py:54
 msgid "role"
 msgstr "Rôle"
-
-#: apps/authentication/models.py:58
-msgid "nom"
-msgstr "Nom"
-
-#: apps/authentication/models.py:58
-msgid "prenom"
-msgstr "Prénom"
 
 #: apps/authentication/templates/accounts/login.html:5
 #: apps/authentication/templates/accounts/login.html:20
@@ -277,9 +269,9 @@ msgid "using the new account."
 msgstr "en utilisant le nouveau compte."
 
 #: apps/authentication/templates/accounts/register.html:130
-#: apps/dashboard/templates/gestion-coproprietaire.html:92
-#: apps/dashboard/templates/gestion-prestataire.html:89
-#: apps/dashboard/templates/gestion-supersyndic.html:119
+#: apps/dashboard/templates/gestion-coproprietaire.html:91
+#: apps/dashboard/templates/gestion-prestataire.html:88
+#: apps/dashboard/templates/gestion-supersyndic.html:118
 #: apps/dashboard/templates/search-results.html:51
 #: apps/dashboard/templates/user-profile.html:62
 #: apps/dashboard/templates/users-datas.html:157
@@ -1143,11 +1135,11 @@ msgstr "IA"
 msgid "Dark Mode"
 msgstr "Mode sombre"
 
-#: apps/authentication/templates/layouts/base.html:104
+#: apps/authentication/templates/layouts/base.html:103
 msgid "-¡!¡- Welcome,"
 msgstr "-¡!¡- Bienvenue,"
 
-#: apps/authentication/templates/layouts/base.html:104
+#: apps/authentication/templates/layouts/base.html:103
 msgid "-¡!¡-"
 msgstr "-¡!¡-"
 
@@ -1198,7 +1190,7 @@ msgstr "Inscriptions"
 #: apps/dashboard/views.py:378 apps/dashboard/views.py:394
 #: apps/dashboard/views.py:421 apps/dashboard/views.py:448
 #: apps/dashboard/views.py:473 apps/dashboard/views.py:501
-#: apps/home/views.py:23 apps/home/views.py:53 core/utils.py:42
+#: apps/home/views.py:23 apps/home/views.py:53 core/utils.py:41
 msgid "%a %d %B %Y"
 msgstr "%a %d %B %Y"
 
@@ -1570,7 +1562,7 @@ msgstr "Supprimer"
 msgid "View Details"
 msgstr "Voir les Détails"
 
-#: apps/dashboard/templates/gestion-coproprietaire.html:76
+#: apps/dashboard/templates/gestion-coproprietaire.html:75
 msgid "Are you sure you want to delete this co-owner?"
 msgstr "Êtes-vous sûr de vouloir supprimer ce copropriétaire ?"
 
@@ -1607,7 +1599,7 @@ msgstr "Infos du Fournisseur"
 msgid "n°"
 msgstr "n°"
 
-#: apps/dashboard/templates/gestion-prestataire.html:75
+#: apps/dashboard/templates/gestion-prestataire.html:73
 msgid "Are you sure you want to delete this provider?"
 msgstr "Êtes-vous sûr de vouloir supprimer ce fournisseur ?"
 
@@ -1666,7 +1658,7 @@ msgstr "Aucune licence trouvée pour ce syndic."
 msgid "No license details for this syndic."
 msgstr "Aucun détail de licence pour ce syndic."
 
-#: apps/dashboard/templates/gestion-supersyndic.html:103
+#: apps/dashboard/templates/gestion-supersyndic.html:102
 msgid "Are you sure you want to delete this super syndic?"
 msgstr "Êtes-vous sûr de vouloir supprimer ce super syndic ?"
 
@@ -1686,7 +1678,7 @@ msgstr "Détails des Syndics"
 msgid "Syndic Info"
 msgstr "Informations sur le Syndic"
 
-#: apps/dashboard/templates/gestion-syndic.html:105
+#: apps/dashboard/templates/gestion-syndic.html:104
 msgid "Are you sure you want to delete this syndic?"
 msgstr "Êtes-vous sûr de vouloir supprimer ce syndic ?"
 
@@ -1884,23 +1876,23 @@ msgstr "Résultat pour : \"%s\""
 msgid "Profile of %s"
 msgstr "Profil de %s"
 
-#: core/settings.py:225
+#: core/settings.py:226
 msgid "English"
 msgstr "Anglais"
 
-#: core/settings.py:226
+#: core/settings.py:227
 msgid "French"
 msgstr "Français"
 
-#: core/settings.py:227
+#: core/settings.py:228
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: core/settings.py:228
+#: core/settings.py:229
 msgid "Portuguese"
 msgstr "Portugais"
 
-#: core/utils.py:100
+#: core/utils.py:99
 msgid "OTP device not found for this user."
 msgstr "Aucun appareil OTP trouvé pour cet utilisateur."
 

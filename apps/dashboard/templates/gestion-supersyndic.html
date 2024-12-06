@@ -87,7 +87,7 @@
                             <td>
                                 {% if supersyndic.license %}
                                 <a href="{% url 'dashboard-supersyndic' supersyndic.id %}" class="btn btn-sm">
-                                    n°{{ supersyndic.id }}: {% trans "View Details" %}
+                                    <i class="material-icons">search</i> {% trans "View Details" %}
                                 </a>
                                 {% else %}
                                 <p>{% trans "No license details for this syndic." %}</p>

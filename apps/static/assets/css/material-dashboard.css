@@ -12819,6 +12819,18 @@ Copyright (c) 2015 Daniel Eden
 
 /*# sourceMappingURL=material-dashboard.css.map */
 
+
+
+/*==============================
+=>  media queries to adjust the 'titlePage' styling for different screen sizes
+================================*/
+@media (max-width: 768px) {
+    body > div.wrapper > div.main-panel > nav > div > div.navbar-wrapper > a {
+        font-size: 14px;      /* Decrease font size for smaller screens */
+        max-width: 150px;     /* Reduce max width for smaller viewports */
+    }
+}
+
 /*==============================
 =>  Translate Language BTN Section
 ================================*/

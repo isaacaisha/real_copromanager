@@ -10,121 +10,120 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-<div class="container">
 
-    <div class="container text-center mb-3">
+<div class="container">
+    <div class="container text-center mb-5">
         {% if user.is_authenticated and user.role == 'Superadmin' %}
         <a href="{% url 'register' %}" class="btn btn-success btn-sm">{% trans "Register" %}</a>
         {% endif %}
     </div>
-    
+
     <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <a href="{% url 'gestion-supersyndic' %}" class="card-link">
-                <div class="card card-stats">
-                    <div class="card-header card-header-icon">
-                        <div class="card-icon">
-                            <i class="material-icons">person</i>
-                        </div>
-                        <p class="card-category">{% trans "Super Syndics Information" %}</p>
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title">
-                            {% trans "Super Syndics" %}: {{ supersyndics.count }}
-                            <small>{% trans "count" %}</small>
-                        </h3>
-                    </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            <i class="material-icons text-success">warning</i>
-                            <span>{% trans "Click to create and/or edit" %}</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
+        <div class="row">
 
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <a href="{% url 'gestion-syndic' %}" class="card-link">
-                <div class="card card-stats">
-                    <div class="card-header card-header-icon">
-                        <div class="card-icon">
-                            <i class="material-icons">person</i>
+            <!-- Syndic Infos -->
+            <div class="col-md-4">
+                <a href="{% url 'gestion-syndic' %}">
+                    <div class="card card-chart">
+                        <div class="card-header card-header-success">
+                            <div class="ct-chart" id="dailySalesChart">{% trans "Syndics Information" %}<hr></div>
                         </div>
-                        <p class="card-category">{% trans "Syndics Information" %}</p>
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title">
-                            {% trans "Syndics" %}: {{ syndics.count }}
-                            <small>{% trans "count" %}</small>
-                        </h3>
-                    </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            <i class="material-icons text-success">warning</i>
-                            <span>{% trans "Click to create and/or edit" %}</span>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                {% trans "Active Syndics" %}: {{ syndics.count }}
+                                <small>{% trans "count" %}</small>
+                            </h4>
+                            <p class="card-category">
+                                <span class="text-success"><i class="fa fa-long-arrow-up"></i> 19% </span>
+                                {% blocktrans %}increase in today sales{% endblocktrans %}.
+                            </p>
+                            <hr>
+                            <h4 class="card-title">
+                                {% trans "Inactive Syndics" %}: {{ syndics.count }}
+                                <small>{% trans "count" %}</small>
+                            </h4>
+                            <p class="card-category">
+                                <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span>
+                                {% blocktrans %}increase in today sales{% endblocktrans %}.
+                            </p>
                         </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-        
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <a href="{% url 'gestion-coproprietaire' %}" class="card-link">
-                <div class="card card-stats">
-                    <div class="card-header card-header-icon">
-                        <div class="card-icon">
-                            <i class="fas fa-group"></i>
-                        </div>
-                        <p class="card-category">{% trans "Co-owners Information" %}</p>
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title">
-                            {% trans "Co-owners" %}: {{ coproprietaires.count }}
-                            <small>{% trans "count" %}</small>
-                        </h3>
-                    </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            <i class="material-icons text-success">warning</i>
-                            <span>{% trans "Click to create and/or edit" %}</span>
+                        <div class="card-footer">
+                            <div class="stats">
+                                <i class="material-icons">access_time</i> {% trans "updated 4 minutes ago" %}
+                            </div>
+                            <div class="stats">
+                                <i class="material-icons text-success">warning</i>
+                                <span>{% trans "Click to create and/or edit" %}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </a>
-        </div>
-        
-        <div class="col-lg-3 col-md-6 col-sm-6">
-            <a href="{% url 'gestion-prestataire' %}" class="card-link">
-                <div class="card card-stats">
-                    <div class="card-header card-header-icon">
-                        <div class="card-icon">
-                            <i class="fas fa-address-book"></i>
+                </a>
+            </div>
+
+            <!-- Revenue and Performance -->
+            <div class="col-md-4">
+                <a href="#">
+                    <div class="card card-chart">
+                        <div class="card-header card-header-warning">
+                            <div class="ct-chart" id="websiteViewsChart">{% trans "Revenue and Performance" %}<hr></div>
                         </div>
-                        <p class="card-category">{% trans "Providers Information" %}</p>
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title">
-                            {% trans "Providers" %}: {{ prestataires.count }}
-                            <small>{% trans "count" %}</small>
-                        </h3>
-                    </div>
-                    <div class="card-footer">
-                        <div class="stats">
-                            <i class="material-icons text-success">warning</i>
-                            <span>{% trans "Click to create and/or edit" %}</span>
+                        <div class="card-body">
+                            <h4 class="card-title">{% trans "Generated Revenue" %}</h4>
+                            <hr>
+                            <p class="card-category">{% trans "Current revenue:" %} <span class="text-success">$2071</span></p>
+                            <hr>
+                            <p class="card-category">
+                                <span class="text-success"><i class="fa fa-long-arrow-up"></i> 37% </span>
+                                {{ increase_decrease }}{% trans "Since the previous period." %}
+                            </p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="stats">
+                                <i class="material-icons">access_time</i> {% trans "campaign sent 2 days ago" %}
+                            </div>
+                            <div class="stats">
+                                <i class="material-icons">search</i> {% trans "View Details" %}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
+
+            <!-- Ongoing Requests -->
+            <div class="col-md-4">
+                <a href="#">
+                    <div class="card card-chart">
+                        <div class="card-header card-header-danger">
+                            <div class="ct-chart" id="completedTasksChart">{% trans "Support and Ongoing Requests" %}<hr></div>
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                {% trans "Number of ticket:" %} 91
+                                <small>{% trans "count" %}</small>
+                            </h4>
+                            <hr>
+                            <h4 class="card-title">{% trans "Tickets Status" %}</h4>
+                            <p class="card-category">{% trans "open, pending, resolved." %}</p>
+                            <hr>
+                            <h4 class="card-title">{% trans "Completed Tasks" %}</h4>
+                            <p class="card-category">{% trans "Last Campaign Performance" %}</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="stats">
+                                <i class="material-icons">access_time</i> {% trans "campaign sent 2 days ago" %}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
         </div>
     </div>
 
-    <!-- Back Button home -->
-    <div class="text-center mt-3">
-        <a href="{% url 'home' %}" class="btn btn-sm">{% trans "Return to Home" %}</a>
+    <!-- Back Button -->
+    <div class="text-center mt-4">
+        <a href="{% url 'home' %}" class="btn btn-secondary btn-sm">{% trans "Return to Home" %}</a>
     </div>
-
 </div>
 
 {% endblock %}
