@@ -12,7 +12,7 @@
 {% block content %}
 
 <div class="container">
-    <div class="container text-center mb-5">
+    <div class="container text-center mb-3">
         {% if user.is_authenticated and user.role == 'Superadmin' %}
         <a href="{% url 'register' %}" class="btn btn-success btn-sm">{% trans "Register" %}</a>
         {% endif %}
@@ -23,41 +23,81 @@
 
             <!-- Syndic Infos -->
             <div class="col-md-4">
-                <a href="{% url 'gestion-syndic' %}">
-                    <div class="card card-chart">
-                        <div class="card-header card-header-success">
-                            <div class="ct-chart" id="dailySalesChart">{% trans "Syndics Information" %}<hr></div>
-                        </div>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                {% trans "Active Syndics" %}: {{ syndics.count }}
-                                <small>{% trans "count" %}</small>
-                            </h4>
-                            <p class="card-category">
-                                <span class="text-success"><i class="fa fa-long-arrow-up"></i> 19% </span>
-                                {% blocktrans %}increase in today sales{% endblocktrans %}.
-                            </p>
-                            <hr>
-                            <h4 class="card-title">
-                                {% trans "Inactive Syndics" %}: {{ syndics.count }}
-                                <small>{% trans "count" %}</small>
-                            </h4>
-                            <p class="card-category">
-                                <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span>
-                                {% blocktrans %}increase in today sales{% endblocktrans %}.
-                            </p>
-                        </div>
-                        <div class="card-footer">
-                            <div class="stats">
-                                <i class="material-icons">access_time</i> {% trans "updated 4 minutes ago" %}
-                            </div>
-                            <div class="stats">
-                                <i class="material-icons text-success">warning</i>
-                                <span>{% trans "Click to create and/or edit" %}</span>
-                            </div>
+                <div class="card card-chart">
+                    <div class="card-header card-header-success">
+                        <div class="ct-chart" id="dailySalesChart">
+                            {% trans "Syndics Information" %} & {% trans "SUper Syndics" %}<hr>
                         </div>
                     </div>
-                </a>
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            {% trans "Active Syndics" %}: {{ syndics.count }}
+                            <small>{% trans "count" %}</small>
+                        </h4>
+                        <p class="card-category">
+                            <span class="text-success"><i class="fa fa-long-arrow-up"></i> 19% </span>
+                            {% blocktrans %}increase in today sales{% endblocktrans %}.
+                        </p>
+                        <hr>
+                        <h4 class="card-title">
+                            {% trans "Inactive Syndics" %}: {{ syndics.count }}
+                            <small>{% trans "count" %}</small>
+                        </h4>
+                        <p class="card-category">
+                            <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span>
+                            {% blocktrans %}increase in today sales{% endblocktrans %}.
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> {% trans "updated 4 minutes ago" %}
+                        </div>
+                        <a href="{% url 'gestion-syndic' %}">
+                            <div class="stats">
+                                <i class="material-icons text-warning">warning</i>
+                                <span>
+                                    {% trans "Click to create and/or edit" %}
+                                    <spann class="text-success"> {% trans "Syndics" %}</span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            {% trans "Active Super Syndics" %}: {{ supersyndics.count }}
+                            <small>{% trans "count" %}</small>
+                        </h4>
+                        <p class="card-category">
+                            <span class="text-success"><i class="fa fa-long-arrow-up"></i> 19% </span>
+                            {% blocktrans %}increase in today sales{% endblocktrans %}.
+                        </p>
+                        <hr>
+                        <h4 class="card-title">
+                            {% trans "Inactive Super Syndics" %}: {{ supersyndics.count }}
+                            <small>{% trans "count" %}</small>
+                        </h4>
+                        <p class="card-category">
+                            <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span>
+                            {% blocktrans %}increase in today sales{% endblocktrans %}.
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> {% trans "updated 4 minutes ago" %}
+                        </div>
+                        <a href="{% url 'gestion-supersyndic' %}">
+                            <div class="stats">
+                                <i class="material-icons text-warning">warning</i>
+                                <span>
+                                    {% trans "Click to create and/or edit" %}
+                                    <spann class="text-success"> {% trans "SUper Syndics" %}
+                                </span>
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <!-- Revenue and Performance -->
@@ -115,6 +155,24 @@
                         </div>
                     </div>
                 </a>
+            </div>
+
+            <!-- Backoffice Co-owners & Providers -->
+            <div class="mt-3">
+                <ul>
+                    <li>
+                        <a class="a_link" href="{% url 'gestion-coproprietaire' %}">
+                            {% trans "Backoffice - Management of Co-owners" %}
+                        </a>
+                    </li>
+                    <hr>
+                    <li>
+                        <a class="a_link" href="{% url 'gestion-prestataire' %}">
+                            {% trans "Backoffice - Manage Providers" %}
+            
+                        </a>
+                    </li>
+                </ul>
             </div>
             
         </div>
