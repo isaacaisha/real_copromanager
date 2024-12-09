@@ -1,4 +1,5 @@
-# -*- encoding: utf-8 -*- apps/authhentication/views.py
+# -*- encoding: utf-8 -*- apps/authentication/views.py
+
 """
 Copyright (c) 2019 - present AppSeed.us
 """

@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 import os
-import environ
+#import environ
 from decouple import config
 from unipath import Path
 from django.utils.translation import gettext_lazy as _
@@ -14,10 +14,10 @@ from django.utils.translation import gettext_lazy as _
 BASE_DIR = Path(__file__).parent
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Initialize environment variables
-env = environ.Env()
-# Load environment variables from the .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+## Initialize environment variables
+#env = environ.Env()
+## Load environment variables from the .env file
+#environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
