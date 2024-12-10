@@ -12825,10 +12825,13 @@ Copyright (c) 2015 Daniel Eden
 =>  media queries to adjust the 'titlePage' styling for different screen sizes
 ================================*/
 @media (max-width: 768px) {
-    body > div.wrapper > div.main-panel > nav > div > div.navbar-wrapper > a {
-        font-size: 14px;      /* Decrease font size for smaller screens */
-        max-width: 150px;     /* Reduce max width for smaller viewports */
-    }
+  
+  body > div.wrapper > div.main-panel > nav > div > div.navbar-wrapper > a,
+  body > div.wrapper > div.sidebar > div.sidebar-wrapper > ul:nth-child(3) > li:nth-child(1) > a > p {
+    font-weight:400;
+    font-size: 13px;      /* Decrease font size for smaller screens */
+    max-width: 150px;     /* Reduce max width for smaller viewports */
+  }
 }
 
 /*==============================
