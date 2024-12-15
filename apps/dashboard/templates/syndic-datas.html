@@ -17,7 +17,6 @@
                         <div class="card-icon">
                             <i class="material-icons">person</i>
                         </div>
-                        <h5>Syndic ProServices</h5>
                         <h3 class="card-title">{{ syndic.user.nom }}</h3>
                         <p class="card-category">{% trans "Syndic id:" %} {{ syndic.id }}</p>
                         <!-- Icônes cliquables -->
@@ -59,7 +58,7 @@
             {% endif %}
             
             <div class="card col-lg-6 col-md-6 mb-4">
-                <div class="card-header">
+                <!--<div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <button class="nav-link active" id="gestion-tab" data-bs-toggle="tab"
@@ -79,6 +78,17 @@
                                 aria-selected="false">Comptabilité</button>
                         </li>
                     </ul>
+                </div>-->
+
+                <div class="card-header">
+                    <h5 class="card-title">Gestion et Suivi</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between flex-wrap">
+                        <button class="btn btn-primary btn-sm">Gestion des propriétés</button>
+                        <button class="btn btn-sm">Suivi financier</button>
+                        <button class="btn btn-info btn-sm">Comptabilité</button>
+                    </div>
                 </div>
 
                 <div class="card-body" style="max-height: 400px; overflow-y: auto;">
