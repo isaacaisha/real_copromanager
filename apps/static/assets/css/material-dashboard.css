@@ -12944,7 +12944,7 @@ body.dark-mode .sidebar .nav li > a, body.dark-mode .sidebar .dropdown-item {
     color: #c1e2fc !important; /* Light text color */
 }
 
-body.dark-mode .sidebar .nav li > a:hover {
+body.dark-mode .sidebar .nav li > a:hover, body.dark-mode div.card-body.p-2 {
     background-color: #333 !important; /* Slightly lighter background on hover */
     color: #fff !important; /* Light text color on hover */
 }
@@ -13052,4 +13052,28 @@ td > ul > li, .enable-twofactor {
 label {
     padding-right: 10px;
     text-align: left;
+}
+
+
+/*==============================
+=>  Syndic-datas Section
+================================*/
+.icones-syndic {
+    border: 2px solid #007bff; /* Border color */
+    border-radius: 50%; /* Fully rounded */
+    padding: 10px; /* Padding inside the border */
+    background-color: #f0f8ff; /* Background color */
+    display: inline-flex; /* Align icon within the border */
+    align-items: center; /* Center icon vertically */
+    justify-content: center; /* Center icon horizontally */
+    width: 40px; /* Fixed width */
+    height: 40px; /* Fixed height */
+    color: #007bff; /* Icon color */
+    transition: all 0.3s ease; /* Smooth hover effect */
+}
+
+.icones-syndic:hover {
+    background-color: #007bff; /* Hover background color */
+    color: white; /* Hover icon color */
+    transform: scale(1.1); /* Slight enlargement on hover */
 }

@@ -11,8 +11,14 @@
 
 {% block content %}
 
+    {% if user.role == 'Superadmin' or user.role == 'Superadmin' or user.role == 'SuperSyndic' %}
+    <div class="container text-center mb-3">
+        <a href="{% url 'register' %}" class="btn btn-success btn-sm">{% trans "Inscription" %}</a>
+    </div>
+    {% endif %}
+
     {% if user.is_authenticated and user.role == 'Superadmin' %}
-    <div class="d-flex justify-content-center mb-3">
+    <div class="d-flex justify-content-center mb-5">
         <a href="{% url 'customize-license' syndic.id %}" class="btn btn-warning btn-sm pull-left">
             {% trans "Modify" %}
         </a>

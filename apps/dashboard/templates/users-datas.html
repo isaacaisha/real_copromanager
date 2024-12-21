@@ -1,26 +1,147 @@
-<!-- apps/dashboard/templates/users-datas.html -->
+<!-- apps/dashboard/templates/syndic-datas.html -->
 
 {% load static i18n %}
 
-<div class="container">
-    <div class="row justify-content-center">
+<!-- Card principale -->
+<div class="card card-body mx-2 mx-md-3 mt-n6">
+    {% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+    <div class="row gx-3 mb-1">
+        <!-- Colonne pour les informations personnelles -->
+
+        <div class="col-auto my-auto">
+            <h5 class="mb-0">Syndic Pro Service</h5>
+        </div>
+
+        <!-- Bouton Réglages (plus petit) -->
+        <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-2 d-md-block">
+            <div class="nav-wrapper position-relative end-0">
+                <ul class="nav nav-pills nav-fill p-0" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link mb-0 px-0 py-0.25" data-bs-toggle="tab"
+                            href="{% url 'customize-license' syndic.id %}" role="tab" aria-selected="false">
+                            <i class="material-icons text-lg position-relative">settings</i>
+                            <span class="ms-0">{% trans "Settings" %}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Icônes et boutons sur la même ligne, mais empilés sur petits écrans-->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
+
+
+        <!-- Icônes -->
+        <ul class="nav nav-pills p-3 d-flex" style="z-index: 10; gap: 19px;">
+            <li class="nav-item">
+                <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="tel:{{ syndic.user.telephone }}"
+                    role="tab" aria-selected="true">
+                    <i class="material-icons text-lg position-relative icones-syndic">phone</i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="mailto:{{ syndic.user.email }}"
+                    role="tab" aria-selected="false">
+                    <i class="material-icons text-lg position-relative icones-syndic">message</i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="https://calendar.google.com/" role="tab"
+                    aria-selected="false">
+                    <i class="material-icons text-lg position-relative icones-syndic">event</i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="javascript:;" role="tab"
+                    aria-selected="false">
+                    <i class="material-icons text-lg position-relative icones-syndic">check_box</i>
+                </a>
+            </li>
+        </ul>
+
+        <!-- Boutons -->
+        <div class="d-flex flex-column flex-sm-row mt-md-0">
+            <a class="btn bg-primary mx-1 my-1 btn-sm" href="{% url 'gestion-coproprietaire' %}">
+                {% trans "Management of Co-owners" %}
+            </a>
+            <a class="btn bg-primary mx-1 my-1 btn-sm" href="#">
+                {% trans "SUIVI FINANCIER" %}
+            </a>
+            <a class="btn bg-primary mx-1 my-1 btn-sm" href="#">
+                {% trans "COMPTABILITE" %}
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Informations contact et petites cards à droite -->
+    <div class="row gx-4 gy-4" style="max-height: 400px; overflow-y: auto;">
+
+        {% if license %}
+        <!-- License Information -->
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card">
+                <div class="card-header card-header-icon">
+                    <div class="card-icon">
+                        <i class="material-icons">assignment</i>
+                    </div>
+                    <h5 class="card-title">{% trans "License Information" %}</h5>
+                    <p class="card-category">{% trans "License id:" %} {{ license.id }}</p>
+                </div>
+                <div class="card-body p-2">
+                    <p>
+                        <strong>- {% trans "Start Date:" %}</strong> {{ license.date_debut|date:"d/m/Y" }}
+                    </p>
+                    <p>
+                        <strong>- {% trans "End Date:" %}</strong> {{ license.date_fin|date:"d/m/Y" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         {% if syndic %}
         <!-- Syndic Information -->
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-12 col-md-6 col-lg-3">
             <div class="card">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
                         <i class="material-icons">person</i>
                     </div>
-                    <h3 class="card-title">{{ syndic.user.nom }}</h3>
+                    <h5 class="card-title">{{ syndic.user.nom }}</h5>
                     <p class="card-category">{% trans "Syndic id:" %} {{ syndic.id }}</p>
                 </div>
-                <div class="card-body">
-                    <strong>{% trans "Syndic First Name:" %}</strong> {{ syndic.user.prenom }}<br>
-                    <strong>{% trans "Syndic Email:" %}</strong> <a href="#" class="a_link">{{ syndic.user.email }}</a><br>
-                    <strong>{% trans "Syndic Role:" %}</strong> {{ syndic.user.role }}<br>
-                    <strong>{% trans "Created at:" %}</strong> {{ license.date_debut|date:"d/m/Y" }}<br>
-                    <strong>{% trans "Updated at:" %}</strong> {{ license.date_fin|date:"d/m/Y" }}<br>
+                <div class="card-body p-2">
+                    <div>
+                        <p>
+                            <strong>- Contact Principal: </strong>
+                            &nbsp; <span class="fs-5">{{ syndic.user.prenom }}</span>
+                        </p>
+                        <p>
+                            <strong>- Email:</strong>
+                            &nbsp; <span class="fs-5">
+                                <a href="#" class="a_link">{{ syndic.user.email }}</a>
+                            </span>
+                        </p>
+                        <p>
+                            <strong>- Téléphone:</strong> &nbsp;
+                            <span class="fs-5">(44) 123 1234 123{{ syndic.user.telephone }}</span>
+                        </p>
+                        <p>
+                            <strong>- Adresse du siège:</strong>
+                            &nbsp; <span class="fs-5">
+                                12 Rue des Érables, 75012 Paris{{ syndic.user.adresse }}</span>
+                        </p>
+                        <p>
+                            <strong>- Statut:</strong>
+                            &nbsp; <span class="fs-5">Actif{{ syndic.user.statut }}</span>
+                        </p>
+                        <p>
+                            <strong>- Commercial:</strong>
+                            &nbsp; <span class="fs-5">Julie Martin{{ syndic.user.commercial }}</span>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -28,7 +149,7 @@
 
         {% if supersyndic %}
         <!-- Super Syndic Information -->
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-12 col-md-6 col-lg-3">
             <div class="card">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
@@ -37,34 +158,12 @@
                     <h3 class="card-title">{{ supersyndic.user.nom }}</h3>
                     <p class="card-category">{% trans "Super Syndic id:" %} {{ supersyndic.id }}</p>
                 </div>
-                <div class="card-body">
-                    <strong>{% trans "Super Syndic First Name:" %}</strong> {{ supersyndic.user.prenom }}<br>
-                    <strong>{% trans "Super Syndic Email:" %}</strong> <a href="#" class="a_link">{{ supersyndic.user.email }}</a><br>
-                    <strong>{% trans "Super Syndic Role:" %}</strong> {{ supersyndic.user.role }}<br>
-                    <strong>{% trans "Created at:" %}</strong> {{ license.date_debut|date:"d/m/Y" }}<br>
-                    <strong>{% trans "Updated at:" %}</strong> {{ license.date_fin|date:"d/m/Y" }}<br>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if license %}
-        <!-- License Information -->
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card card-stats">
-                <div class="card-header card-header-icon">
-                    <div class="card-icon">
-                        <i class="material-icons">assignment</i>
-                    </div>
-                    <p class="card-title">{% trans "License Information" %}</p>
-                    <h3 class="card-category">{{ syndic.id }}{{ supersyndic.id }}</h3>
-                </div>
-                <div class="card-body">
-                    <strong>{% trans "Start Date:" %}</strong> 
-                    {{ license.date_debut|date:"d/m/Y" }}
-                    <br>
-                    <strong>{% trans "End Date:" %}</strong> 
-                    {{ license.date_fin|date:"d/m/Y" }}
+                <div class="card-body p-2">
+                    <p><strong>{% trans "Super Syndic First Name:" %}</strong> {{ supersyndic.user.prenom }}</p>
+                    <p><strong>{% trans "Super Syndic Email:" %}</strong> <a href="#" class="a_link">{{ supersyndic.user.email }}</a></p>
+                    <p><strong>{% trans "Super Syndic Role:" %}</strong> {{ supersyndic.user.role }}</p>
+                    <p><strong>{% trans "Created at:" %}</strong> {{ license.date_debut|date:"d/m/Y" }}</p>
+                    <p><strong>{% trans "Updated at:" %}</strong> {{ license.date_fin|date:"d/m/Y" }}</p>
                 </div>
             </div>
         </div>
@@ -72,27 +171,28 @@
 
         {% if coproprietaires %}
         <!-- List of Co-owners (Coproprietaires) -->
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-12 col-md-6 col-lg-3">
             <div class="card shadow-sm">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
                         <i class="fas fa-users"></i>
-                        <br>
-                        <i class="fas fa-handshake"></i>
                     </div>
-                    <h3 class="card-title">{% trans "Co-owners" %}</h3>
+                    <h5 class="card-title">{% trans "Co-owners" %}</h5>
                 </div>
-                <div class="card-body">
-                    <ul>
+                <div class="card-body p-2">
+                    <div>
                         {% for coproprietaire in coproprietaires %}
-                        <li>- {% trans "Co-owner Name:" %} {{ coproprietaire.user.nom }}<br>
-                            - {% trans "Co-owner First Name:" %} {{ coproprietaire.user.prenom }}<br>
-                            - {% trans "Co-owner Email:" %} <a href="#" class="a_link">{{ coproprietaire.user.email }}</a><br>
-                            <br>
-                            {% empty %}
-                            <p>{% trans "No co-owner found for this user." %}</p>
-                            {% endfor %}
-                    </ul>
+                        <!--<div class="text-center">
+                            <a href="{% url 'gestion-coproprietaire' %}" class="btn btn-sm bg-primary">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </div>-->
+                        <p><strong>- {% trans "Co-owner First Name:" %}</strong> {{ coproprietaire.user.prenom }}</p>
+                            <a><strong>- {% trans "Co-owner Email:" %}</strong> <a href="#" class="a_link">{{ coproprietaire.user.email }}</a>
+                        {% empty %}
+                        <p>{% trans "No co-owner found for this user." %}</p>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,27 +200,29 @@
 
         {% if prestataires %}
         <!-- List of Co-prestataires (Prestataires) -->
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-12 col-md-6 col-lg-3">
             <div class="card shadow-sm">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
-                        <i class="fas fa-users"></i>
-                        <br>
                         <i class="fas fa-handshake"></i>
                     </div>
-                    <h3 class="card-title">{% trans "Associated Co-Prestataires" %}</h3>
+                    <h5 class="card-title">{% trans "Associated Co-Prestataires" %}</h5>
                 </div>
-                <div class="card-body">
-                    <ul>
+                <div class="card-body p-2">
+                    <div>
                         {% for prestataire in prestataires %}
-                        <li>- {% trans "Prestataire Name:" %} {{ prestataire.user.nom }}<br>
-                            - {% trans "Prestataire First Name:" %} {{ prestataire.user.prenom }}<br>
-                            - {% trans "Prestataire Email:" %} <a href="#" class="a_link">{{ prestataire.user.email }}</a><br>
-                            <br>
-                            {% empty %}
-                            <p>{% trans "No prestataire found for this user." %}</p>
-                            {% endfor %}
-                    </ul>
+                        <p><strong>- {% trans "Prestataire" %}:</strong> {{ prestataires.count }}</p>
+                        <!--<div class="text-center">
+                            <a href="{% url 'gestion-prestataire' %}" class="btn btn-sm bg-primary">
+                                <i class="material-icons">search</i>
+                            </a>
+                        </div>-->
+                        <p><strong>- {% trans "Prestataire First Name:" %}</strong> {{ prestataire.user.prenom }}</p>
+                            <p><strong>- {% trans "Prestataire Email:" %}</strong> <a href="#" class="a_link">{{ prestataire.user.email}}</p>
+                        {% empty %}
+                        <p>{% trans "No prestataire found for this user." %}</p>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
@@ -128,7 +230,7 @@
 
         {% if immeubles %}
         <!-- List of Managed Buildings (Immeubles) -->
-        <div class="col-lg-4 col-md-6 mb-4">
+        <div class="col-12 col-md-6 col-lg-3">
             <div class="card shadow-sm">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
@@ -136,7 +238,7 @@
                     </div>
                     <h3 class="card-title">{% trans "Managed Buildings" %}</h3>
                 </div>
-                <div class="card-body">
+                <div class="card-body p-2">
                     <ul>
                         {% for immeuble in immeubles %}
                         <li>{{ immeuble.nom }} - {{ immeuble.adresse }}</li>
@@ -149,8 +251,13 @@
             </div>
         </div>
         {% endif %}
+
     </div>
 
+</div>
+
+
+<div class="container">
     <!-- Back Button login -->
     <div class="text-center mt-3">
         {% if user.is_authenticated and user.role == 'Superadmin' %}
