@@ -9,7 +9,7 @@
         <!-- Colonne pour les informations personnelles -->
 
         <div class="col-auto my-auto">
-            <h5 class="mb-0">Syndic Pro Service</h5>
+            <h5 class="mb-0">{{ nom }}</h5>
         </div>
 
         <!-- Bouton Réglages (plus petit) -->
@@ -17,11 +17,13 @@
             <div class="nav-wrapper position-relative end-0">
                 <ul class="nav nav-pills nav-fill p-0" role="tablist">
                     <li class="nav-item">
+                        {% if license %}
                         <a class="nav-link mb-0 px-0 py-0.25" data-bs-toggle="tab"
-                            href="{% url 'customize-license' syndic.id %}" role="tab" aria-selected="false">
+                            href="{% url 'customize-license' license.id %}" role="tab" aria-selected="false">
                             <i class="material-icons text-lg position-relative">settings</i>
                             <span class="ms-0">{% trans "Settings" %}</span>
                         </a>
+                        {% endif %}
                     </li>
                 </ul>
             </div>
@@ -80,7 +82,7 @@
 
         {% if license %}
         <!-- License Information -->
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-md-6 col-lg-6">
             <div class="card">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
@@ -103,7 +105,7 @@
 
         {% if syndic %}
         <!-- Syndic Information -->
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-md-6 col-lg-6">
             <div class="card">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
@@ -149,7 +151,7 @@
 
         {% if supersyndic %}
         <!-- Super Syndic Information -->
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-md-6 col-lg-6">
             <div class="card">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
@@ -171,7 +173,7 @@
 
         {% if coproprietaires %}
         <!-- List of Co-owners (Coproprietaires) -->
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-md-6 col-lg-6">
             <div class="card shadow-sm">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
@@ -182,11 +184,7 @@
                 <div class="card-body p-2">
                     <div>
                         {% for coproprietaire in coproprietaires %}
-                        <!--<div class="text-center">
-                            <a href="{% url 'gestion-coproprietaire' %}" class="btn btn-sm bg-primary">
-                                <i class="material-icons">search</i>
-                            </a>
-                        </div>-->
+                        <p><strong>- {% trans "Co-owner" %}:</strong> {{ coproprietaires.count }}</p>
                         <p><strong>- {% trans "Co-owner First Name:" %}</strong> {{ coproprietaire.user.prenom }}</p>
                             <a><strong>- {% trans "Co-owner Email:" %}</strong> <a href="#" class="a_link">{{ coproprietaire.user.email }}</a>
                         {% empty %}
@@ -200,7 +198,7 @@
 
         {% if prestataires %}
         <!-- List of Co-prestataires (Prestataires) -->
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-md-6 col-lg-6">
             <div class="card shadow-sm">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
@@ -212,11 +210,6 @@
                     <div>
                         {% for prestataire in prestataires %}
                         <p><strong>- {% trans "Prestataire" %}:</strong> {{ prestataires.count }}</p>
-                        <!--<div class="text-center">
-                            <a href="{% url 'gestion-prestataire' %}" class="btn btn-sm bg-primary">
-                                <i class="material-icons">search</i>
-                            </a>
-                        </div>-->
                         <p><strong>- {% trans "Prestataire First Name:" %}</strong> {{ prestataire.user.prenom }}</p>
                             <p><strong>- {% trans "Prestataire Email:" %}</strong> <a href="#" class="a_link">{{ prestataire.user.email}}</p>
                         {% empty %}
@@ -230,7 +223,7 @@
 
         {% if immeubles %}
         <!-- List of Managed Buildings (Immeubles) -->
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-md-6 col-lg-6">
             <div class="card shadow-sm">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">

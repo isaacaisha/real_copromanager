@@ -12841,7 +12841,14 @@ Copyright (c) 2015 Daniel Eden
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 19px;
+}
+
+/* Add margin-left for Dark-Mode BTN on large screens */
+@media (min-width: 992px) {
+  .togglebutton {
+    margin-left: 265px;
+  }
 }
 
 body > div.wrapper > div.darkmode-selectlang-container.mb-3 > form > select {
@@ -12862,6 +12869,10 @@ body > div.wrapper > div.darkmode-selectlang-container.mb-3 > form > select {
 
 .language-form {
   margin: 0;
+}
+
+span#darkMode {
+  margin-right: 0 !important;
 }
 
 /*==============================
@@ -13059,21 +13070,26 @@ label {
 =>  Syndic-datas Section
 ================================*/
 .icones-syndic {
-    border: 2px solid #007bff; /* Border color */
+    border: 1px solid #007bff; /* Border color */
     border-radius: 50%; /* Fully rounded */
     padding: 10px; /* Padding inside the border */
     background-color: #f0f8ff; /* Background color */
     display: inline-flex; /* Align icon within the border */
     align-items: center; /* Center icon vertically */
     justify-content: center; /* Center icon horizontally */
-    width: 40px; /* Fixed width */
-    height: 40px; /* Fixed height */
+    width: 30px; /* Fixed width */
+    height: 30px; /* Fixed height */
     color: #007bff; /* Icon color */
     transition: all 0.3s ease; /* Smooth hover effect */
+    font-size: medium;
 }
 
 .icones-syndic:hover {
     background-color: #007bff; /* Hover background color */
     color: white; /* Hover icon color */
     transform: scale(1.1); /* Slight enlargement on hover */
+}
+
+.view-details {
+  color: #007bff;
 }

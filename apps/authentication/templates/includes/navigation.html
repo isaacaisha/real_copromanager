@@ -7,15 +7,6 @@
       {% if titlePage %}
       <a class="navbar-brand titlePage" href="#">
         {{ titlePage }}
-        {% if syndic %}
-        {{ syndic.user.nom }}
-        {% elif supersyndic %}
-        <!--{{ supersyndic.user.nom }}-->
-        {% elif coproprietaire %}
-        {{ coproprietaire.user.nom }}
-        {% elif prestataire %}
-        {{ prestataire.user.nom }}
-        {% endif %}
       </a>
       {% else %}
       <a class="navbar-brand copromanager" href="#">{% trans "Copromanager" %}</a>

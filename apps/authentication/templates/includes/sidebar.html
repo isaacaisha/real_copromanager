@@ -2,17 +2,9 @@
 
 <div class="sidebar" data-color="purple" data-background-color="white" data-image="{% static 'assets/img/sidebar-1.jpg' %}">
   <div class="logo">
-    {% if titlePage %}
-      <a rel="noopener noreferrer" href="#" class="simple-text logo-normal titlePage">
-        {% if syndic %}
-          {{ syndic.user.nom }}
-        {% elif supersyndic %}
-          {{ supersyndic.user.nom }}
-        {% elif coproprietaire %}
-          {{ coproprietaire.user.nom }}
-        {% elif prestataire %}
-          {{ prestataire.user.nom }}
-        {% endif %}
+    {% if nom %}
+      <a rel="noopener noreferrer" href="#" class="simple-text logo-normal titlePage" style="font-size: small;">
+        {{ nom }}
       </a>
     {% else %}
       <a class="simple-text logo-normal titlePage" href="#">{% trans "Copromanager" %}</a>

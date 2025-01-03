@@ -21,7 +21,7 @@ from core.utils import get_user_context, otp_required_for_supersyndic  # Import 
 
 from .forms import LicenseForm
 from .models import (
-    License, SuperSyndic,
+    License, Superadmin, SuperSyndic,
     Syndic, Coproprietaire, Prestataire, Immeuble
     )
 
@@ -62,7 +62,7 @@ def dashboard(request):
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def dashboard_superadmin(request):
-
+    
     # Retrieve all Super Syndics, Syndics, and other roles
     supersyndics = CustomUser.objects.filter(role='SuperSyndic')
     syndics = CustomUser.objects.filter(role='Syndic')
@@ -105,7 +105,7 @@ def dashboard_superadmin(request):
         'syndics': syndics,
         'coproprietaires': coproprietaires,
         'prestataires': prestataires,
-        'titlePage':  _('Super Admin Dashboard'),
+        'titlePage':  _('Super Admin') + f" {request.user.nom}",
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
 
@@ -118,7 +118,6 @@ def dashboard_superadmin(request):
 @otp_required_for_supersyndic
 @user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role == 'SuperSyndic'))
 def dashboard_supersyndic(request, supersyndic_id):
-    titlePage = _('Super Syndic Dashboard')
 
     # Fetch the current logged-in user's syndic profile
     try:
@@ -146,7 +145,8 @@ def dashboard_supersyndic(request, supersyndic_id):
             'license': license,
             #'immeubles': immeubles,
             #'coproprietaires': coproprietaires,
-            'titlePage': titlePage,
+            'titlePage': _('Super Syndic') + f" {supersyndic.user.nom}",
+            'nom': supersyndic.user.nom,
             'date': timezone.now().strftime(_("%a %d %B %Y"))
         }
 
@@ -198,7 +198,8 @@ def dashboard_syndic(request, syndic_id):
             'coproprietaires': coproprietaires,
             'prestataires': prestataires,
             'immeubles': immeubles,
-            'titlePage': _('Dashboard'),
+            'titlePage': _('Dashboard') + f" {syndic.user.nom}",
+            'nom': syndic.user.nom,
             'date': timezone.now().strftime(_("%a %d %B %Y"))
         }
 
@@ -252,7 +253,8 @@ def dashboard_coproprietaire(request, coproprietaire_id):
         'coproprietaires': coproprietaires,
         'syndic': syndic,
         'license': license,
-        'titlePage': _('Dashboard'),
+        'titlePage': _('Dashboard') + f" {coproprietaire.user.nom}",
+        'nom': coproprietaire.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
 
@@ -296,7 +298,8 @@ def dashboard_prestataire(request, prestataire_id):
         'prestataires': prestataires,
         'syndic': syndic,
         'license': license,
-        'titlePage': _('Dashboard'),
+        'titlePage': _('Dashboard') + f" {prestataire.user.nom}",
+        'nom': prestataire.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
 

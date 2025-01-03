@@ -15,14 +15,13 @@
 
     <div class="card">
         <div class="card-header">
-            {% if user.role == 'Syndic' %}
-            <span>{% trans "License ID" %} {{ license.syndic.user.id|default:_("Unknown") }}</span>
+            {% if user.role == 'Superadmin' %}
+            <span>{% trans "License ID" %} {{ license.id }}</span>
             <br>
-            <span>{% trans "Customize License for" %} {{ license.syndic.user.nom|default:_("Unknown") }}</span>
-            {% else %}
-            <span>{% trans "License ID" %} {{ license.supersyndic.user.id|default:_("Unknown") }}</span>
-            <br>
-            <span>{% trans "Customize License for" %} {{ license.supersyndic.user.nom|default:_("Unknown") }}</span>
+            <span>
+                {% trans "Customize License for" %} 
+                {{ license.syndic.user.nom }} {{ license.supersyndic.user.nom }}
+            </span>
             {% endif %}
         </div>
 
