@@ -219,7 +219,7 @@ def dashboard_syndic(request, syndic_id):
 
 
 @login_required(login_url="/login/")
-@user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role == 'Coproprietaire'))
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic', 'Coproprietaire'])
 def dashboard_coproprietaire(request, coproprietaire_id):
     """
     View for the coproprietaire dashboard.
@@ -227,23 +227,29 @@ def dashboard_coproprietaire(request, coproprietaire_id):
     such as co-owner documents, charges, and announcements.
     """
 
-    # Fetch the current coproprietaire profile
-    if request.user.role == 'Superadmin':
-        # Query by user__id when accessed by Superadmin
+    # Fetch the current coproprietaire profile  
+    if request.user.role in ['Superadmin', 'Syndic', 'SuperSyndic']:
+        # Allow Superadmin, Syndic, and SuperSyndic to query by user__id
         coproprietaire = get_object_or_404(Coproprietaire, user__id=coproprietaire_id)
-    else:
+    elif request.user.role == 'Coproprietaire':
         # Restrict to the currently logged-in coproprietaire
         coproprietaire = get_object_or_404(Coproprietaire, user=request.user)
+    else:
+        # Forbid access for other roles
+        return HttpResponse(status=403)
+    
 
     # Retrieve the syndic associated with this prestataire
     syndic = coproprietaire.syndic if hasattr(coproprietaire, 'syndic') else None
 
     # Retrieve the license associated with the syndic
-    license = syndic.licence if syndic and hasattr(syndic, 'licence') else None
+    license = syndic.licence if syndic and hasattr(syndic, 'license') else None
     
      # Only fetch the coproprietaires associated with the current syndic
     if request.user.role == 'Superadmin':
         coproprietaires = Coproprietaire.objects.all()  # Superadmin can see all
+    elif request.user.role in ['Syndic', 'SuperSyndic']:
+        coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
     else:
         coproprietaires = Coproprietaire.objects.filter(syndic=syndic, user=request.user)  # Filter by syndic for others
     
@@ -263,7 +269,7 @@ def dashboard_coproprietaire(request, coproprietaire_id):
 
 
 @login_required(login_url="/login/")
-@user_passes_test(lambda u: u.is_active and( u.role == 'Superadmin' or u.role == 'Prestataire'))
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic', 'Prestataire'])
 def dashboard_prestataire(request, prestataire_id):
     """
     View for the prestataire dashboard.
@@ -272,23 +278,28 @@ def dashboard_prestataire(request, prestataire_id):
     """
 
     # Fetch the current prestataire profile
-    if request.user.role == 'Superadmin':
+    if request.user.role in ['Superadmin', 'Syndic', 'SuperSyndic']:
         # Query by user__id when accessed by Superadmin
         prestataire = get_object_or_404(Prestataire, user__id=prestataire_id)
-    else:
+    elif request.user.role == 'Prestataire':
         # Restrict to the currently logged-in prestataire
         prestataire = get_object_or_404(Prestataire, user=request.user)
+    else:
+        return HttpResponse(status=403)
+
 
     # Retrieve the syndic associated with this prestataire
     syndic = prestataire.syndic if hasattr(prestataire, 'syndic') else None
 
     # Retrieve the license associated with the syndic
-    license = syndic.licence if syndic and hasattr(syndic, 'licence') else None
+    license = syndic.licence if syndic and hasattr(syndic, 'license') else None
 
     
     # Only fetch the prestataires associated with the current syndic
     if request.user.role == 'Superadmin':
         prestataires = Prestataire.objects.all()  # Superadmin can see all
+    elif request.user.role in ['Syndic', 'SuperSyndic']:
+        prestataires = Prestataire.objects.filter(syndic=syndic)
     else:
         prestataires = Prestataire.objects.filter(syndic=syndic, user=request.user)  # Filter by syndic for others
 
@@ -370,7 +381,7 @@ def gestion_syndic(request):
 
 
 @login_required(login_url="/login/")
-@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def gestion_coproprietaire(request):
     coproprietaires = CustomUser.objects.filter(role='Coproprietaire')
 
@@ -386,7 +397,7 @@ def gestion_coproprietaire(request):
 
 
 @login_required(login_url="/login/")
-@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def gestion_prestataire(request):
     prestataires = CustomUser.objects.filter(role='Prestataire')
 
@@ -456,10 +467,7 @@ def license_detail(request, license_id):
 
 
 @login_required(login_url="/login/")
-@user_passes_test(lambda u: u.is_active and 
-                  (u.role == 'Superadmin' 
-                   or u.role == 'Syndic' 
-                   or u.role == 'SuperSyndic'))
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def user_search(request):
     query = request.GET.get('q', '').strip()  # Get the search query from the GET request
     print(f"Search Query: {query}")  # Debug statement

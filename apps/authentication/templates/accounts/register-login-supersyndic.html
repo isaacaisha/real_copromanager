@@ -11,15 +11,14 @@
 
 {% block content %}
 <main class="auth layout">
-    <div class="container my-5">
+    <div class="container my-3">
         <div class="text-center">
-            <!--<h1>{{ titlePage|default:_("Super User Access") }}</h1>-->
             <p class="text-muted">{% trans "Manage your VIP profile seamlessly." %}</p>
         </div>
 
         {% if titlePage == 'Login' %}
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <div class="card shadow border-success">
                     <div class="card-header bg-success text-white text-center">
                         <h5>{% trans "Super Syndic Login" %}</h5>
@@ -46,7 +45,7 @@
             <div class="col-md-8">
                 <div class="card shadow">
                     <div class="card-header bg-secondary text-white text-center">
-                        <h3>{% trans "Super Syndic Registration" %}</h3>
+                        <h5 class="mb-0">{% trans "Super Syndic Registration" %}</h5>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="">
@@ -60,16 +59,14 @@
                                 {% endif %}
                             </div>
                             {% endfor %}
-                            <div class="text-center">
-                                <button type="submit" class="btn bg-secondary btn-sm">{% trans "Register" %}</button>
+                            <div class="mt-4">
+                                <button type="submit" class="btn bg-success btn-sm">{% trans "Register" %}</button>
+                                
+                                <a href="{% url 'login' %}" class="btn btn-sm btn-secondary pull-right"
+                                    onclick="window.history.back(); return false;">{% trans "Cancel" %}
+                                </a>
                             </div>
                         </form>
-                    </div>
-                </div>
-                <div class="text-center mt-4">
-                    <div>
-                        <a href="{% url 'login' %}" class="btn btn-sm btn-secondary"
-                            onclick="window.history.back(); return false;">{% trans "Cancel" %}</a>
                     </div>
                 </div>
             </div>

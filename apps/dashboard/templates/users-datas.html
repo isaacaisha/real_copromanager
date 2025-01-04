@@ -251,12 +251,10 @@
 
 
 <div class="container">
-    <!-- Back Button login -->
+    <!-- Go Back Button -->
     <div class="text-center mt-3">
-        {% if user.is_authenticated and user.role == 'Superadmin' %}
-        <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm">{% trans "Backoffice" %}</a>
-        {% else %}
-        <a href="{% url 'home' %}" class="btn btn-sm">{% trans "Return to Home" %}</a>
-        {% endif %}
+        <a href="javascript:history.back()" class="btn btn-sm">
+            <i class="material-icons">arrow_back</i> {% trans "Go back" %}
+        </a>
     </div>
 </div>

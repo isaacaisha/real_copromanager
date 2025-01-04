@@ -134,9 +134,11 @@
         </div>
     </div>
 
-    <!-- Back Button dasboad-superadmin -->
+    <!-- Go Back Button -->
     <div class="text-center mt-3">
-        <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm">Backoffice</a>
+        <a href="javascript:history.back()" class="btn btn-sm">
+            <i class="material-icons">arrow_back</i> {% trans "Go back" %}
+        </a>
     </div>
     
 </div>

@@ -57,6 +57,7 @@ def redirect_based_on_role(request, user):
 
 
 #@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+#@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def register_user(request):
     success = False
 
@@ -170,6 +171,7 @@ def login_view(request):
 
 # View for the register Super Syndic, requiring 2FAfrom django.db import transaction
 @login_required
+@user_passes_test(lambda u: u.is_active and u.role == 'Syndic')
 def register_supersyndic(request, syndic_id):
     titlePage = _('Register Super Syndic')
     supersyndic_form = SuperSyndicForm(request.POST or None)
@@ -222,6 +224,7 @@ def register_supersyndic(request, syndic_id):
 
 # View for the login VIP page, requiring 2FA
 @login_required
+@user_passes_test(lambda u: u.is_active and u.role == 'Supersyndic')
 def login_supersyndic(request, supersyndic_id):
     titlePage = _('Login Super Syndic')
 

@@ -168,10 +168,6 @@
                 <div class="card-header fs-8 card-header-icon">
                     <div class="card-icon">
                         <i class="fa-solid fa-city"></i>
-                        <i class="fa-solid fa-house-user"></i>
-                        <i class="fa-solid fa-house-chimney"></i>
-                        <i class="fa-solid fa-house-chimney-user"></i>
-                        <i class="fa-solid fa-building"></i>
                     </div>
                     <h5 class="card-title"><!--{% trans "Co-owners" %}-->{% trans "Nombre De Résidences" %}: 19{{ residences.count }}</h5>
                 </div>
@@ -210,12 +206,10 @@
 
 
 <div class="container">
-    <!-- Back Button login -->
+    <!-- Go Back Button -->
     <div class="text-center mt-3">
-        {% if user.is_authenticated and user.role == 'Superadmin' %}
-        <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm">{% trans "Backoffice" %}</a>
-        {% else %}
-        <a href="{% url 'home' %}" class="btn btn-sm">{% trans "Return to Home" %}</a>
-        {% endif %}
+        <a href="javascript:history.back()" class="btn btn-sm">
+            <i class="material-icons">arrow_back</i> {% trans "Go back" %}
+        </a>
     </div>
 </div>
