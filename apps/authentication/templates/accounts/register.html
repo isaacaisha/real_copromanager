@@ -119,15 +119,109 @@
               </div>
               <span class="text-danger">{{ form.password2.errors }}</span>
 
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating"></label>
+                    {{ form.phone }}
+                  </div>
+                </div>
+              </div>
+              <span class="text-danger">{{ form.phone.errors }}</span>
+              
+              <br />
+              
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating"></label>
+                    {{ form.status }}
+                  </div>
+                </div>
+              </div>
+              <span class="text-danger">{{ form.status.errors }}</span>
+              
+              <br />
+              
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating"></label>
+                    {{ form.commercial }}
+                  </div>
+                </div>
+              </div>
+              <span class="text-danger">{{ form.commercial.errors }}</span>
+              
+              <br />
+              
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating"></label>
+                    {{ form.address }}
+                  </div>
+                </div>
+              </div>
+              <span class="text-danger">{{ form.address.errors }}</span>
+              
+              <br />
+              
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating"></label>
+                    {{ form.city }}
+                  </div>
+                </div>
+              </div>
+              <span class="text-danger">{{ form.city.errors }}</span>
+              
+              <br />
+              
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating"></label>
+                    {{ form.country }}
+                  </div>
+                </div>
+              </div>
+              <span class="text-danger">{{ form.country.errors }}</span>
+              
+              <br />
+              
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating"></label>
+                    {{ form.postal_code }}
+                  </div>
+                </div>
+              </div>
+              <span class="text-danger">{{ form.postal_code.errors }}</span>
+              
+              <br />
+              
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label class="bmd-label-floating"></label>
+                    {{ form.about_me }}
+                  </div>
+                </div>
+              </div>
+              <span class="text-danger">{{ form.about_me.errors }}</span>
+
               <br />
               {{ license_form.as_p }}
               <br>
 
-              <button type="submit" name="register" class="btn btn-success btn-sm pull-left">{% trans "Register" %}</button>
+              <button type="submit" name="register" class="btn btn-success btn-sm pull-left">{% trans "Sign Up" %}</button>
 
-              <!-- Back Button gestion -->
-              <a href="{% url 'dashboard-superadmin' %}" class="btn btn-sm pull-right">
-               {% trans "Backoffice" %}
+              <!-- Go Back Button -->
+              <a href="javascript:history.back()" class="btn btn-sm pull-right">
+                {% trans "Cancel" %}
               </a>
 
               <div class="clearfix"></div>

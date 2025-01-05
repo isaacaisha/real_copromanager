@@ -53,7 +53,7 @@
         </li>
         {% endif %}
         
-        {% if user.role == 'Coproprietaire' %}
+        {% if user.role == 'Coproprietaire' and coproprietaire %}
         <li class="nav-item {% if 'dashboard_coprorietaire' in segment %} active {% endif %}">
           <a class="nav-link" href="{% url 'dashboard-coproprietaire' coproprietaire_id=coproprietaire.id %}">
             <i class="material-icons">person</i>
@@ -62,7 +62,7 @@
         </li>
         {% endif %}
         
-        {% if user.role == 'Prestataire' %}
+        {% if user.role == 'Prestataire' and prestataire %}
         <li class="nav-item {% if 'dashboard_prestataire' in segment %} active {% endif %}">
           <a class="nav-link" href="{% url 'dashboard-prestataire' prestataire_id=prestataire.id %}">
             <i class="material-icons">person</i>

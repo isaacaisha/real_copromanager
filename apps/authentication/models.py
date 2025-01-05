@@ -53,6 +53,16 @@ class CustomUser(AbstractUser):
     prenom = models.CharField(_('first name'), max_length=255)
     role = models.CharField(_('role'), max_length=50, choices=ROLES, default='Syndic')
 
+    # Additional fields
+    phone = models.CharField(_('phone'), max_length=20, null=True, blank=True)
+    status = models.CharField(_('status'), max_length=100, null=True, blank=True)
+    commercial = models.CharField(_('commercial'), max_length=100, null=True, blank=True)
+    address = models.TextField(_('address'), null=True, blank=True)
+    city = models.CharField(_('city'), max_length=100, null=True, blank=True)
+    country = models.CharField(_('country'), max_length=100, null=True, blank=True)
+    postal_code = models.CharField(_('postal code'), max_length=20, null=True, blank=True)
+    about_me = models.TextField(_('about me'), null=True, blank=True)
+
     # Set email as the username field
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['nom', 'prenom', 'role']  # do not use verbose translations here

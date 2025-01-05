@@ -12909,7 +12909,7 @@ body.dark-mode {
   font-family: 'Arial', sans-serif;
 }
 
-body.dark-mode .prenom {
+body.dark-mode .prenom, body.dark-mode textarea#id_about_me, body.dark-mode textarea#id_address {
   color: rgb(231, 231, 231);
 }
 
@@ -12955,8 +12955,7 @@ body.dark-mode .sidebar .nav li > a, body.dark-mode .sidebar .dropdown-item {
     color: #c1e2fc !important; /* Light text color */
 }
 
-body.dark-mode .sidebar .nav li > a:hover, body.dark-mode div.card-body.p-2,
-body > div.wrapper > div.main-panel > div > div.container-fluid > div > div > div.card-header.card-header-icon > span {
+body.dark-mode .sidebar .nav li > a:hover, body.dark-mode div.card-body.p-2 {
     background-color: #333 !important; /* Slightly lighter background on hover */
     color: #fff !important; /* Light text color on hover */
 }

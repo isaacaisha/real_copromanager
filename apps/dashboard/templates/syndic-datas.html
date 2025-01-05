@@ -2,8 +2,35 @@
 
 {% load static i18n %}
 
+{% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+<div class="container text-center mb-3">
+    <a href="{% url 'register' %}" class="btn btn-success btn-sm">{% trans "Inscription" %}</a>
+</div>
+{% endif %}
+
+{% if user.is_authenticated and user.role == 'Superadmin' %}
+<div class="container">
+    <a href="{% url 'customize-license' license.id %}" class="btn btn-warning btn-sm pull-left">
+        {% trans "License" %} <i class="fa fa-key"></i>
+    </a>
+
+    <a href="{% url 'update-profile-with-id' user.id %}" class="btn btn-warning btn-sm pull-right">
+        {% trans "Profile" %} <i class="fa fa-key"></i>
+    </a>
+</div>
+{% endif %}
+
+{% if user.is_authenticated and user.role != 'Superadmin' %}
+<div class="text-center">
+    <a href="{% url 'update-profile' %}" class="btn btn-warning btn-sm">
+        {% trans "Modify Profile" %}
+    </a>
+</div>
+{% endif %}
+<br>
+
 <!-- Card principale -->
-<div class="card card-body mx-2 mx-md-3 mt-n6">
+<div class="card card-body">
     <div class="row gx-3 mb-1">
         <div class="col-auto my-auto">
             <h5 class="mb-0 p-3">{{ nom }}</h5>
@@ -74,20 +101,20 @@
                         </p>
                         <p>
                             <strong>Téléphone:</strong> &nbsp;
-                            <span class="fs-5">(44) 123 1234 123{{ syndic.user.telephone }}</span>
+                            <span class="fs-5">{{ syndic.user.phone }}</span>
                         </p>
                         <p>
                             <strong>Adresse du siège:</strong>
                             &nbsp; <span class="fs-5">
-                                12 Rue des Érables, 75012 Paris{{ syndic.user.adresse }}</span>
+                                {{ syndic.user.address }}</span>
                         </p>
                         <p>
                             <strong>Statut:</strong>
-                            &nbsp; <span class="fs-5">Actif{{ syndic.user.statut }}</span>
+                            &nbsp; <span class="fs-5">{{ syndic.user.status }}</span>
                         </p>
                         <p>
                             <strong>Commercial:</strong>
-                            &nbsp; <span class="fs-5">Julie Martin{{ syndic.user.commercial }}</span>
+                            &nbsp; <span class="fs-5">{{ syndic.user.commercial }}</span>
                         </p>
                     </div>
                 </div>
@@ -113,20 +140,20 @@
                         </p>
                         <p>
                             <strong>Téléphone:</strong> &nbsp;
-                            <span class="fs-5">(44) 123 1234 123{{ supersyndic.user.telephone }}</span>
+                            <span class="fs-5">{{ supersyndic.user.phone }}</span>
                         </p>
                         <p>
                             <strong>Adresse du siège:</strong>
                             &nbsp; <span class="fs-5">
-                                12 Rue des Érables, 75012 Paris{{ supersyndic.user.adresse }}</span>
+                                {{ supersyndic.user.address }}</span>
                         </p>
                         <p>
                             <strong>Statut:</strong>
-                            &nbsp; <span class="fs-5">Actif{{ supersyndic.user.statut }}</span>
+                            &nbsp; <span class="fs-5">{{ supersyndic.user.status }}</span>
                         </p>
                         <p>
                             <strong>Commercial:</strong>
-                            &nbsp; <span class="fs-5">Julie Martin{{ supersyndic.user.commercial }}</span>
+                            &nbsp; <span class="fs-5">{{ supersyndic.user.commercial }}</span>
                         </p>
                     </div>
                 </div>
@@ -204,12 +231,13 @@
 
 </div>
 
-
-<div class="container">
-    <!-- Go Back Button -->
-    <div class="text-center mt-3">
-        <a href="javascript:history.back()" class="btn btn-sm">
-            <i class="material-icons">arrow_back</i> {% trans "Go back" %}
-        </a>
-    </div>
+<!-- Go Back Button -->
+<div class="text-center mt-3">
+    {% if user.is_authenticated and user.role == 'Superadmin' %}
+    <a href="javascript:history.back()" class="btn btn-sm">
+        <i class="material-icons">arrow_back</i> {% trans "Go back" %}
+    </a>
+    {% else %}
+    <a href="{% url 'home' %}" class="btn btn-secondary btn-sm">{% trans "Back to Home" %}</a>
+    {% endif %}
 </div>

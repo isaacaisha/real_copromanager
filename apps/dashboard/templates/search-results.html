@@ -16,7 +16,7 @@
     {% if users %}
     <div class="row justify-content-center">
         {% for user in users %}
-        <div class="col-md-4 mb-4">
+        <div class="col-md-6 mb-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">
@@ -31,10 +31,13 @@
                         <br>
                         <strong>{% trans "Role" %}:</strong> {{ user.role }}
                     </p>
-                    <div class="text-center">
-                        <button href="{% url 'user-profile' user.id %}" class="btn btn-sm" disabled>
+                    <div class="">
+                        <a href="{% url 'user-profile' user.id %}" class="btn btn-sm" disabled>
                             {% trans "View Profile" %}
-                        </button>
+                        </a>
+                        <a href="{% url 'update-profile' %}" class="btn btn-warning btn-sm pull-right text-small">
+                            {% trans "Modify" %} <i class="fa fa-key"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -45,13 +48,11 @@
     <p class="text-center">{% trans "No users found." %}</p>
     {% endif %}
 
-    <!-- Back Button login -->
+    <!-- Go Back Button -->
     <div class="text-center mt-3">
-        {% if user.is_authenticated and user.role == 'Superadmin' %}
-        <a href="{% url 'dashboard-superadmin' %}" class="btn btn-secondary btn-sm">{% trans "Backoffice" %}</a>
-        {% else %}
-        <a href="{% url 'home' %}" class="btn btn-secondary btn-sm">{% trans "Back to Home" %}</a>
-        {% endif %}
+        <a href="javascript:history.back()" class="btn btn-sm">
+            <i class="material-icons">arrow_back</i> {% trans "Go back" %}
+        </a>
     </div>
 </div>
 

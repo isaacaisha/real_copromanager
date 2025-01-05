@@ -8,6 +8,7 @@ from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView, PasswordResetCompleteView
@@ -283,6 +284,41 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
         context['titlePage'] = _('Password Reset Complete')
         context['date'] = timezone.now().strftime(_("%a %d %B %Y"))
         return context
+
+
+@login_required
+def update_profile(request, user_id=None):   
+    # Determine if the current user is allowed to update the profile
+    if user_id:
+        if request.user.role != "Superadmin":
+            messages.error(request, _("You do not have permission to update other users' profiles."))
+            return redirect('home')
+        user_to_update = get_object_or_404(CustomUser, id=user_id)
+    else:
+        user_to_update = request.user  # Default to the current user
+
+    #license_form = LicenseForm(request.POST)
+        
+    if request.method == "POST":
+        form = SignUpForm(request.POST, instance=user_to_update)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _("Profile updated successfully!"))
+            # Redirect to the current user's profile page or a dashboard
+            return redirect('home')
+        else:
+            messages.error(request, _("There were errors in the form. Please correct them."))
+    else:
+        form = SignUpForm(instance=user_to_update)
+        #license_form = LicenseForm()
+
+    context = {
+        'form': form,
+        #'license_form': license_form,
+        'titlePage': _("Update Profile for ") + user_to_update.nom,
+        'date': timezone.now().strftime(_("%a %d %B %Y")),
+    }
+    return render(request, "accounts/update_profile.html", context)
     
 
 # Delete Syndic View

@@ -8,7 +8,7 @@ from django.urls import path
 from .views import (
     ResetPasswordView, CustomPasswordResetConfirmView, CustomPasswordResetCompleteView,
     register_supersyndic, login_supersyndic,
-    register_user, login_view, logout_view,
+    register_user, login_view, logout_view, update_profile,
     delete_supersyndic, delete_syndic, delete_coproprietaire, delete_prestataire
     )
 
@@ -37,11 +37,18 @@ urlpatterns = [
     path('register-supersyndic/<int:syndic_id>/', register_supersyndic, name='register-supersyndic'),
     path('login-supersyndic/<int:supersyndic_id>/', login_supersyndic, name='login-supersyndic'),
 
+    # URLs for Search Bar 
+    path('user-search/', user_search, name='user-search'),
+    # URLs for User & Update Profile 
+    path('user-profile/<int:user_id>/', user_profile, name='user-profile'),
+    path('update-profile/', update_profile, name='update-profile'),  # For updating the current user's profile
+    path('update-profile/<int:user_id>/', update_profile, name='update-profile-with-id'),  # For Superadmin to update other users
+
     # Delete operations for syndic, supersyndic, coproprietaire, prestataire
     path('delete-syndic/<int:syndic_id>/', delete_syndic, name='delete-syndic'),
     path('delete-supersyndic/<int:supersyndic_id>/', delete_supersyndic, name='delete-supersyndic'),
-    path('delete/coproprietaire/<int:coproprietaire_id>/', delete_coproprietaire, name='delete-coproprietaire'),
-    path('delete/prestataire/<int:prestataire_id>/', delete_prestataire, name='delete-prestataire'),
+    path('delete-coproprietaire/<int:coproprietaire_id>/', delete_coproprietaire, name='delete-coproprietaire'),
+    path('delete-prestataire/<int:prestataire_id>/', delete_prestataire, name='delete-prestataire'),
 
     # URLs for Dashboard User
     path('dashboard-superadmin/', dashboard_superadmin, name='dashboard-superadmin'),
@@ -58,10 +65,5 @@ urlpatterns = [
     path('dashboard-syndic/<int:syndic_id>/', dashboard_syndic, name='dashboard-syndic'),
     path('dashboard-coproprietaire/<int:coproprietaire_id>/', dashboard_coproprietaire, name='dashboard-coproprietaire'),
     path('dashboard-prestataire/<int:prestataire_id>/', dashboard_prestataire, name='dashboard-prestataire'),
-    
-    # URLs for Search Bar 
-    path('user-search/', user_search, name='user-search'),
-    # URLs for User Profile 
-    path('user/profile/<int:user_id>/', user_profile, name='user-profile'),
 
 ]
