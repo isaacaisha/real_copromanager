@@ -147,6 +147,7 @@ def dashboard_supersyndic(request, supersyndic_id):
             #'coproprietaires': coproprietaires,
             'titlePage': _('Super Syndic') + f" {supersyndic.user.nom}",
             'nom': supersyndic.user.nom,
+            'phone': supersyndic.user.phone,
             'date': timezone.now().strftime(_("%a %d %B %Y"))
         }
 
@@ -200,6 +201,7 @@ def dashboard_syndic(request, syndic_id):
             'immeubles': immeubles,
             'titlePage': _('Dashboard') + f" {syndic.user.nom}",
             'nom': syndic.user.nom,
+            'phone': syndic.user.phone,
             'date': timezone.now().strftime(_("%a %d %B %Y"))
         }
 
@@ -261,6 +263,7 @@ def dashboard_coproprietaire(request, coproprietaire_id):
         'license': license,
         'titlePage': _('Dashboard') + f" {coproprietaire.user.nom}",
         'nom': coproprietaire.user.nom,
+        'phone': coproprietaire.user.phone,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
 
@@ -311,6 +314,7 @@ def dashboard_prestataire(request, prestataire_id):
         'license': license,
         'titlePage': _('Dashboard') + f" {prestataire.user.nom}",
         'nom': prestataire.user.nom,
+        'phone': prestataire.user.phone,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
 

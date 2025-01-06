@@ -52,7 +52,11 @@
                         {% for coproprietaire in coproprietaires %}
                         <tr>
                             <td>{{ coproprietaire.nom }}</td>
-                            <td>{{ coproprietaire.email }}</td>
+                            <td>
+                                <a href="mailto:{{ coproprietaire.email }}" class="a_link">
+                                    {{ coproprietaire.email }}
+                                </a>
+                            </td>
                             <td>
                                 <a href="{% url 'dashboard-coproprietaire' coproprietaire_id=coproprietaire.id %}"
                                     class="btn btn-sm">

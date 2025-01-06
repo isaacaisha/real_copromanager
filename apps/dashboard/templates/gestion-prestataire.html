@@ -51,7 +51,11 @@
                         {% for prestataire in prestataires %}
                         <tr>
                             <td>{{ prestataire.nom }}</td>
-                            <td>{{ prestataire.email }}</td>
+                            <td>
+                                <a href="mailto:{{ prestataire.email }}" class="a_link">
+                                    {{ prestataire.email }}
+                                </a>
+                            </td>
                             <td>
                                 <a href="{% url 'dashboard-prestataire' prestataire.id %}" class="btn btn-sm">
                                     <i class="material-icons">search</i> {% trans "View Details" %}

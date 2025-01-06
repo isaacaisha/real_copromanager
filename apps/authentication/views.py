@@ -287,7 +287,7 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 
 
 @login_required
-def update_profile(request, user_id=None):   
+def update_profile(request, user_id=None):
     # Determine if the current user is allowed to update the profile
     if user_id:
         if request.user.role != "Superadmin":

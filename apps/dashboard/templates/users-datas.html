@@ -37,7 +37,7 @@
         <!-- Icônes -->
         <ul class="nav nav-pills p-3 d-flex" style="z-index: 10; gap: 19px;">
             <li class="nav-item">
-                <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="tel:{{ syndic.user.telephone }}"
+                <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="tel:{{ phone }}"
                     role="tab" aria-selected="true">
                     <i class="material-icons text-lg position-relative icones-syndic">phone</i>
                 </a>
@@ -117,30 +117,40 @@
                 <div class="card-body p-2">
                     <div>
                         <p>
-                            <strong>- Contact Principal: </strong>
+                            <strong>Contact Principal: </strong>
                             &nbsp; <span class="fs-5">{{ syndic.user.prenom }}</span>
                         </p>
                         <p>
-                            <strong>- Email:</strong>
+                            <strong>Email:</strong>
                             &nbsp; <span class="fs-5">
-                                <a href="#" class="a_link">{{ syndic.user.email }}</a>
+                                <a href="mailto:{{ syndic.user.email }}" class="a_link">
+                                    {{ syndic.user.email }}
+                                </a>
                             </span>
                         </p>
                         <p>
-                            <strong>- Téléphone:</strong> &nbsp;
-                            <span class="fs-5">{{ syndic.user.phone }}</span>
+                            <strong>Phone:</strong> &nbsp;
+                            &nbsp; <span class="fs-5">
+                                <a href="tel:{{ syndic.user.phone }}" class="a_link">
+                                    {{ syndic.user.phone }}
+                                </a>
+                            </span>
                         </p>
                         <p>
-                            <strong>- Adresse du siège:</strong>
+                            <strong>Adresse du siège:</strong>
                             &nbsp; <span class="fs-5">
                                 {{ syndic.user.address }}</span>
                         </p>
                         <p>
-                            <strong>- Statut:</strong>
+                            <strong>Role:</strong>
+                            &nbsp; <span class="fs-5">{{ syndic.user.role }}</span>
+                        </p>
+                        <p>
+                            <strong>Statut:</strong>
                             &nbsp; <span class="fs-5">{{ syndic.user.status }}</span>
                         </p>
                         <p>
-                            <strong>- Commercial:</strong>
+                            <strong>Commercial:</strong>
                             &nbsp; <span class="fs-5">{{ syndic.user.commercial }}</span>
                         </p>
                     </div>
@@ -163,30 +173,39 @@
                 <div class="card-body p-2">
                     <div>
                         <p>
-                            <strong>- Contact Principal: </strong>
+                            <strong>Contact Principal: </strong>
                             &nbsp; <span class="fs-5">{{ supersyndic.user.prenom }}</span>
                         </p>
                         <p>
-                            <strong>- Email:</strong>
+                            <strong>Email:</strong>
                             &nbsp; <span class="fs-5">
-                                <a href="#" class="a_link">{{ supersyndic.user.email }}</a>
+                                <a href="mailto:{{ supersyndic.user.email }}" class="a_link">
+                                    {{ supersyndic.user.email }}
+                                </a>
                             </span>
                         </p>
                         <p>
-                            <strong>- Téléphone:</strong> &nbsp;
-                            <span class="fs-5">{{ supersyndic.user.phone }}</span>
-                        </p>
-                        <p>
-                            <strong>- Adresse du siège:</strong>
+                            <strong>Phone:</strong> &nbsp;
                             &nbsp; <span class="fs-5">
-                                {{ supersyndic.user.address }}</span>
+                                <a href="tel:{{ supersyndic.user.phone }}" class="a_link">
+                                    {{ supersyndic.user.phone }}
+                                </a>
+                            </span>
                         </p>
                         <p>
-                            <strong>- Statut:</strong>
+                            <strong>Adresse du siège:</strong>
+                            &nbsp; <span class="fs-5">{{ supersyndic.user.address }}</span>
+                        </p>
+                        <p>
+                            <strong>Role:</strong>
+                            &nbsp; <span class="fs-5">{{ syndic.user.role }}</span>
+                        </p>
+                        <p>
+                            <strong>Statut:</strong>
                             &nbsp; <span class="fs-5">Actif{{ supersyndic.user.status }}</span>
                         </p>
                         <p>
-                            <strong>- Commercial:</strong>
+                            <strong>Commercial:</strong>
                             &nbsp; <span class="fs-5">{{ supersyndic.user.commercial }}</span>
                         </p>
                     </div>
@@ -203,14 +222,19 @@
                     <div class="card-icon">
                         <i class="fas fa-users"></i>
                     </div>
-                    <h5 class="card-title">{% trans "Co-owners" %}</h5>
+                    <h5 class="card-title">{% trans "Total Co-owners" %}: {{ coproprietaires.count }}</h5>
                 </div>
                 <div class="card-body p-2">
                     <div>
                         {% for coproprietaire in coproprietaires %}
-                        <p><strong>- {% trans "Co-owner" %}:</strong> {{ coproprietaires.count }}</p>
-                        <p><strong>- {% trans "Co-owner First Name:" %}</strong> {{ coproprietaire.user.prenom }}</p>
-                            <a><strong>- {% trans "Co-owner Email:" %}</strong> <a href="#" class="a_link">{{ coproprietaire.user.email }}</a>
+                        <strong>{% trans "Email" %}:</strong>
+                        <a href="mailto:{{ coproprietaire.user.email }}" class="a_link">
+                            {{ coproprietaire.user.email }}
+                        </a><br>
+                        <p>
+                            <strong>{% trans "Last Name" %}:</strong> {{ coproprietaire.user.nom }}<br>
+                            <strong>{% trans "First Name" %}:</strong> {{ coproprietaire.user.prenom }}
+                        </p>
                         {% empty %}
                         <p>{% trans "No co-owner found for this user." %}</p>
                         {% endfor %}
@@ -228,14 +252,18 @@
                     <div class="card-icon">
                         <i class="fas fa-handshake"></i>
                     </div>
-                    <h5 class="card-title">{% trans "Associated Co-Prestataires" %}</h5>
+                    <h5 class="card-title">{% trans "Associated Co-Prestataires" %}: {{ prestataires.count }}</h5>
                 </div>
                 <div class="card-body p-2">
                     <div>
-                        {% for prestataire in prestataires %}
-                        <p><strong>- {% trans "Prestataire" %}:</strong> {{ prestataires.count }}</p>
-                        <p><strong>- {% trans "Prestataire First Name:" %}</strong> {{ prestataire.user.prenom }}</p>
-                            <p><strong>- {% trans "Prestataire Email:" %}</strong> <a href="#" class="a_link">{{ prestataire.user.email}}</p>
+                        {% for prestataire in prestataires %}<strong>{% trans "Email" %}:</strong>
+                        <a href="mailto:{{ prestataire.user.email }}" class="a_link">
+                            {{ prestataire.user.email }}
+                        </a><br>
+                        <p>
+                            <strong>{% trans "Last Name" %}:</strong> {{ prestataire.user.nom }}<br>
+                            <strong>{% trans "First Name" %}:</strong> {{ prestataire.user.prenom }}
+                        </p>
                         {% empty %}
                         <p>{% trans "No prestataire found for this user." %}</p>
                         {% endfor %}

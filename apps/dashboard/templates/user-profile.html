@@ -20,16 +20,29 @@
             <h5 class="card-title">{{ titlePage }}</h5>
         </div>
         <div class="card-body">
-            <h4 class="card-title">{{ titlePage }}</h4>
-            <p class="text-muted">{% trans "Date" %}: {{ date }}</p>
-
             <div class="mb-4">
                 <h5 class="text-secondary">{% trans "User Information" %}</h5>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><strong>{% trans "Name" %}:</strong> {{ user.nom }}</li>
-                    <li class="list-group-item"><strong>{% trans "Email" %}:</strong> {{ user.email }}</li>
-                    <li class="list-group-item"><strong>{% trans "Role" %}:</strong> {{ user.role }}</li>
-                </ul>
+                <h5>
+                    <strong>{% trans "Email" %}:</strong>
+                    <a href="mailto:{{ user.email }}" class="a_link">
+                        {{ user.email }}
+                    </a><br>
+                    {% trans "Last Name" %}: {{ user.nom }}<br>
+                    {% trans "First Name" %}: {{ user.prenom }}<br>
+                    <strong>{% trans "Phone" %}:</strong>
+                    <a href="tel:{{ user.phone }}" class="a_link">
+                        {{ user.phone }}
+                    </a><br>
+                    {% trans "Role" %}: {{ user.role }}<br>
+                    <strong>{% trans "User ID" %}:</strong> {{ user.id }}<br>
+                    {% trans "Status" %}: {{ user.status }}<br>
+                    {% trans "Commercial" %}: {{ user.commercial }}<br>
+                    {% trans "Address" %}: {{ user.address }}<br>
+                    {% trans "City" %}: {{ user.city }}<br>
+                    {% trans "Country" %}: {{ user.country }}<br>
+                    {% trans "Postal Code" %}: {{ user.postal_code }}<br>
+                    {% trans "About me" %}: {{ user.about_me }}<br>
+                </h5>
             </div>
 
             {% if related_data.syndic %}

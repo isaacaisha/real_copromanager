@@ -75,7 +75,11 @@
                         {% for supersyndic in supersyndics %}
                         <tr>
                             <td>{{ supersyndic.nom }}</td>
-                            <td><a href="#" class="a_link">{{ supersyndic.email }}</a></td>
+                            <td>
+                                <a href="mailto:{{ supersyndic.email }}" class="a_link">
+                                    {{ supersyndic.email }}
+                                </a>
+                            </td>
                             <td>
                                 {% if supersyndic.license %}
                                 n°{{ supersyndic.license.id }}: 

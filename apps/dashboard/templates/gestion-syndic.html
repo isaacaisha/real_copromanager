@@ -73,7 +73,11 @@
                         {% for syndic in syndics %}
                         <tr>
                             <td>{{ syndic.nom }}</td>
-                            <td><a href="#" class="a_link">{{ syndic.email }}</a></td>
+                            <td>
+                                <a href="mailto:{{ syndic.email }}" class="a_link">
+                                    {{ syndic.email }}
+                                </a>
+                            </td>
                             <td>
                                 {% if syndic.license %}
                                 n°{{ syndic.license.id }}: 
