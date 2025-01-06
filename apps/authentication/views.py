@@ -288,6 +288,8 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 
 @login_required
 def update_profile(request, user_id=None):
+    #license_form = LicenseForm(request.POST)
+    
     # Determine if the current user is allowed to update the profile
     if user_id:
         if request.user.role != "Superadmin":
@@ -297,8 +299,6 @@ def update_profile(request, user_id=None):
     else:
         user_to_update = request.user  # Default to the current user
 
-    #license_form = LicenseForm(request.POST)
-        
     if request.method == "POST":
         form = SignUpForm(request.POST, instance=user_to_update)
         if form.is_valid():
