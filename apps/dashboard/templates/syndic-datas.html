@@ -14,7 +14,7 @@
         {% trans "License" %} <i class="fa fa-key"></i>
     </a>
 
-    <a href="{% url 'update-profile-with-id' user.id %}" class="btn btn-warning btn-sm pull-right">
+    <a href="{% url 'update-profile' profile.user_id %}" class="btn btn-warning btn-sm pull-right">
         {% trans "Profile" %} <i class="fa fa-key"></i>
     </a>
 </div>
@@ -110,6 +110,11 @@
                             </span>
                         </p>
                         <p>
+                            <strong>User ID:</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ syndic.user.id }}</span>
+                        </p>
+                        <p>
                             <strong>Adresse du siège:</strong>
                             &nbsp; <span class="fs-5">
                                 {{ syndic.user.address }}</span>
@@ -153,6 +158,11 @@
                                     {{ supersyndic.user.phone }}
                                 </a>
                             </span>
+                        </p>
+                        <p>
+                            <strong>User ID:</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ supersyndic.user.id }}</span>
                         </p>
                         <p>
                             <strong>Adresse du siège:</strong>

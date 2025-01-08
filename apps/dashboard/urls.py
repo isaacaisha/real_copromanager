@@ -6,19 +6,19 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.urls import path, re_path
 
-from apps.dashboard.views import (
-    dashboard,
+#from apps.dashboard.views import (
+#    dashboard,
 #    user_search, user_profile,
 #    dashboard_superadmin, customize_license, license_detail, dashboard_supersyndic,
 #    dashboard_syndic, dashboard_coproprietaire, dashboard_prestataire,
 #    gestion_supersyndic, gestion_syndic, gestion_coproprietaire, gestion_prestataire
-    )
+#    )
 
 
 urlpatterns = [
 
     # Matches any html file
-    re_path(r'^.*\.*', dashboard, name='dashboard'),
+    #re_path(r'^.*\.*', dashboard, name='dashboard'),
 
     ## URLs for Dashboard User
     #path('dashboard-superadmin/', dashboard_superadmin, name='dashboard-superadmin'),

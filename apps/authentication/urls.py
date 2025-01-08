@@ -42,7 +42,7 @@ urlpatterns = [
     # URLs for User & Update Profile 
     path('user-profile/<int:user_id>/', user_profile, name='user-profile'),
     path('update-profile/', update_profile, name='update-profile'),  # For updating the current user's profile
-    path('update-profile/<int:user_id>/', update_profile, name='update-profile-with-id'),  # For Superadmin to update other users
+    path('update-profile/<int:user_id>/', update_profile, name='update-profile'),  # For Superadmin to update other users
 
     # Delete operations for syndic, supersyndic, coproprietaire, prestataire
     path('delete-syndic/<int:syndic_id>/', delete_syndic, name='delete-syndic'),
@@ -51,7 +51,7 @@ urlpatterns = [
     path('delete-prestataire/<int:prestataire_id>/', delete_prestataire, name='delete-prestataire'),
 
     # URLs for Dashboard User
-    path('dashboard-superadmin/', dashboard_superadmin, name='dashboard-superadmin'),
+    path('dashboard-superadmin/<int:superadmin_id>/', dashboard_superadmin, name='dashboard-superadmin'),
     path('customize-license/<int:license_id>/', customize_license, name='customize-license'),
 
     path('license-detail/<int:license_id>/', license_detail, name='license-detail'),

@@ -19,7 +19,8 @@ from core.utils import get_user_context
 def pages(request):
     context = get_user_context(request.user)
     context.update({
-        'titlePage': _('Welcome'),
+        'titlePage': _('Dashboard') + f" {request.user.nom}",
+        'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
         })
     
@@ -49,7 +50,8 @@ def index(request):
     context = get_user_context(request.user)
     context.update({
         'segment': 'index',
-        'titlePage': _('Welcome'),
+        'titlePage': _('Dashboard') + f" {request.user.nom}",
+        'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y")),
         })
 

@@ -36,7 +36,11 @@ def redirect_based_on_role(request, user):
         'SuperSyndic': 'dashboard-supersyndic',
     }
 
-    if user.role == 'Syndic':
+    if user.role == 'Superadmin':
+        superadmin, created = Superadmin.objects.get_or_create(user=user)  # Ensure superadmin instance exists
+        return redirect('dashboard-superadmin', superadmin_id=superadmin.id)  # Redirect with superadmin_id
+
+    elif user.role == 'Syndic':
         syndic, created = Syndic.objects.get_or_create(user=user)  # Ensure syndic instance exists
         return redirect('dashboard-syndic', syndic_id=syndic.id)  # Redirect with syndic_id
 
@@ -215,6 +219,7 @@ def register_supersyndic(request, syndic_id):
 
     context = {
         'titlePage': titlePage,
+        'nom': request.user.nom,
         'syndic': syndic,
         'supersyndic': supersyndic,
         'supersyndic_form': supersyndic_form,
@@ -288,38 +293,46 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 
 @login_required
 def update_profile(request, user_id=None):
-    #license_form = LicenseForm(request.POST)
-    
-    # Determine if the current user is allowed to update the profile
-    if user_id:
-        if request.user.role != "Superadmin":
-            messages.error(request, _("You do not have permission to update other users' profiles."))
-            return redirect('home')
-        user_to_update = get_object_or_404(CustomUser, id=user_id)
+    """
+    View to update a user's profile. 
+    - Superadmin can update any profile without specifying the ID in the URL.
+    - Regular users can only update their own profile.
+    """
+    # Determine the user to update based on the role
+    if request.user.role == "Superadmin" and user_id:
+        # Superadmin is updating another user's profile
+        profile = get_object_or_404(CustomUser, id=user_id)
+    elif request.user.role != "Superadmin" and user_id:
+        # Non-superadmin users are not allowed to update another user's profile
+        messages.error(request, _("You do not have permission to update this profile."))
+        return redirect('home')
     else:
-        user_to_update = request.user  # Default to the current user
+        # Default to updating the current user's profile
+        profile = request.user
 
+    # Handle form submission
     if request.method == "POST":
-        form = SignUpForm(request.POST, instance=user_to_update)
+        form = SignUpForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
             messages.success(request, _("Profile updated successfully!"))
-            # Redirect to the current user's profile page or a dashboard
-            return redirect('home')
+            return redirect('home')  # Redirect to the appropriate page
         else:
             messages.error(request, _("There were errors in the form. Please correct them."))
     else:
-        form = SignUpForm(instance=user_to_update)
-        #license_form = LicenseForm()
+        form = SignUpForm(instance=profile)
 
+    # Prepare the context
     context = {
         'form': form,
-        #'license_form': license_form,
-        'titlePage': _("Update Profile for ") + user_to_update.nom,
+        'profile': profile,
+        'id': profile.id if profile else None,
+        'titlePage': _("Update Profile for ") + profile.nom,
+        'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y")),
     }
     return render(request, "accounts/update_profile.html", context)
-    
+
 
 # Delete Syndic View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')

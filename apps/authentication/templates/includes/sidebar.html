@@ -16,10 +16,12 @@
         
         {% if user.role == 'Superadmin' %}
         <li class="nav-item {% if 'dashboard_superadmin' in segment %} active {% endif %}">
-          <a class="nav-link" href="{% url 'dashboard-superadmin' %}">
+          {% if superadmin.id %}
+          <a class="nav-link" href="{% url 'dashboard-superadmin' superadmin.id %}">
             <i class="material-icons">person</i>
             <p>{% trans "Dashboard SuperAdmin" %}</p>
           </a>
+          {% endif %}
         </li>
         {% endif %}
         

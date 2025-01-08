@@ -42,7 +42,7 @@
                         <a href="{% url 'user-profile' user.id %}" class="btn btn-sm" disabled>
                             {% trans "View Profile" %}
                         </a>
-                        <a href="{% url 'update-profile' %}" class="btn btn-warning btn-sm pull-right text-small">
+                        <a href="{% url 'update-profile' user.id %}" class="btn btn-warning btn-sm pull-right text-small">
                             {% trans "Modify" %} <i class="fa fa-key"></i>
                         </a>
                     </div>
