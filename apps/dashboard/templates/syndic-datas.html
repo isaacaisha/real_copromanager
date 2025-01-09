@@ -2,14 +2,12 @@
 
 {% load static i18n %}
 
-{% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
-<div class="container text-center mb-3">
-    <a href="{% url 'register' %}" class="btn btn-success btn-sm">{% trans "Inscription" %}</a>
-</div>
-{% endif %}
-
-{% if user.is_authenticated and user.role == 'Superadmin' %}
+{% if user.role == 'Superadmin' %}
 <div class="container">
+    <div class="text-center">
+        <a href="{% url 'register' %}" class="btn btn-success btn-sm">{% trans "Inscription" %}</a>
+    </div>
+
     <a href="{% url 'customize-license' license.id %}" class="btn btn-warning btn-sm pull-left">
         {% trans "License" %} <i class="fa fa-key"></i>
     </a>
@@ -17,17 +15,28 @@
     <a href="{% url 'update-profile' profile.user_id %}" class="btn btn-warning btn-sm pull-right">
         {% trans "Profile" %} <i class="fa fa-key"></i>
     </a>
+    <br>
 </div>
 {% endif %}
 
-{% if user.is_authenticated and user.role != 'Superadmin' %}
+{% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+<div class="container">
+    <a href="{% url 'register' %}" class="btn btn-success btn-sm pull-left">{% trans "Inscription" %}</a>
+    
+    <a href="{% url 'update-profile' %}" class="btn btn-warning btn-sm pull-right">
+        {% trans "Modify Profile" %}
+    </a>
+    <br>
+</div>
+{% endif %}
+
+{% if user.role == 'Coproprietaire' or user.role == 'Prestataire' %}
 <div class="text-center">
     <a href="{% url 'update-profile' %}" class="btn btn-warning btn-sm">
         {% trans "Modify Profile" %}
     </a>
 </div>
 {% endif %}
-<br>
 
 <!-- Card principale -->
 <div class="card card-body">

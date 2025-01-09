@@ -64,25 +64,22 @@ def redirect_based_on_role(request, user):
 #@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 #@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def register_user(request):
-    success = False
 
     if request.method == "POST":
         form = SignUpForm(request.POST)
         license_form = LicenseForm(request.POST)
         
         if form.is_valid():
-
             # return redirect("/login/")
             user = form.save(commit=False)
             user.set_password(form.cleaned_data.get("password1"))
             user.save()
 
+            superadmin = Superadmin.objects.create(user=user)
             # Handle role-based logic as in your previous code
             if user.role == 'Superadmin':
-                Superadmin.objects.create(user=user)
                 messages.success(request, _('Superadmin created successfully.'))
-                success = True
-                return redirect('login')
+                return redirect_based_on_role(request, superadmin)
 
             elif user.role == 'Syndic':
                 # Create a Syndic and associate the license
@@ -97,9 +94,9 @@ def register_user(request):
                     # Assign the license to the syndic and save
                     syndic.license = license
                     syndic.save()
-                    
+
                     messages.success(request, _('Syndic created successfully.'))
-                    return redirect('dashboard-superadmin')
+                    return redirect_based_on_role(request, superadmin)
                 else:
                     print("License form is not valid:", license_form.errors)
                     messages.error(request, _('License form is not valid.'))
@@ -112,10 +109,10 @@ def register_user(request):
                 if syndic:
                     Coproprietaire.objects.create(user=user, syndic=syndic)
                     messages.success(request, _('Coproprietaire created successfully.'))
+                    return redirect_based_on_role(request, superadmin)
                 else:
                     messages.error(request, _('No syndic available to assign to Coproprietaire.'))
-                success = True
-                return redirect('dashboard-superadmin')
+                    return redirect('register')
 
             elif user.role == 'Prestataire':
                 # Assign the user to an existing syndic (if available)
@@ -123,10 +120,10 @@ def register_user(request):
                 if syndic:
                     Prestataire.objects.create(user=user, syndic=syndic)
                     messages.success(request, _('Prestataire created successfully.'))
+                    return redirect_based_on_role(request, superadmin)
                 else:
                     messages.error(request, _('No syndic available to assign to Prestataire.'))
-                success = True
-                return redirect('dashboard-superadmin')
+                    return redirect('register')
         else:
             messages.error(request, _('Form is not valid'))
 
@@ -137,7 +134,6 @@ def register_user(request):
     context = {
         'form': form,
         'license_form': license_form,
-        'success': success,
         'titlePage': _('Incriptions'),
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
@@ -316,7 +312,8 @@ def update_profile(request, user_id=None):
         if form.is_valid():
             form.save()
             messages.success(request, _("Profile updated successfully!"))
-            return redirect('home')  # Redirect to the appropriate page
+            # Redirect to the appropriate dashboard based on the user's role
+            return redirect('home')
         else:
             messages.error(request, _("There were errors in the form. Please correct them."))
     else:

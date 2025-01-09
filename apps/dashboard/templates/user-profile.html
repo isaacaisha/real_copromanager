@@ -11,7 +11,7 @@
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="mt-5">
     <div class="card shadow-lg">
         <div class="card-header card-header-icon">
             <div class="card-icon">
@@ -103,8 +103,8 @@
 
             <!-- Go Back Button -->
             <div class="mt-3">
-                <a href="{% url 'update-profile' %}" class="btn btn-warning btn-sm text-small">
-                    {% trans "Modify" %} <i class="fa fa-key"></i>
+                <a href="{% url 'update-profile' user.id %}" class="btn btn-warning btn-sm text-small">
+                    {% trans "Modify Profile" %} <i class="fa fa-key"></i>
                 </a>
                 <a href="javascript:history.back()" class="btn btn-sm pull-right">
                     {% trans "Cancel" %}

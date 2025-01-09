@@ -11,13 +11,13 @@
 
 {% block content %}
 <main class="auth layout">
-    <div class="container my-3">
+    <div class="my-3">
         <div class="text-center">
             <p class="text-muted">{% trans "Manage your VIP profile seamlessly." %}</p>
         </div>
 
         {% if titlePage == 'Login' %}
-        <div class="row justify-content-center">
+        <!--<div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow border-success">
                     <div class="card-header bg-success text-white text-center">
@@ -39,14 +39,14 @@
         <div class="text-center">
             <a href="{% url 'login' %}" class="btn btn-sm btn-secondary"
                 onclick="window.history.back(); return false;">{% trans "Cancel" %}</a>
-        </div>
+        </div>-->
         {% else %}
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-10">
                 <div class="card shadow">
                     <div class="card-header  card-header-icon text-center">
                         <div class="card-icon">
-                            <i class="fa-solid fa-right-to-bracket fa-fade"></i>
+                            <i class="fa-solid fa-right-to-bracket fa-fade fa-2x"></i>
                         </div>
                         <h5 class="card-title mb-0">{% trans "Super Syndic Registration" %}</h5>
                     </div>

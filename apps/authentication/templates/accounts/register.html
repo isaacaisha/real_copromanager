@@ -32,203 +32,194 @@
           
           <br />
 
-          {% if success %}
+          <form role="form" method="post" action="">
+              
+            {% csrf_token %} 
 
-            <p class="">
-              {% trans "Please" %} <a href="{% url 'login' %}" class="text-black text-small">{% trans "authenticate" %}</a> {% trans "using the new account." %}
-            </p>  
-
-          {% else %}
-            <form role="form" method="post" action="">
-                
-              {% csrf_token %} 
-
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.email }}
-                  </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.email }}
                 </div>
               </div>
-              <span class="text-danger">{{ form.email.errors }}</span>
+            </div>
+            <span class="text-danger">{{ form.email.errors }}</span>
 
-              <br />
+            <br />
 
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.nom }}
-                  </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.nom }}
                 </div>
               </div>
-              <span class="text-danger">{{ form.nom.errors }}</span>
+            </div>
+            <span class="text-danger">{{ form.nom.errors }}</span>
 
-              <br />
+            <br />
 
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.prenom }}
-                  </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.prenom }}
                 </div>
               </div>
-              <span class="text-danger">{{ form.prenom.errors }}</span>
+            </div>
+            <span class="text-danger">{{ form.prenom.errors }}</span>
 
-              <br />
+            <br />
 
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating">{% trans "Role:" %}</label>
-                    {{ form.role }}
-                  </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating">{% trans "Role:" %}</label>
+                  {{ form.role }}
                 </div>
               </div>
-              <span class="text-danger">{{ form.role.errors }}</span>
+            </div>
+            <span class="text-danger">{{ form.role.errors }}</span>
 
-              <br />
+            <br />
 
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.password1 }}
-                    <!-- Eye icon for toggling password visibility for the first password -->
-                    <i class="fa fa-eye-slash position-absolute" id="togglePassword1"
-                      style="cursor: pointer; top: 50%; right: 10px; transform: translateY(-50%);"></i>
-                  </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.password1 }}
+                  <!-- Eye icon for toggling password visibility for the first password -->
+                  <i class="fa fa-eye-slash position-absolute" id="togglePassword1"
+                    style="cursor: pointer; top: 50%; right: 10px; transform: translateY(-50%);"></i>
                 </div>
               </div>
-              <span class="text-danger">{{ form.password1.errors }}</span>
+            </div>
+            <span class="text-danger">{{ form.password1.errors }}</span>
 
-              <br />
+            <br />
 
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.password2 }}
-                    <!-- Eye icon for toggling password visibility for the second password -->
-                    <i class="fa fa-eye-slash position-absolute" id="togglePassword2"
-                      style="cursor: pointer; top: 50%; right: 10px; transform: translateY(-50%);"></i>
-                  </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.password2 }}
+                  <!-- Eye icon for toggling password visibility for the second password -->
+                  <i class="fa fa-eye-slash position-absolute" id="togglePassword2"
+                    style="cursor: pointer; top: 50%; right: 10px; transform: translateY(-50%);"></i>
                 </div>
               </div>
-              <span class="text-danger">{{ form.password2.errors }}</span>
+            </div>
+            <span class="text-danger">{{ form.password2.errors }}</span>
 
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.phone }}
-                  </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.phone }}
                 </div>
               </div>
-              <span class="text-danger">{{ form.phone.errors }}</span>
-              
-              <br />
-              
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.status }}
-                  </div>
+            </div>
+            <span class="text-danger">{{ form.phone.errors }}</span>
+            
+            <br />
+            
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.status }}
                 </div>
               </div>
-              <span class="text-danger">{{ form.status.errors }}</span>
-              
-              <br />
-              
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.commercial }}
-                  </div>
+            </div>
+            <span class="text-danger">{{ form.status.errors }}</span>
+            
+            <br />
+            
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.commercial }}
                 </div>
               </div>
-              <span class="text-danger">{{ form.commercial.errors }}</span>
-              
-              <br />
-              
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.address }}
-                  </div>
+            </div>
+            <span class="text-danger">{{ form.commercial.errors }}</span>
+            
+            <br />
+            
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.address }}
                 </div>
               </div>
-              <span class="text-danger">{{ form.address.errors }}</span>
-              
-              <br />
-              
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.city }}
-                  </div>
+            </div>
+            <span class="text-danger">{{ form.address.errors }}</span>
+            
+            <br />
+            
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.city }}
                 </div>
               </div>
-              <span class="text-danger">{{ form.city.errors }}</span>
-              
-              <br />
-              
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.country }}
-                  </div>
+            </div>
+            <span class="text-danger">{{ form.city.errors }}</span>
+            
+            <br />
+            
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.country }}
                 </div>
               </div>
-              <span class="text-danger">{{ form.country.errors }}</span>
-              
-              <br />
-              
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.postal_code }}
-                  </div>
+            </div>
+            <span class="text-danger">{{ form.country.errors }}</span>
+            
+            <br />
+            
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.postal_code }}
                 </div>
               </div>
-              <span class="text-danger">{{ form.postal_code.errors }}</span>
-              
-              <br />
-              
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating"></label>
-                    {{ form.about_me }}
-                  </div>
+            </div>
+            <span class="text-danger">{{ form.postal_code.errors }}</span>
+            
+            <br />
+            
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating"></label>
+                  {{ form.about_me }}
                 </div>
               </div>
-              <span class="text-danger">{{ form.about_me.errors }}</span>
+            </div>
+            <span class="text-danger">{{ form.about_me.errors }}</span>
 
-              <br />
-              {{ license_form.as_p }}
-              <br>
+            <br />
+            {{ license_form.as_p }}
+            <br>
 
-              <button type="submit" name="register" class="btn btn-success btn-sm pull-left">{% trans "Sign Up" %}</button>
+            <button type="submit" name="register" class="btn btn-success btn-sm pull-left">{% trans "Sign Up" %}</button>
 
-              <!-- Go Back Button -->
-              <a href="javascript:history.back()" class="btn btn-sm pull-right">
-                {% trans "Cancel" %}
-              </a>
+            <!-- Go Back Button -->
+            <a href="javascript:history.back()" class="btn btn-sm pull-right">
+              {% trans "Cancel" %}
+            </a>
 
-              <div class="clearfix"></div>
+            <div class="clearfix"></div>
 
-            </form>
-
-          {% endif %}
+          </form>
 
         </div>
       </div>
