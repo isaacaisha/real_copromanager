@@ -294,6 +294,9 @@ def update_profile(request, user_id=None):
     - Superadmin can update any profile without specifying the ID in the URL.
     - Regular users can only update their own profile.
     """
+    form = None
+    supersyndic_form = None
+    
     # Determine the user to update based on the role
     if request.user.role == "Superadmin" and user_id:
         # Superadmin is updating another user's profile
@@ -308,20 +311,48 @@ def update_profile(request, user_id=None):
 
     # Handle form submission
     if request.method == "POST":
-        form = SignUpForm(request.POST, instance=profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, _("Profile updated successfully!"))
-            # Redirect to the appropriate dashboard based on the user's role
-            return redirect('home')
-        else:
-            messages.error(request, _("There were errors in the form. Please correct them."))
-    else:
-        form = SignUpForm(instance=profile)
+        if request.user.role == "SuperSyndic":
+            supersyndic_form = SuperSyndicForm(request.POST, instance=profile)
+            if supersyndic_form.is_valid():
+                try:
+                    with transaction.atomic():
+                        user = supersyndic_form.save(commit=False)
+                        user.role = 'SuperSyndic'
+                        user.save()
 
-    # Prepare the context
+                        # Handle the license transfer
+                        supersyndic = get_object_or_404(SuperSyndic, user=profile)
+                        license = License.objects.filter(supersyndic=supersyndic).order_by('-date_debut').first()
+                        if license:
+                            license.supersyndic = supersyndic  # Link license to the updated SuperSyndic
+                            license.syndic = None  # Remove the license from the old syndic (if applicable)
+                            license.save()
+
+                        messages.success(request, _("Profile updated successfully!"))
+                        return redirect('dashboard-supersyndic', supersyndic_id=supersyndic.id)
+
+                except Exception as e:
+                    messages.error(request, f"An error occurred: {e}")
+            else:
+                messages.error(request, _("Form is not valid."))
+        else:
+            form = SignUpForm(request.POST, instance=profile)
+            if form.is_valid():
+                form.save()
+                messages.success(request, _("Profile updated successfully!"))
+                return redirect('home')
+            else:
+                messages.error(request, _("There were errors in the form. Please correct them."))
+
+    else:
+        if request.user.role == "SuperSyndic":
+            supersyndic_form = SuperSyndicForm(instance=profile)
+        else:
+            form = SignUpForm(instance=profile)
+
     context = {
         'form': form,
+        'supersyndic_form': supersyndic_form,
         'profile': profile,
         'id': profile.id if profile else None,
         'titlePage': _("Update Profile for ") + profile.nom,

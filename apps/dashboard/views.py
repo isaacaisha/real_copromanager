@@ -521,24 +521,59 @@ def user_search(request):
 
 @login_required(login_url="/login/")
 def user_profile(request, user_id):
-    user = get_object_or_404(CustomUser, id=user_id)
-    
-    # Get related data based on user role
-    related_data = {}
-    if user.role == 'SuperSyndic':
-        related_data['supersyndic'] = get_object_or_404(SuperSyndic, user=user)
-        related_data['supersyndic_licenses'] = License.objects.filter(supersyndic=related_data['supersyndic'])
+    # Initialize variables
+    superadmin = None
+    syndic = None
+    supersyndic = None
+    license = None
+    coproprietaire = None
+    prestataire = None
+    coproprietaires = None
+    prestataires = None
+    user = get_object_or_404(CustomUser, id=user_id)  # Get the user by ID
+
+    # Fetch role-specific data
+    if user.role == 'Superadmin':
+        superadmin = get_object_or_404(Superadmin, user=user)
+        profile = get_object_or_404(Superadmin, user=user)
+
     elif user.role == 'Syndic':
-        related_data['syndic'] = get_object_or_404(Syndic, user=user)
-        related_data['syndic_licenses'] = License.objects.filter(syndic=related_data['syndic'])
+        syndic = get_object_or_404(Syndic, user=user)
+        profile = get_object_or_404(Syndic, user=user)
+
+        # Retrieve the license associated with the syndic
+        license = License.objects.filter(syndic=syndic).order_by('-date_debut').first()
+        # Fetch associated coproprietaires
+        coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
+        # Fetch associated prestataires
+        prestataires = Prestataire.objects.filter(syndic=syndic)
+
+    elif user.role == 'SuperSyndic':
+        supersyndic = get_object_or_404(SuperSyndic, user=user)
+        profile = get_object_or_404(SuperSyndic, user=user)
+        license = License.objects.filter(supersyndic=supersyndic).order_by('-date_debut').first()
+
     elif user.role == 'Coproprietaire':
-        related_data['coproprietaire'] = get_object_or_404(Coproprietaire, user=user)
+        coproprietaire = get_object_or_404(Coproprietaire, user=user)
+        profile = get_object_or_404(Coproprietaire, user=user)
+        syndic = coproprietaire.syndic if hasattr(coproprietaire, 'syndic') else None
+
     elif user.role == 'Prestataire':
-        related_data['prestataire'] = get_object_or_404(Prestataire, user=user)
+        prestataire = get_object_or_404(Prestataire, user=user)
+        profile = get_object_or_404(Prestataire, user=user)
+        syndic = prestataire.syndic if hasattr(prestataire, 'syndic') else None
 
     context = {
-        'user': user,
-        'related_data': related_data,
+        'profile': profile,
+        'nom': user.nom,
+        'superadmin': superadmin,
+        'syndic': syndic,
+        'supersyndic': supersyndic,
+        'license': license,
+        'coproprietaire': coproprietaire,
+        'prestataire': prestataire,
+        'coproprietaires': coproprietaires,
+        'prestataires': prestataires,
         'titlePage': _('Profile of %s') % user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y")),
     }

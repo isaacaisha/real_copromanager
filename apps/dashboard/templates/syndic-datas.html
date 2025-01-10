@@ -41,50 +41,57 @@
 <!-- Card principale -->
 <div class="card card-body">
     <div class="row gx-3 mb-1">
-        <div class="col-auto my-auto">
-            <h5 class="mb-0 p-3">{{ nom }}</h5>
+        <div class="col-12 col-lg-auto text-center text-lg-start my-auto">
+            <h3 class="font-weight-bold">{{ nom }}</h3>
         </div>
     </div>
 
     <!-- Icônes et boutons sur la même ligne, mais empilés sur petits écrans-->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
         <!-- Icônes -->
-        <ul class="nav nav-pills p-3 d-flex" style="z-index: 10; gap: 19px;">
+        <ul class="nav nav-pills p-1 d-flex text-center" style="z-index: 10; gap: 1px;">
             <li class="nav-item">
                 <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="tel:{{ phone }}" role="tab"
                     aria-selected="true">
-                    <i class="material-icons text-lg position-relative icones-syndic">phone</i>
+                    <i class="material-icons text-lg position-relative icones-syndic" rel="tooltip"
+                        title="{% trans 'Phone' %}">phone</i><br>
+                    <label for="phone">phone</label>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="mailto:{{ syndic.user.email }}" role="tab"
                     aria-selected="false">
-                    <i class="material-icons text-lg position-relative icones-syndic">message</i>
+                    <i class="material-icons text-lg position-relative icones-syndic" rel="tooltip"
+                        title="{% trans 'Message' %}">message</i><br>
+                    <label for="message">message</label>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="https://calendar.google.com/" role="tab"
                     aria-selected="false">
-                    <i class="material-icons text-lg position-relative icones-syndic">event</i>
+                    <i class="material-icons text-lg position-relative icones-syndic" rel="tooltip"
+                        title="{% trans 'Event' %}">event</i><br>
+                    <label for="event">event</label>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="javascript:;" role="tab"
-                    aria-selected="false">
-                    <i class="material-icons text-lg position-relative icones-syndic">check_box</i>
+                <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="javascript:;" role="tab" aria-selected="false">
+                    <i class="material-icons text-lg position-relative icones-syndic" rel="tooltip"
+                        title="{% trans 'Check box' %}">check_box</i><br>
+                    <label for="check_box">check box</label>
                 </a>
             </li>
         </ul>
 
         <!-- Boutons -->
-        <div class="d-flex flex-column flex-sm-row mt-md-0">
-            <a class="btn mx-1 my-1 btn-sm" href="{% url 'gestion-coproprietaire' %}">
+        <div class="d-flex flex-column flex-sm-row mt-md-0 mb-4">
+            <a class="btn bg-primary mx-1 my-1 btn-sm" href="{% url 'gestion-coproprietaire' %}">
                 {% trans "Management of Co-owners" %}
             </a>
-            <a class="btn mx-1 my-1 btn-sm" href="#">
+            <a class="btn bg-primary mx-1 my-1 btn-sm" href="#">
                 {% trans "SUIVI FINANCIER" %}
             </a>
-            <a class="btn mx-1 my-1 btn-sm" href="#">
+            <a class="btn bg-primary mx-1 my-1 btn-sm" href="#">
                 {% trans "COMPTABILITE" %}
             </a>
         </div>
@@ -95,7 +102,16 @@
         {% if syndic %}
         <!-- Syndic Information -->
         <div class="col-12 col-md-6 col-xl-4">
-            <div class="card card-plain">
+            <div class="card">
+                <div class="card-header card-header-icon">
+                    <div class="card-icon">
+                        <i class="material-icons">person</i>
+                    </div>
+                    <h5 class="card-title">{{ syndic.user.nom }}</h5>
+                    {% if user.role == 'Superadmin' %}
+                    <p class="card-category">{% trans "Syndic id:" %} {{ syndic.user.id }}</p>
+                    {% endif %}
+                </div>
                 <div class="card-body p-2">
                     <div>
                         <p>
@@ -119,14 +135,25 @@
                             </span>
                         </p>
                         <p>
-                            <strong>User ID:</strong>
-                            &nbsp; <span class="fs-5">
-                                {{ syndic.user.id }}</span>
-                        </p>
-                        <p>
                             <strong>Adresse du siège:</strong>
                             &nbsp; <span class="fs-5">
                                 {{ syndic.user.address }}</span>
+                        </p>
+                        <p>
+                            <strong>Postal Code:</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ syndic.user.postal_code }}</span>
+                        </p>
+                        <p>
+                            <strong>City</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ syndic.user.city }}</span>
+                        </p>
+                        {% if user.role == 'Superadmin' %}
+                        <p>
+                            <strong>User ID:</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ syndic.user.id }}</span>
                         </p>
                         <p>
                             <strong>Statut:</strong>
@@ -136,6 +163,7 @@
                             <strong>Commercial:</strong>
                             &nbsp; <span class="fs-5">{{ syndic.user.commercial }}</span>
                         </p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -145,7 +173,16 @@
         {% if supersyndic %}
         <!-- Syndic Information -->
         <div class="col-12 col-md-6 col-xl-4">
-            <div class="card card-plain">
+            <div class="card">
+                <div class="card-header card-header-icon">
+                    <div class="card-icon">
+                        <i class="material-icons">person</i>
+                    </div>
+                    <h5 class="card-title">{{ supersyndic.user.nom }}</h5>
+                    {% if user.role == 'Superadmin' %}
+                    <p class="card-category">{% trans "Super Syndic id:" %} {{ supersyndic.id }}</p>
+                    {% endif %}
+                </div>
                 <div class="card-body p-2">
                     <div>
                         <p>
@@ -169,13 +206,24 @@
                             </span>
                         </p>
                         <p>
+                            <strong>Adresse du siège:</strong>
+                            &nbsp; <span class="fs-5">{{ supersyndic.user.address }}</span>
+                        </p>
+                        <p>
+                            <strong>Postal Code:</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ supersyndic.user.postal_code }}</span>
+                        </p>
+                        <p>
+                            <strong>City</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ supersyndic.user.city }}</span>
+                        </p>
+                        {% if user.role == 'Superadmin' %}
+                        <p>
                             <strong>User ID:</strong>
                             &nbsp; <span class="fs-5">
                                 {{ supersyndic.user.id }}</span>
-                        </p>
-                        <p>
-                            <strong>Adresse du siège:</strong>
-                            &nbsp; <span class="fs-5">{{ supersyndic.user.address }}</span>
                         </p>
                         <p>
                             <strong>Statut:</strong>
@@ -185,6 +233,7 @@
                             <strong>Commercial:</strong>
                             &nbsp; <span class="fs-5">{{ supersyndic.user.commercial }}</span>
                         </p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -201,7 +250,9 @@
                         <i class="material-icons">assignment</i>
                     </div>
                     <h5 class="card-title">{% trans "License Information" %}</h5>
+                    {% if user.role == 'Superadmin' %}
                     <p class="card-category">{% trans "License id:" %} {{ license.id }}</p>
+                    {% endif %}
                 </div>
                 <div class="card-body p-2">
                     <p>

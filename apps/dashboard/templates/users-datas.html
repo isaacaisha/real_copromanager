@@ -1,28 +1,35 @@
-<!-- apps/dashboard/templates/syndic-datas.html -->
+<!-- apps/dashboard/templates/users-datas.html -->
 
 {% load static i18n %}
 
 <!-- Card principale -->
 <div class="card card-body">
-    {% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
-    <div class="row gx-3 mb-1">
+    <div class="row gx-3 mb-1 align-items-center">
         <!-- Colonne pour les informations personnelles -->
-
-        <div class="col-auto my-auto">
-            <h5 class="mb-0">{{ nom }}</h5>
+        <div class="col-12 col-lg-auto text-center text-lg-start my-auto">
+            <h3 class="font-weight-bold">{{ nom }}</h3>
         </div>
-
-        <!-- Bouton Réglages (plus petit) -->
-        <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-2 d-md-block">
+        
+        <div class="col-12 col-lg d-flex justify-content-lg-end justify-content-center">
             <div class="nav-wrapper position-relative end-0">
                 <ul class="nav nav-pills nav-fill p-0" role="tablist">
                     <li class="nav-item">
-                        {% if license %}
-                        <a class="nav-link mb-0 px-0 py-0.25" data-bs-toggle="tab"
-                            href="{% url 'customize-license' license.id %}" role="tab" aria-selected="false">
-                            <i class="material-icons text-lg position-relative">settings</i>
-                            <span class="ms-0">{% trans "Settings" %}</span>
-                        </a>
+                        {% if user.role == 'Superadmin' %}
+                        <div>
+                            <a href="{% url 'update-profile' profile.user_id %}" class="btn btn-warning btn-sm">
+                                <i class="material-icons text-lg position-relative">settings</i>
+                                <span class="ms-0">{% trans "Settings" %}</span>
+                            </a>
+                        </div>
+                        {% endif %}
+
+                        {% if user.role != 'Superadmin' %}
+                        <div>
+                            <a href="{% url 'update-profile' %}" class="btn btn-warning btn-sm">
+                                <i class="material-icons text-lg position-relative">settings</i>
+                                <span class="ms-0">{% trans "Settings" %}</span>
+                            </a>
+                        </div>
                         {% endif %}
                     </li>
                 </ul>
@@ -31,39 +38,41 @@
     </div>
 
     <!-- Icônes et boutons sur la même ligne, mais empilés sur petits écrans-->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
-
-
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
         <!-- Icônes -->
-        <ul class="nav nav-pills p-3 d-flex" style="z-index: 10; gap: 19px;">
+        <ul class="nav nav-pills p-1 d-flex text-center" style="z-index: 10; gap: 1px;">
             <li class="nav-item">
                 <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="tel:{{ phone }}"
                     role="tab" aria-selected="true">
-                    <i class="material-icons text-lg position-relative icones-syndic">phone</i>
+                    <i class="material-icons text-lg position-relative icones-syndic" rel="tooltip" title="{% trans 'Phone' %}">phone</i><br>
+                    <label for="phone">phone</label>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="mailto:{{ syndic.user.email }}"
                     role="tab" aria-selected="false">
-                    <i class="material-icons text-lg position-relative icones-syndic">message</i>
+                    <i class="material-icons text-lg position-relative icones-syndic" rel="tooltip" title="{% trans 'Message' %}">message</i><br>
+                    <label for="message">message</label>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="https://calendar.google.com/" role="tab"
                     aria-selected="false">
-                    <i class="material-icons text-lg position-relative icones-syndic">event</i>
+                    <i class="material-icons text-lg position-relative icones-syndic" rel="tooltip" title="{% trans 'Event' %}">event</i><br>
+                    <label for="event">event</label>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="javascript:;" role="tab"
                     aria-selected="false">
-                    <i class="material-icons text-lg position-relative icones-syndic">check_box</i>
+                    <i class="material-icons text-lg position-relative icones-syndic" rel="tooltip" title="{% trans 'Check box' %}">check_box</i><br>
+                    <label for="check_box">check box</label>
                 </a>
             </li>
         </ul>
 
         <!-- Boutons -->
-        <div class="d-flex flex-column flex-sm-row mt-md-0">
+        <div class="d-flex flex-column flex-sm-row mt-md-0 mb-4">
             <a class="btn bg-primary mx-1 my-1 btn-sm" href="{% url 'gestion-coproprietaire' %}">
                 {% trans "Management of Co-owners" %}
             </a>
@@ -75,7 +84,6 @@
             </a>
         </div>
     </div>
-    {% endif %}
 
     <!-- Informations contact et petites cards à droite -->
     <div class="row gx-4 gy-4 justify-content-center" style="max-height: 400px; overflow-y: auto;">
@@ -89,7 +97,9 @@
                         <i class="material-icons">person</i>
                     </div>
                     <h5 class="card-title">{{ syndic.user.nom }}</h5>
-                    <p class="card-category">{% trans "Syndic id:" %} {{ syndic.id }}</p>
+                    {% if user.role == 'Superadmin' %}
+                    <p class="card-category">{% trans "Syndic id:" %} {{ syndic.user.id }}</p>
+                    {% endif %}
                 </div>
                 <div class="card-body p-2">
                     <div>
@@ -119,6 +129,22 @@
                                 {{ syndic.user.address }}</span>
                         </p>
                         <p>
+                            <strong>Postal Code:</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ syndic.user.postal_code }}</span>
+                        </p>
+                        <p>
+                            <strong>City</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ syndic.user.city }}</span>
+                        </p>
+                        {% if user.role == 'Superadmin' %}
+                        <p>
+                            <strong>User ID:</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ syndic.user.id }}</span>
+                        </p>
+                        <p>
                             <strong>Role:</strong>
                             &nbsp; <span class="fs-5">{{ syndic.user.role }}</span>
                         </p>
@@ -130,6 +156,7 @@
                             <strong>Commercial:</strong>
                             &nbsp; <span class="fs-5">{{ syndic.user.commercial }}</span>
                         </p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -174,6 +201,22 @@
                             &nbsp; <span class="fs-5">{{ supersyndic.user.address }}</span>
                         </p>
                         <p>
+                            <strong>Postal Code:</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ supersyndic.user.postal_code }}</span>
+                        </p>
+                        <p>
+                            <strong>City</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ supersyndic.user.city }}</span>
+                        </p>
+                        {% if user.role == 'Superadmin' %}
+                        <p>
+                            <strong>User ID:</strong>
+                            &nbsp; <span class="fs-5">
+                                {{ supersyndic.user.id }}</span>
+                        </p>
+                        <p>
                             <strong>Role:</strong>
                             &nbsp; <span class="fs-5">{{ syndic.user.role }}</span>
                         </p>
@@ -184,6 +227,79 @@
                         <p>
                             <strong>Commercial:</strong>
                             &nbsp; <span class="fs-5">{{ supersyndic.user.commercial }}</span>
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if coproprietaire %}
+        <!-- List of Co-owners (Coproprietaires) -->
+        <div class="col-12 col-md-6 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header card-header-icon">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    {% if user.role == 'Superadmin' %}
+                    <h5 class="card-title">{% trans "Co-owner ID" %}: {{ coproprietaire.id }}</h5>
+                    {% else %}
+                    <h5 class="card-title">{% trans "Co-owner" %}</h5>
+                    {% endif%}
+                </div>
+                <div class="card-body p-2">
+                    <div>
+                        <strong>{% trans "Email" %}:</strong>
+                        <a href="mailto:{{ coproprietaire.user.email }}" class="a_link">
+                            {{ coproprietaire.user.email }}
+                        </a><br>
+                        <p>
+                            <strong>{% trans "Last Name" %}:</strong> {{ coproprietaire.user.nom }}<br>
+                            <strong>{% trans "First Name" %}:</strong> {{ coproprietaire.user.prenom }}<br>
+                            <strong>Phone:</strong> &nbsp;
+                            &nbsp; <span class="fs-5">
+                                <a href="tel:{{ coproprietaire.user.phone }}" class="a_link">
+                                    {{ coproprietaire.user.phone }}
+                                </a>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if prestataire %}
+        <!-- List of Co-prestataires (Prestataires) -->
+        <div class="col-12 col-md-6 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header card-header-icon">
+                    <div class="card-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    {% if user.role == 'Superadmin' %}
+                    <h5 class="card-title">{% trans "Co-Prestataire ID" %}: {{ prestataire.id }}</h5>
+                    {% else %}
+                    <h5 class="card-title">{% trans "Co-Prestataire" %}</h5>
+                    {% endif %}
+                </div>
+                <div class="card-body p-2">
+                    <div>
+                        <strong>{% trans "Email" %}:</strong>
+                        <a href="mailto:{{ prestataire.user.email }}" class="a_link">
+                            {{ prestataire.user.email }}
+                        </a><br>
+                        <p>
+                            <strong>{% trans "Last Name" %}:</strong> {{ prestataire.user.nom }}<br>
+                            <strong>{% trans "First Name" %}:</strong> {{ prestataire.user.prenom }}<br>
+                            <strong>Phone:</strong> &nbsp;
+                            &nbsp; <span class="fs-5">
+                                <a href="tel:{{ prestataire.user.phone }}" class="a_link">
+                                    {{ prestataire.user.phone }}
+                                </a>
+                            </span>
                         </p>
                     </div>
                 </div>
@@ -200,7 +316,9 @@
                         <i class="material-icons">assignment</i>
                     </div>
                     <h5 class="card-title">{% trans "License Information" %}</h5>
+                    {% if user.role == 'Superadmin' %}
                     <p class="card-category">{% trans "License id:" %} {{ license.id }}</p>
+                    {% endif %}
                 </div>
                 <div class="card-body p-2">
                     <p>
@@ -209,65 +327,6 @@
                     <p>
                         <strong>- {% trans "End Date:" %}</strong> {{ license.date_fin|date:"d/m/Y" }}
                     </p>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if coproprietaires %}
-        <!-- List of Co-owners (Coproprietaires) -->
-        <div class="col-12 col-md-6 col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-header card-header-icon">
-                    <div class="card-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h5 class="card-title">{% trans "Total Co-owners" %}: {{ coproprietaires.count }}</h5>
-                </div>
-                <div class="card-body p-2">
-                    <div>
-                        {% for coproprietaire in coproprietaires %}
-                        <strong>{% trans "Email" %}:</strong>
-                        <a href="mailto:{{ coproprietaire.user.email }}" class="a_link">
-                            {{ coproprietaire.user.email }}
-                        </a><br>
-                        <p>
-                            <strong>{% trans "Last Name" %}:</strong> {{ coproprietaire.user.nom }}<br>
-                            <strong>{% trans "First Name" %}:</strong> {{ coproprietaire.user.prenom }}
-                        </p>
-                        {% empty %}
-                        <p>{% trans "No co-owner found for this user." %}</p>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-
-        {% if prestataires %}
-        <!-- List of Co-prestataires (Prestataires) -->
-        <div class="col-12 col-md-6 col-lg-6">
-            <div class="card shadow-sm">
-                <div class="card-header card-header-icon">
-                    <div class="card-icon">
-                        <i class="fas fa-handshake"></i>
-                    </div>
-                    <h5 class="card-title">{% trans "Associated Co-Prestataires" %}: {{ prestataires.count }}</h5>
-                </div>
-                <div class="card-body p-2">
-                    <div>
-                        {% for prestataire in prestataires %}<strong>{% trans "Email" %}:</strong>
-                        <a href="mailto:{{ prestataire.user.email }}" class="a_link">
-                            {{ prestataire.user.email }}
-                        </a><br>
-                        <p>
-                            <strong>{% trans "Last Name" %}:</strong> {{ prestataire.user.nom }}<br>
-                            <strong>{% trans "First Name" %}:</strong> {{ prestataire.user.prenom }}
-                        </p>
-                        {% empty %}
-                        <p>{% trans "No prestataire found for this user." %}</p>
-                        {% endfor %}
-                    </div>
                 </div>
             </div>
         </div>
@@ -294,23 +353,6 @@
                     </ul>
                 </div>
             </div>
-        </div>
-        {% endif %}
-
-        {% if user.is_authenticated and user.role != 'Superadmin' %}
-        <div class="text-center">
-            <a href="{% url 'update-profile' %}" class="btn btn-warning btn-sm">
-                {% trans "Modify Profile" %}
-            </a>
-        </div>
-        {% endif %}
-        
-
-        {% if user.is_authenticated and user.role == 'Superadmin' %}
-        <div class="text-center">
-            <a href="{% url 'update-profile' profile.user_id %}" class="btn btn-warning btn-sm">
-                {% trans "Modify Profile" %}
-            </a>
         </div>
         {% endif %}
 
