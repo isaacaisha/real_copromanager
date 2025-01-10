@@ -301,17 +301,18 @@ def update_profile(request, user_id=None):
     if request.user.role == "Superadmin" and user_id:
         # Superadmin is updating another user's profile
         profile = get_object_or_404(CustomUser, id=user_id)
-    elif request.user.role != "Superadmin" and user_id:
-        # Non-superadmin users are not allowed to update another user's profile
-        messages.error(request, _("You do not have permission to update this profile."))
-        return redirect('home')
+    #elif request.user.role != "Superadmin" and user_id:
+    #    # Non-superadmin users are not allowed to update another user's profile
+    #    messages.error(request, _("You do not have permission to update this profile."))
+    #    return redirect('home')
     else:
         # Default to updating the current user's profile
         profile = request.user
 
     # Handle form submission
     if request.method == "POST":
-        if request.user.role == "SuperSyndic":
+        if request.user.role == "Superadmin" and profile.role == "SuperSyndic" or profile.role == 'SuperSyndic':
+            # Use the SuperSyndic form for SuperSyndic profiles
             supersyndic_form = SuperSyndicForm(request.POST, instance=profile)
             if supersyndic_form.is_valid():
                 try:
@@ -345,7 +346,7 @@ def update_profile(request, user_id=None):
                 messages.error(request, _("There were errors in the form. Please correct them."))
 
     else:
-        if request.user.role == "SuperSyndic":
+        if request.user.role == "Superadmin" and profile.role == "SuperSyndic" or profile.role == 'SuperSyndic':
             supersyndic_form = SuperSyndicForm(instance=profile)
         else:
             form = SignUpForm(instance=profile)

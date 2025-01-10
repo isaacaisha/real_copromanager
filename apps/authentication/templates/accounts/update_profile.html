@@ -19,38 +19,20 @@
             </div>
             <h5 class="card-title">{{ titlePage }}</h5>
         </div>
-
         <div class="card-body">
-            {% if user.role == 'Superadmin' %}
             <form method="POST" action="{% url 'update-profile' profile.id %}">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {% if request.user.role == "Superadmin" and profile.role == "SuperSyndic" or user.role == 'SuperSyndic' %}
+                    {{ supersyndic_form.as_p }}
+                {% else %}
+                    {{ form.as_p }}
+                {% endif %}
             
                 <div class="text-center">
                     <button type="submit" class="btn btn-success btn-sm pull-left">{% trans "Save Changes" %}</button>
                     <a href="javascript:history.back()" class="btn btn-sm pull-right">{% trans "Cancel" %}</a>
                 </div>
-            {% elif user.role == 'SuperSyndic' %}
-            <form method="POST" action="{% url 'update-profile' %}">
-                {% csrf_token %}
-                {{ supersyndic_form.as_p }}
-            
-                <div class="text-center">
-                    <button type="submit" class="btn btn-success btn-sm pull-left">{% trans "Save Changes Sup" %}</button>
-                    <a href="javascript:history.back()" class="btn btn-sm pull-right">{% trans "Cancel" %}</a>
-                </div>
             </form>
-            {% else %}
-            <form method="POST" action="{% url 'update-profile' %}">
-                {% csrf_token %}
-                {{ form.as_p }}
-
-                <div class="text-center">
-                    <button type="submit" class="btn btn-success btn-sm pull-left">{% trans "Save Changes" %}</button>
-                    <a href="javascript:history.back()" class="btn btn-sm pull-right">{% trans "Cancel" %}</a>
-                </div>
-            </form>
-            {% endif %}
         </div>
     </div>
 </div>
