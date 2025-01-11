@@ -43,14 +43,15 @@
                     <div class="card card-stats">
                         <div class="card-header card-header-icon">
                             <div class="card-icon">
-                                <i class="material-icons">group</i>
+                                <i class="fa-solid fa-city"></i>
                             </div>
                             <p class="card-category">{% trans "Residences" %}</p>
-                            <h3 class="card-title">{{ residences.count }}</h3>
+                            <h3 class="card-title">113{{ residences.count }}</h3>
                         </div>
                         <div class="card-footer">
                             <div class="stats">
-                                <i class="material-icons">info</i> {% trans "Total Residences" %}
+                                <i class="material-icons">info</i> 
+                                <span class="card-title">145 {% trans "Total Co-owners" %}</span>
                             </div>
                         </div>
                     </div>
@@ -131,6 +132,206 @@
             </div>
 
         </div>
+    </div>
+
+    <div class="">
+    
+        <!-- Card principale -->
+        <div class="card card-body">
+            <!-- En-tête -->
+            <div class="row gx-3 mb-1">
+                <div class="col-auto my-auto">
+                    <h5 class="mb-0">Nom de la Copropriété</h5>
+                </div>
+                <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-2 d-none d-md-block">
+                    <div class="position-relative end-0">
+                        <ul class="list-unstyled p-0 m-0">
+                            <li class="mb-2">
+                                <a href="reglage-gestion-de-la-residence.html" class="btn btn-link p-0">
+                                    <i class="material-icons text-lg position-relative">settings</i>
+                                    <span class="ms-0">Réglages</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Icônes -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-left mt-2">
+                <div class="d-flex">
+                    <a href="javascript:;" class="btn btn-link p-0 mx-1">
+                        <i class="material-icons text-lg position-relative">phone</i>
+                    </a>
+                    <a href="javascript:;" class="btn btn-link p-0 mx-1">
+                        <i class="material-icons text-lg position-relative">message</i>
+                    </a>
+                    <a href="javascript:;" class="btn btn-link p-0 mx-1">
+                        <i class="material-icons text-lg position-relative">event</i>
+                    </a>
+                    <a href="javascript:;" class="btn btn-link p-0 mx-1">
+                        <i class="material-icons text-lg position-relative">check_box</i>
+                    </a>
+                </div>
+                <div class="d-flex flex-column flex-sm-row mt-2 mt-md-0">
+                    <button class="btn btn-primary mx-1 my-1 btn-sm">COMPTABILITÉ</button>
+                    <a href="{% url 'gestion-coproprietaire' %}">
+                        <button class="btn btn-primary mx-1 my-1 btn-sm">GESTION DES COPROPRIÉTAIRES</button>
+                    </a>
+    
+                    <button class="btn btn-primary mx-1 my-1 btn-sm">PRESTATAIRES</button>
+                </div>
+            </div>
+    
+            <!-- Cards -->
+            <div class="row mt-3">
+                <!-- Informations Résidence -->
+                <div class="col-12">
+                    <div class="card mb-3" style="font-size: 0.9rem; padding: 10px;">
+                        <div class="card-header bg-light py-1">
+                            <h6 class="mb-0">Informations Résidence</h6>
+                        </div>
+                        <div class="card-body py-1 px-2">
+                            <p><strong>Adresse :</strong> 123 Rue Principale, Paris</p>
+                            <p><strong>Code Postal :</strong> 75001</p>
+                            <p><strong>Ville :</strong> Paris</p>
+                            <p><strong>Pays :</strong> France</p>
+                            <p><strong>Année de Construction :</strong> 1985</p>
+                            <p><strong>Nombre d'Appartements :</strong> 50</p>
+                            <p><strong>Surface Totale :</strong> 10,000 m²</p>
+                            <p><strong>Surface Résidentielle :</strong> 8,500 m²</p>
+                            <p><strong>Surface des Locaux Commerciaux :</strong> 1,500 m²</p>
+                            <p><strong>Nombre de Résidents :</strong> 100</p>
+                            <p><strong>Type de Résidence :</strong> Mixte (Résidentielle et Commerciale)</p>
+                            <p><strong>Nombre de Locaux Commerciaux :</strong> 3</p>
+                            <p><strong>Nombre d'Étages :</strong> 5</p>
+                            <p><strong>Équipements :</strong> Ascenseur, Parking sous-terrain, Jardin commun</p>
+                            <p><strong>Accessibilité PMR :</strong> Oui</p>
+                            <p><strong>État Général :</strong> Rénové en 2020</p>
+                            <p><strong>Charges Annuelles Moyennes :</strong> 25,000 €</p>
+                        </div>
+    
+                    </div>
+                </div>
+    
+                <!-- Gestionnaire -->
+                <div class="col-12">
+                    <div class="card mb-3" style="font-size: 0.9rem; padding: 10px;">
+                        <div class="card-header bg-light py-1">
+                            <h6 class="mb-0">Gestionnaire</h6>
+                        </div>
+                        <div class="card-body py-1 px-2">
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Nom :</strong>
+                                    Jacques Dupont</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Téléphone
+                                        :</strong> 01 23 45 67 89</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email :</strong>
+                                    contact@residence.com</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Suppléant
+                                        :</strong> Marie Lefèvre</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Téléphone
+                                        Suppléant :</strong> 01 98 76 54 32</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Email Suppléant
+                                        :</strong> marie.lefevre@residence.com</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Responsabilités
+                                        :</strong> Gestion des budgets, Coordination des prestataires</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Disponibilité
+                                        :</strong> Lundi à Vendredi, 9h-18h</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Installations -->
+                <div class="col-12">
+                    <div class="card mb-3" style="font-size: 0.9rem; padding: 10px;">
+                        <div class="card-header bg-light py-1">
+                            <h6 class="mb-0">Installations</h6>
+                        </div>
+                        <div class="card-body py-1 px-2">
+                            <h6 class="text-white bg-dark p-2">Informations Techniques</h6>
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Type de
+                                        Chauffage :</strong> Chauffage Collectif au Gaz</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Fréquence
+                                        :</strong> Contrôle annuel</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Dernière
+                                        Maintenance :</strong> 01/08/2023</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Contrat
+                                        :</strong> ChauffGaz, depuis 2015</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Nombre
+                                        d'Ascenseurs :</strong> 2</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Fréquence
+                                        :</strong> Contrôle trimestriel</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Dernière
+                                        Maintenance :</strong> 15/07/2023</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Contrat
+                                        :</strong> AscenseurPro, depuis 2018</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Type de Toiture
+                                        :</strong> Tuiles</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">État de la
+                                        Toiture :</strong> Bon état</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Dernière
+                                        Rénovation :</strong> 2020</li>
+                            </ul>
+    
+                            <h6 class="text-white bg-secondary p-2 mt-3">Confort et Équipements</h6>
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Espaces Communs
+                                        :</strong> Jardin (200 m²), Salle de sport</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong
+                                        class="text-dark">Parking/Stationnement :</strong> 20 places, Bornes de recharge
+                                    électrique</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Aire de Jeux
+                                        :</strong> Oui</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Boîtes aux
+                                        Lettres Sécurisées :</strong> Oui</li>
+                            </ul>
+    
+                            <h6 class="text-white bg-dark p-2 mt-3">Accessibilité et Environnement</h6>
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Accessibilité
+                                        Handicapé :</strong> Rampes et ascenseurs adaptés</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Proximité des
+                                        Transports :</strong> Métro à 5 min</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Proximité des
+                                        Commerces :</strong> Supermarché, Pharmacie</li>
+                            </ul>
+    
+                            <h6 class="text-white bg-secondary p-2 mt-3">Gestion et Maintenance</h6>
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Entreprise de
+                                        Nettoyage :</strong> CleanPro</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Fréquence
+                                        :</strong> Intervention hebdomadaire</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Dernière
+                                        Intervention :</strong> 05/08/2023</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Contrat
+                                        :</strong> Depuis 2019</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Maintenance
+                                        Chaudière :</strong> ChauffGaz</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Fréquence
+                                        :</strong> Contrôle annuel</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Dernière
+                                        Inspection de Sécurité :</strong> 10/07/2023</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Fournisseur
+                                        d'Énergie :</strong> EDF</li>
+                            </ul>
+    
+                            <h6 class="text-white bg-dark p-2 mt-3">Aspects Légaux et Administratifs</h6>
+                            <ul class="list-group">
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Contrats
+                                        d'Entretien Actifs :</strong> Chauffage, Espaces verts, Sécurité</li>
+                                <li class="list-group-item border-0 ps-0 text-sm"><strong class="text-dark">Garantie
+                                        Décennale :</strong> Oui, jusqu'en 2030</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
     </div>
 
     <!-- Go Back Button -->
