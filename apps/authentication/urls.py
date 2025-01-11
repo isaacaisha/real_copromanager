@@ -16,7 +16,7 @@ from apps.dashboard.views import (
     user_search, user_profile,
     dashboard_superadmin, customize_license, license_detail, dashboard_supersyndic,
     dashboard_syndic, dashboard_coproprietaire, dashboard_prestataire,
-    gestion_supersyndic, gestion_syndic, gestion_coproprietaire, gestion_prestataire
+    gestion_residence, gestion_supersyndic, gestion_syndic, gestion_coproprietaire, gestion_prestataire
     )
 
 
@@ -56,8 +56,9 @@ urlpatterns = [
 
     path('license-detail/<int:license_id>/', license_detail, name='license-detail'),
 
-    path('gestion-supersyndic/', gestion_supersyndic, name='gestion-supersyndic'),
+    path('gestion-residence/', gestion_residence, name='gestion-residence'),
     path('gestion-syndic/', gestion_syndic, name='gestion-syndic'),
+    path('gestion-supersyndic/', gestion_supersyndic, name='gestion-supersyndic'),
     path('gestion-coproprietaire/', gestion_coproprietaire, name='gestion-coproprietaire'),
     path('gestion-prestataire/', gestion_prestataire, name='gestion-prestataire'),
 

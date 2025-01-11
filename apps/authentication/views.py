@@ -62,73 +62,87 @@ def redirect_based_on_role(request, user):
 
 
 #@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
-#@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def register_user(request):
-
     if request.method == "POST":
-        form = SignUpForm(request.POST)
+        form = SignUpForm(request.POST, logged_in_user_role=request.user.role)
         license_form = LicenseForm(request.POST)
-        
+
         if form.is_valid():
-            # return redirect("/login/")
             user = form.save(commit=False)
             user.set_password(form.cleaned_data.get("password1"))
+
+            # Determine the creator's role (Superadmin, Syndic, SuperSyndic)
+            creator = request.user  # The user performing the registration
+            if creator.role not in ['Superadmin', 'Syndic', 'SuperSyndic']:
+                messages.error(request, _("You do not have permission to register new users."))
+                return redirect('register')
+
             user.save()
 
-            superadmin = Superadmin.objects.create(user=user)
-            # Handle role-based logic as in your previous code
             if user.role == 'Superadmin':
+                # Create a Superadmin instance
+                Superadmin.objects.create(user=user)
                 messages.success(request, _('Superadmin created successfully.'))
-                return redirect_based_on_role(request, superadmin)
+                return redirect('dashboard-superadmin', superadmin_id=user.id)
 
             elif user.role == 'Syndic':
-                # Create a Syndic and associate the license
+                # Create a Syndic and associate a license
                 syndic = Syndic.objects.create(user=user, nom=user.nom, email=user.email)
-                # Create a License instance linked to the newly created Syndic
-                license_form = LicenseForm(request.POST)
                 if license_form.is_valid():
                     license = license_form.save(commit=False)
-                    license.syndic = syndic  # Link license to the Syndic
+                    license.syndic = syndic
                     license.save()
 
-                    # Assign the license to the syndic and save
                     syndic.license = license
                     syndic.save()
 
                     messages.success(request, _('Syndic created successfully.'))
-                    return redirect_based_on_role(request, superadmin)
+                    return redirect('dashboard-syndic', syndic_id=user.id)
                 else:
-                    print("License form is not valid:", license_form.errors)
                     messages.error(request, _('License form is not valid.'))
-                    syndic.delete()  # Rollback syndic creation if license creation fails
+                    syndic.delete()  # Rollback syndic creation
                     return redirect('register')
 
-            elif user.role == 'Coproprietaire':
-                # Assign the user to an existing syndic (if available)
-                syndic = Syndic.objects.first()
-                if syndic:
-                    Coproprietaire.objects.create(user=user, syndic=syndic)
-                    messages.success(request, _('Coproprietaire created successfully.'))
-                    return redirect_based_on_role(request, superadmin)
-                else:
-                    messages.error(request, _('No syndic available to assign to Coproprietaire.'))
-                    return redirect('register')
+            elif user.role in ['Coproprietaire', 'Prestataire']:
+                # Assign the new user to the creator (either a Syndic or SuperSyndic)
+                if creator.role == 'Syndic':
+                    syndic = Syndic.objects.filter(user=creator).first()
+                    if not syndic:
+                        messages.error(request, _('Could not find associated Syndic.'))
+                        return redirect('register')
 
-            elif user.role == 'Prestataire':
-                # Assign the user to an existing syndic (if available)
-                syndic = Syndic.objects.first()
-                if syndic:
-                    Prestataire.objects.create(user=user, syndic=syndic)
-                    messages.success(request, _('Prestataire created successfully.'))
-                    return redirect_based_on_role(request, superadmin)
-                else:
-                    messages.error(request, _('No syndic available to assign to Prestataire.'))
-                    return redirect('register')
+                    if user.role == 'Coproprietaire':
+                        Coproprietaire.objects.create(user=user, syndic=syndic)
+                        messages.success(request, _('Coproprietaire created successfully.'))
+                        return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
+
+                    elif user.role == 'Prestataire':
+                        Prestataire.objects.create(user=user, syndic=syndic)
+                        messages.success(request, _('Prestataire created successfully.'))
+                        return redirect('dashboard-prestataire', prestataire_id=user.id)
+
+                elif creator.role == 'SuperSyndic':
+                    supersyndic = SuperSyndic.objects.filter(user=creator).first()
+                    if not supersyndic:
+                        messages.error(request, _('Could not find associated SuperSyndic.'))
+                        return redirect('register')
+
+                    if user.role == 'Coproprietaire':
+                        Coproprietaire.objects.create(user=user, supersyndic=supersyndic)
+                        messages.success(request, _('Coproprietaire created successfully.'))
+                        return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
+
+                    elif user.role == 'Prestataire':
+                        Prestataire.objects.create(user=user, supersyndic=supersyndic)
+                        messages.success(request, _('Prestataire created successfully.'))
+                        return redirect('dashboard-prestataire', prestataire_id=user.id)
+
         else:
             messages.error(request, _('Form is not valid'))
 
     else:
-        form = SignUpForm()
+        form = SignUpForm(logged_in_user_role=request.user.role)
         license_form = LicenseForm()
 
     context = {
@@ -301,10 +315,10 @@ def update_profile(request, user_id=None):
     if request.user.role == "Superadmin" and user_id:
         # Superadmin is updating another user's profile
         profile = get_object_or_404(CustomUser, id=user_id)
-    #elif request.user.role != "Superadmin" and user_id:
-    #    # Non-superadmin users are not allowed to update another user's profile
-    #    messages.error(request, _("You do not have permission to update this profile."))
-    #    return redirect('home')
+    elif request.user.role != "Superadmin" and user_id:
+        # Non-superadmin users are not allowed to update another user's profile
+        messages.error(request, _("You do not have permission to update this profile."))
+        return redirect('home')
     else:
         # Default to updating the current user's profile
         profile = request.user

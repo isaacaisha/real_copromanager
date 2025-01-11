@@ -206,9 +206,11 @@
             </div>
             <span class="text-danger">{{ form.about_me.errors }}</span>
 
+            {% if user.role == 'Superadmin' %}
             <br />
             {{ license_form.as_p }}
             <br>
+            {% endif %}
 
             <button type="submit" name="register" class="btn btn-success btn-sm pull-left">{% trans "Sign Up" %}</button>
 

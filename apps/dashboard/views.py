@@ -22,40 +22,11 @@ from core.utils import get_user_context, otp_required_for_supersyndic  # Import 
 from .forms import LicenseForm
 from .models import (
     License, Superadmin, SuperSyndic,
-    Syndic, Coproprietaire, Prestataire, Immeuble
+    Syndic, Coproprietaire, Prestataire, Residence
     )
 
 from apps.authentication.forms import SuperSyndicForm
 from apps.authentication.models import CustomUser
-
-
-#@login_required(login_url="/login/")
-#def dashboard(request):
-#    context = get_user_context(request.user)
-#    context.update({
-#        'titlePage': _('Welcome'),
-#        'date': timezone.now().strftime(_("%a %d %B %Y"))
-#        })
-#    
-#    # All resource paths end in .html.
-#    # Pick out the html file name from the url. And load that template.
-#    # Determine which template to load
-#    load_template = request.path.split('/')[-1]
-#
-#    if load_template == 'admin':
-#        return HttpResponseRedirect(reverse('admin:index'))
-#
-#    context['segment'] = load_template
-#
-#    try:
-#        html_template = loader.get_template('dashboard/' + load_template)
-#        return HttpResponse(html_template.render(context, request))
-#    except template.TemplateDoesNotExist:
-#        html_template = loader.get_template('home/page-404.html')
-#        return HttpResponse(html_template.render(context, request))
-#    except Exception as e:
-#        html_template = loader.get_template('home/page-500.html')
-#        return HttpResponse(html_template.render(context, request))
 
 
 # Superadmin dashboard
@@ -120,6 +91,60 @@ def dashboard_superadmin(request, superadmin_id):
     html_template = loader.get_template('dashboard-superadmin.html')
     return HttpResponse(html_template.render(context, request))
 
+
+# Syndic dashboard
+@login_required(login_url="/login/")
+@user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role == 'Syndic'))
+def dashboard_syndic(request, syndic_id):
+    try:
+        # Fetch the current syndic profile
+        if request.user.role == 'Superadmin':
+            # Query by user__id when accessed by Superadmin
+            syndic = get_object_or_404(Syndic, user__id=syndic_id)
+            profile = get_object_or_404(Syndic, user__id=syndic_id)
+        else:
+            # Restrict to the currently logged-in syndic
+            syndic = get_object_or_404(Syndic, user=request.user)
+            profile = get_object_or_404(Syndic, user=request.user)
+
+        # Retrieve relevant syndic information, such as buildings and co-owners
+        residences = Residence.objects.filter(syndic=syndic)
+        coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
+        prestataires = Prestataire.objects.filter(syndic=syndic)
+        # Retrieve the license for the logged-in syndic, handle multiple licenses if necessary
+        license = License.objects.filter(syndic=syndic).order_by('-date_debut').first()
+        if not license:
+            messages.warning(request, _('No license found for this syndic.'))
+        
+        context = {
+            'segment': 'dashboard-syndic',
+            'syndic': syndic,
+            'profile': profile,
+            'license': license,
+            'coproprietaires': coproprietaires,
+            'prestataires': prestataires,
+            'residences': residences,
+            'titlePage': _('Dashboard') + f" {syndic.user.nom}",
+            'nom': syndic.user.nom,
+            'phone': syndic.user.phone,
+            'date': timezone.now().strftime(_("%a %d %B %Y"))
+        }
+
+        html_template = loader.get_template('dashboard-syndic.html')
+        return HttpResponse(html_template.render(context, request))
+
+    except Syndic.DoesNotExist:
+        # Handle the case where the syndic doesn't exist (e.g., if a user tries to access this page without being a syndic)
+        context = {
+            'segment': 'dashboard-syndic',
+            'titlePage': _('Dashboard'),
+            'date': timezone.now().strftime(_("%a %d %B %Y")),
+        }
+        
+        html_template = loader.get_template('dashboard-syndic.html')
+        return HttpResponse(html_template.render(context, request))
+
+
 # View for the Super User page, requiring 2FA status
 @login_required(login_url="/login/")
 @otp_required_for_supersyndic
@@ -139,8 +164,9 @@ def dashboard_supersyndic(request, supersyndic_id):
             profile = get_object_or_404(SuperSyndic, user=request.user)
 
         ## Retrieve relevant syndic information, such as buildings and co-owners
-        #immeubles = Immeuble.objects.filter(super_syndic=super_syndic)
-        #coproprietaires = Coproprietaire.objects.filter(super_syndic=super_syndic)
+        #residences = Residence.objects.filter(supersyndic=supersyndic)
+        coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
+        prestataires = Prestataire.objects.filter(supersyndic=supersyndic)
             
         # Retrieve the license for the logged-in syndic, handle multiple licenses if necessary
         license = License.objects.filter(supersyndic=supersyndic).order_by('-date_debut').first()
@@ -152,8 +178,9 @@ def dashboard_supersyndic(request, supersyndic_id):
             'supersyndic': supersyndic,
             'profile': profile,
             'license': license,
-            #'immeubles': immeubles,
-            #'coproprietaires': coproprietaires,
+            #'residences': residences,
+            'coproprietaires': coproprietaires,
+            'prestataires': prestataires,
             'titlePage': _('Super Syndic') + f" {supersyndic.user.nom}",
             'nom': supersyndic.user.nom,
             'phone': supersyndic.user.phone,
@@ -172,63 +199,6 @@ def dashboard_supersyndic(request, supersyndic_id):
         }
         
         html_template = loader.get_template('dashboard-supersyndic.html')
-        return HttpResponse(html_template.render(context, request))
-
-
-# Syndic dashboard
-@login_required(login_url="/login/")
-@user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role == 'Syndic'))
-def dashboard_syndic(request, syndic_id):
-    try:
-        # Fetch the current syndic profile
-        if request.user.role == 'Superadmin':
-            # Query by user__id when accessed by Superadmin
-            syndic = get_object_or_404(Syndic, user__id=syndic_id)
-            profile = get_object_or_404(Syndic, user__id=syndic_id)
-        else:
-            # Restrict to the currently logged-in syndic
-            syndic = get_object_or_404(Syndic, user=request.user)
-            profile = get_object_or_404(Syndic, user=request.user)
-
-        ## Fetch the current logged-in user's syndic profile
-        ##syndic = Syndic.objects.get(id=syndic_id)
-        #syndic = get_object_or_404(Syndic, id=syndic_id)
-
-        # Retrieve relevant syndic information, such as buildings and co-owners
-        immeubles = Immeuble.objects.filter(syndic=syndic)
-        coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
-        prestataires = Prestataire.objects.filter(syndic=syndic)
-        # Retrieve the license for the logged-in syndic, handle multiple licenses if necessary
-        license = License.objects.filter(syndic=syndic).order_by('-date_debut').first()
-        if not license:
-            messages.warning(request, _('No license found for this syndic.'))
-        
-        context = {
-            'segment': 'dashboard-syndic',
-            'syndic': syndic,
-            'profile': profile,
-            'license': license,
-            'coproprietaires': coproprietaires,
-            'prestataires': prestataires,
-            'immeubles': immeubles,
-            'titlePage': _('Dashboard') + f" {syndic.user.nom}",
-            'nom': syndic.user.nom,
-            'phone': syndic.user.phone,
-            'date': timezone.now().strftime(_("%a %d %B %Y"))
-        }
-
-        html_template = loader.get_template('dashboard-syndic.html')
-        return HttpResponse(html_template.render(context, request))
-
-    except Syndic.DoesNotExist:
-        # Handle the case where the syndic doesn't exist (e.g., if a user tries to access this page without being a syndic)
-        context = {
-            'segment': 'dashboard-syndic',
-            'titlePage': _('Dashboard'),
-            'date': timezone.now().strftime(_("%a %d %B %Y")),
-        }
-        
-        html_template = loader.get_template('dashboard-syndic.html')
         return HttpResponse(html_template.render(context, request))
 
 
@@ -254,12 +224,13 @@ def dashboard_coproprietaire(request, coproprietaire_id):
         # Forbid access for other roles
         return HttpResponse(status=403)
     
-
-    # Retrieve the syndic associated with this prestataire
+    # Retrieve the syndic or supersyndic associated with this prestataire
     syndic = coproprietaire.syndic if hasattr(coproprietaire, 'syndic') else None
+    supersyndic = coproprietaire.supersyndic if hasattr(coproprietaire, 'supersyndic') else None
 
-    # Retrieve the license associated with the syndic
+    # Retrieve the license associated with the syndic or supersyndic
     license = syndic.licence if syndic and hasattr(syndic, 'license') else None
+    #license = supersyndic.licence if supersyndic and hasattr(supersyndic, 'license') else None
     
      # Only fetch the coproprietaires associated with the current syndic
     if request.user.role == 'Superadmin':
@@ -275,6 +246,7 @@ def dashboard_coproprietaire(request, coproprietaire_id):
         'profile': profile,
         'coproprietaires': coproprietaires,
         'syndic': syndic,
+        'supersyndic': supersyndic,
         'license': license,
         'titlePage': _('Dashboard') + f" {coproprietaire.user.nom}",
         'nom': coproprietaire.user.nom,
@@ -307,13 +279,13 @@ def dashboard_prestataire(request, prestataire_id):
     else:
         return HttpResponse(status=403)
 
-
-    # Retrieve the syndic associated with this prestataire
+    # Retrieve the syndic or supersyndic associated with this prestataire
     syndic = prestataire.syndic if hasattr(prestataire, 'syndic') else None
+    supersyndic = prestataire.supersyndic if hasattr(prestataire, 'supersyndic') else None
 
-    # Retrieve the license associated with the syndic
+    # Retrieve the license associated with the syndic or supersyndic
     license = syndic.licence if syndic and hasattr(syndic, 'license') else None
-
+    #license = supersyndic.licence if supersyndic and hasattr(supersyndic, 'license') else None
     
     # Only fetch the prestataires associated with the current syndic
     if request.user.role == 'Superadmin':
@@ -329,6 +301,7 @@ def dashboard_prestataire(request, prestataire_id):
         'profile': profile,
         'prestataires': prestataires,
         'syndic': syndic,
+        'supersyndic': supersyndic,
         'license': license,
         'titlePage': _('Dashboard') + f" {prestataire.user.nom}",
         'nom': prestataire.user.nom,
@@ -337,6 +310,57 @@ def dashboard_prestataire(request, prestataire_id):
     }
 
     html_template = loader.get_template('dashboard-prestataire.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
+def gestion_residence(request):
+    """
+    View for managing SuperSyndic users.
+    Only accessible to users with the role of 'Superadmin"""
+
+    residences = CustomUser.objects.filter(role='Residence')
+
+    context = {
+        'segment': 'gestion-residence',
+        'residences': residences,
+        'titlePage': _('Residence Gestion'),
+        'nom': request.user.nom,
+        'date': timezone.now().strftime(_("%a %d %B %Y"))
+    }
+
+    html_template = loader.get_template('gestion-residence.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+def gestion_syndic(request):
+    form = SuperSyndicForm()
+    syndics = CustomUser.objects.filter(role='Syndic')
+
+    # Add a license field to each syndic
+    for syndic in syndics:
+        # Get the Syndic instance associated with the CustomUser (if exists)
+        try:
+            syndic_instance = Syndic.objects.get(user=syndic)
+            # Retrieve the most recent license for the syndic
+            syndic.license = License.objects.filter(syndic=syndic_instance).order_by('-date_debut').first()
+        except Syndic.DoesNotExist:
+            # Handle the case where the CustomUser is not associated with a Syndic
+            syndic.license = None
+
+    context = {
+        'segment': 'gestion-syndic',
+        'form': form,
+        'syndics': syndics,
+        'titlePage': _('Syndic Gestion'),
+        'nom': request.user.nom,
+        'date': timezone.now().strftime(_("%a %d %B %Y"))
+    }
+
+    html_template = loader.get_template('gestion-syndic.html')
     return HttpResponse(html_template.render(context, request))
 
 
@@ -371,36 +395,6 @@ def gestion_supersyndic(request):
     }
 
     html_template = loader.get_template('gestion-supersyndic.html')
-    return HttpResponse(html_template.render(context, request))
-
-
-@login_required(login_url="/login/")
-@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
-def gestion_syndic(request):
-    form = SuperSyndicForm()
-    syndics = CustomUser.objects.filter(role='Syndic')
-
-    # Add a license field to each syndic
-    for syndic in syndics:
-        # Get the Syndic instance associated with the CustomUser (if exists)
-        try:
-            syndic_instance = Syndic.objects.get(user=syndic)
-            # Retrieve the most recent license for the syndic
-            syndic.license = License.objects.filter(syndic=syndic_instance).order_by('-date_debut').first()
-        except Syndic.DoesNotExist:
-            # Handle the case where the CustomUser is not associated with a Syndic
-            syndic.license = None
-
-    context = {
-        'segment': 'gestion-syndic',
-        'form': form,
-        'syndics': syndics,
-        'titlePage': _('Syndic Gestion'),
-        'nom': request.user.nom,
-        'date': timezone.now().strftime(_("%a %d %B %Y"))
-    }
-
-    html_template = loader.get_template('gestion-syndic.html')
     return HttpResponse(html_template.render(context, request))
 
 
@@ -552,16 +546,22 @@ def user_profile(request, user_id):
         supersyndic = get_object_or_404(SuperSyndic, user=user)
         profile = get_object_or_404(SuperSyndic, user=user)
         license = License.objects.filter(supersyndic=supersyndic).order_by('-date_debut').first()
+        # Fetch associated coproprietaires
+        coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
+        # Fetch associated prestataires
+        prestataires = Prestataire.objects.filter(supersyndic=supersyndic)
 
     elif user.role == 'Coproprietaire':
         coproprietaire = get_object_or_404(Coproprietaire, user=user)
         profile = get_object_or_404(Coproprietaire, user=user)
         syndic = coproprietaire.syndic if hasattr(coproprietaire, 'syndic') else None
+        supersyndic = coproprietaire.supersyndic if hasattr(coproprietaire, 'supersyndic') else None
 
     elif user.role == 'Prestataire':
         prestataire = get_object_or_404(Prestataire, user=user)
         profile = get_object_or_404(Prestataire, user=user)
         syndic = prestataire.syndic if hasattr(prestataire, 'syndic') else None
+        supersyndic = prestataire.supersyndic if hasattr(prestataire, 'supersyndic') else None
 
     context = {
         'profile': profile,

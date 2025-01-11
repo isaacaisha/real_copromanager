@@ -8,9 +8,11 @@
         <a href="{% url 'register' %}" class="btn btn-success btn-sm">{% trans "Inscription" %}</a>
     </div>
 
+    {% if license %}
     <a href="{% url 'customize-license' license.id %}" class="btn btn-warning btn-sm pull-left">
         {% trans "License" %} <i class="fa fa-key"></i>
     </a>
+    {% endif %}
 
     <a href="{% url 'update-profile' profile.user_id %}" class="btn btn-warning btn-sm pull-right">
         {% trans "Profile" %} <i class="fa fa-key"></i>
@@ -85,8 +87,8 @@
 
         <!-- Boutons -->
         <div class="d-flex flex-column flex-sm-row mt-md-0 mb-4">
-            <a class="btn bg-primary mx-1 my-1 btn-sm" href="{% url 'gestion-coproprietaire' %}">
-                {% trans "Management of Co-owners" %}
+            <a class="btn bg-primary mx-1 my-1 btn-sm" href="{% url 'gestion-residence' %}">
+                {% trans "Management of Residences" %}
             </a>
             <a class="btn bg-primary mx-1 my-1 btn-sm" href="#">
                 {% trans "SUIVI FINANCIER" %}
@@ -267,7 +269,7 @@
         {% endif %}
     </div>
 
-    {% if coproprietaires %}
+    {% if coproprietaires or prestataires %}
     <!-- Nouvelle card "Nombre de Résidences" alignée à droite -->
     <div class="row mt-2 justify-content-end">
         <!-- List of Co-owners (Coproprietaires) -->

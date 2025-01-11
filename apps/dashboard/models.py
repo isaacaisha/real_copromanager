@@ -76,12 +76,13 @@ class License(models.Model):
         )
 
 
-class SuperSyndic(models.Model):
+# Syndic Information
+class Syndic(models.Model):
     nom = models.CharField(max_length=255, verbose_name=_('Name'))
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='supersyndic_profile',
+        related_name='syndic_profile',
         null=True,
         blank=True,
         verbose_name=_('User'),
@@ -92,13 +93,12 @@ class SuperSyndic(models.Model):
         return self.nom
 
 
-# Syndic Information
-class Syndic(models.Model):
+class SuperSyndic(models.Model):
     nom = models.CharField(max_length=255, verbose_name=_('Name'))
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='syndic_profile',
+        related_name='supersyndic_profile',
         null=True,
         blank=True,
         verbose_name=_('User'),
@@ -121,7 +121,8 @@ class Coproprietaire(models.Model):
         verbose_name=_('User'),
     )
     email = models.EmailField(verbose_name=_('Email'))
-    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'))
+    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True)
+    supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True)
 
     def __str__(self):
         return self.nom
@@ -139,14 +140,15 @@ class Prestataire(models.Model):
         verbose_name=_('User'),
     )
     email = models.EmailField(verbose_name=_('Email'))
-    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'))
+    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True)
+    supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True)
 
     def __str__(self):
         return self.nom
 
 
 # Building Information
-class Immeuble(models.Model):
+class Residence(models.Model):
     nom = models.CharField(max_length=255, verbose_name=_('Name'))
     adresse = models.TextField(verbose_name=_('Address'))
     syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'))
@@ -164,7 +166,7 @@ class Immeuble(models.Model):
 
 # Apartment Information
 class Appartement(models.Model):
-    immeuble = models.ForeignKey(Immeuble, on_delete=models.CASCADE, verbose_name=_('Building'))
+    immeuble = models.ForeignKey(Residence, on_delete=models.CASCADE, verbose_name=_('Building'))
     numero = models.CharField(max_length=50, verbose_name=_('Number'))
     superficie = models.FloatField(verbose_name=_('Area'))
     proprietaire = models.ForeignKey(
