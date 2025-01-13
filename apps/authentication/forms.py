@@ -40,7 +40,11 @@ class SignUpForm(UserCreationForm):
             }
         ))
     role = forms.ChoiceField(
-        choices=[],
+        choices=[
+                ('Syndic', _('Syndic')),
+                ('Coproprietaire', _('Coproprietaire')),
+                ('Prestataire', _('Prestataire')),
+            ],
         widget=forms.Select(
             attrs={
                 "placeholder": _("Role:"),
@@ -145,18 +149,18 @@ class SignUpForm(UserCreationForm):
         logged_in_user_role = kwargs.pop('logged_in_user_role', None)
         super().__init__(*args, **kwargs)
 
-        # Only allow 'Superadmin' to select 'Syndic'
-        if logged_in_user_role == 'Superadmin':
-            self.fields['role'].choices = [
-                ('Syndic', _('Syndic')),
-                ('Coproprietaire', _('Coproprietaire')),
-                ('Prestataire', _('Prestataire')),
-            ]
-        else:
-            self.fields['role'].choices = [
-                ('Coproprietaire', _('Coproprietaire')),
-                ('Prestataire', _('Prestataire')),
-            ]
+        ## Only allow 'Superadmin' to select 'Syndic'
+        #if logged_in_user_role == 'Superadmin':
+        #    self.fields['role'].choices = [
+        #        ('Syndic', _('Syndic')),
+        #        ('Coproprietaire', _('Coproprietaire')),
+        #        ('Prestataire', _('Prestataire')),
+        #    ]
+        #else:
+        #    self.fields['role'].choices = [
+        #        ('Coproprietaire', _('Coproprietaire')),
+        #        ('Prestataire', _('Prestataire')),
+        #    ]
 
         for field_name, field in self.fields.items():
             field.label = ""  # Remove labels

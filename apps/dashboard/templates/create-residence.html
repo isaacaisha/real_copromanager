@@ -1,35 +1,31 @@
-<!-- apps/dashboard/templates/customize_license.html -->
+<!-- apps/dashboard/templates/create-residence.html -->
 
 {% extends "layouts/base.html" %}
 
 {% load static i18n %}
 
-{% block title %} - {% trans "Customize License for" %} {{ syndic.nom }}{{ supersyndic.nom }} {% endblock %}
+{% block title %} - {% trans "Create Residence for" %} {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
 
-<div class="container">
-{% if user.role == 'Superadmin' %}
+<div class="container mt-5">
     <div class="card">
         <div class="card-header card-header-icon">
             <div class="card-icon">
                 <i class="fa-solid fa-id-card fa-beat fa-2x"></i>
             </div>
-            <span  class="card-title">
-                {% trans "License ID" %} {{ license.id }}
-                <br>
-                {% trans "Customize License for" %} 
-                {{ license.syndic.user.nom }}{{ license.supersyndic.user.nom }}
+            <span class="card-title">
+                {% trans "Residence ID" %} {{ residence.id }}
             </span>
         </div>
 
         <div class="card-body">
-            <form method="POST" action="{% url 'customize-license' license.id %}">
+            <form method="POST" action="{% url 'create-residence' %}">
                 {% csrf_token %}
-                {{ license_form.as_p }}
+                {{ residence_form.as_p }}
 
                 <div class="text-center">
                     <button type="submit" class="btn btn-success btn-sm pull-left">{% trans "Save" %}</button>
@@ -38,7 +34,6 @@
             </form>
         </div>
     </div>
-{% endif %}
 </div>
 
 {% endblock %}

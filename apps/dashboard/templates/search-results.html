@@ -12,7 +12,7 @@
 {% block content %}
 
 <div>
-    <h5 class="text-center">{% trans "Search Results for" %} "<span class="card-title">{{ query }}</span>"</h5>
+    <h5 class="text-center"><span class="card-title">{{ users.count }}</span> {% trans "Search Results for" %} "<span class="card-title">{{ query }}</span>"</h5>
     {% if users %}
     <div class="row justify-content-center" style="max-height: 455px; overflow-y: auto;">
         {% for user in users %}

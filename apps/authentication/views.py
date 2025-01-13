@@ -206,6 +206,21 @@ def register_supersyndic(request, syndic_id):
 
                     # Create or get a SuperSyndic instance for this user
                     supersyndic, created = SuperSyndic.objects.get_or_create(user=user, id=supersyndic_id)
+                    
+                    # Transfer associated Coproprietaires and Prestataires
+                    coproprietaires = Coproprietaire.objects.filter(syndic=syndic)  # Get all linked to the current Syndic
+                    prestataires = Prestataire.objects.filter(syndic=syndic)  # Get all linked to the current Syndic
+                    
+                    for coproprietaire in coproprietaires:
+                        coproprietaire.syndic = None  # Remove old syndic reference
+                        coproprietaire.supersyndic = supersyndic  # Assign new SuperSyndic
+                        coproprietaire.save()
+                    
+                    for prestataire in prestataires:
+                        prestataire.syndic = None  # Remove old syndic reference
+                        prestataire.supersyndic = supersyndic  # Assign new SuperSyndic
+                        prestataire.save()
+
 
                     # Handle the license transfer
                     # Assuming that a syndic can have multiple licenses, we fetch the latest one
@@ -308,6 +323,7 @@ def update_profile(request, user_id=None):
     - Superadmin can update any profile without specifying the ID in the URL.
     - Regular users can only update their own profile.
     """
+
     form = None
     supersyndic_form = None
     
@@ -315,10 +331,10 @@ def update_profile(request, user_id=None):
     if request.user.role == "Superadmin" and user_id:
         # Superadmin is updating another user's profile
         profile = get_object_or_404(CustomUser, id=user_id)
-    elif request.user.role != "Superadmin" and user_id:
-        # Non-superadmin users are not allowed to update another user's profile
-        messages.error(request, _("You do not have permission to update this profile."))
-        return redirect('home')
+    #elif request.user.role != "Superadmin" and user_id:
+    #    # Non-superadmin users are not allowed to update another user's profile
+    #    messages.error(request, _("You do not have permission to update this profile."))
+    #    return redirect('home')
     else:
         # Default to updating the current user's profile
         profile = request.user
@@ -332,6 +348,8 @@ def update_profile(request, user_id=None):
                 try:
                     with transaction.atomic():
                         user = supersyndic_form.save(commit=False)
+                        
+                        # Preserve current role and upgrade to 'SuperSyndic'
                         user.role = 'SuperSyndic'
                         user.save()
 
@@ -343,8 +361,20 @@ def update_profile(request, user_id=None):
                             license.syndic = None  # Remove the license from the old syndic (if applicable)
                             license.save()
 
+                        # Transfer associated Coproprietaires and Prestataires
+                        coproprietaires = Coproprietaire.objects.filter(syndic=None, supersyndic=None)
+                        prestataires = Prestataire.objects.filter(syndic=None, supersyndic=None)
+
+                        for coproprietaire in coproprietaires:
+                            coproprietaire.syndic = supersyndic
+                            coproprietaire.save()
+
+                        for prestataire in prestataires:
+                            prestataire.syndic = supersyndic
+                            prestataire.save()
+
                         messages.success(request, _("Profile updated successfully!"))
-                        return redirect('dashboard-supersyndic', supersyndic_id=supersyndic.id)
+                        return redirect('dashboard-supersyndic', supersyndic_id=user_id)
 
                 except Exception as e:
                     messages.error(request, f"An error occurred: {e}")

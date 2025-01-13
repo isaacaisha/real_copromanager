@@ -19,7 +19,7 @@ from django.utils import timezone
 
 from core.utils import get_user_context, otp_required_for_supersyndic  # Import the helper function
 
-from .forms import LicenseForm
+from .forms import LicenseForm, ResidenceForm
 from .models import (
     License, Superadmin, SuperSyndic,
     Syndic, Coproprietaire, Prestataire, Residence
@@ -33,10 +33,13 @@ from apps.authentication.models import CustomUser
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def dashboard_superadmin(request, superadmin_id):
+
     # Fetch the current superadmin profile
     if request.user.role == 'Superadmin':
         # Query by user__id when accessed by Superadmin
-        superadmin = get_object_or_404(Superadmin, user__id=superadmin_id)
+        #superadmin = get_object_or_404(Superadmin, user__id=superadmin_id)
+        superadmin = get_object_or_404(Superadmin, user=request.user)
+        profile = get_object_or_404(Superadmin, user=request.user)
     else:
         return HttpResponse(status=403)
     
@@ -78,6 +81,7 @@ def dashboard_superadmin(request, superadmin_id):
     # Prepare context
     context = {
         'segment': 'dashboard-superadmin',
+        'profile': profile,
         'supersyndics': supersyndics,
         'syndics': syndics,
         'coproprietaires': coproprietaires,
@@ -165,6 +169,7 @@ def dashboard_supersyndic(request, supersyndic_id):
 
         ## Retrieve relevant syndic information, such as buildings and co-owners
         #residences = Residence.objects.filter(supersyndic=supersyndic)
+        residences = Residence.objects.filter(supersyndic=supersyndic)
         coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
         prestataires = Prestataire.objects.filter(supersyndic=supersyndic)
             
@@ -178,7 +183,7 @@ def dashboard_supersyndic(request, supersyndic_id):
             'supersyndic': supersyndic,
             'profile': profile,
             'license': license,
-            #'residences': residences,
+            'residences': residences,
             'coproprietaires': coproprietaires,
             'prestataires': prestataires,
             'titlePage': _('Super Syndic') + f" {supersyndic.user.nom}",
@@ -315,15 +320,18 @@ def dashboard_prestataire(request, prestataire_id):
 
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
-def gestion_residence(request):
+def gestion_residence(request, license_id=None):
     """
     View for managing SuperSyndic users.
     Only accessible to users with the role of 'Superadmin"""
-
-    residences = CustomUser.objects.filter(role='Residence')
+    # Add a license field to each syndic
+    
+    # Query all residences
+    residences = Residence.objects.all()
 
     context = {
         'segment': 'gestion-residence',
+        'license': license,
         'residences': residences,
         'titlePage': _('Residence Gestion'),
         'nom': request.user.nom,
@@ -432,6 +440,57 @@ def gestion_prestataire(request):
     return HttpResponse(html_template.render(context, request))
 
 
+def create_residence(request):
+    if request.method == 'POST':
+        residence_form = ResidenceForm(request.POST)
+        if residence_form.is_valid():
+            residence_form.save()
+            return redirect('home')
+    else:
+        residence_form = ResidenceForm()
+
+    context = {
+        'segment': 'create-residence',
+        'residence_form': residence_form,
+        #'license': license,
+        #'id': license.id if license else None,
+        'titlePage': _('Residence Creation'),
+        'nom': request.user.nom,
+        'date': timezone.now().strftime(_("%a %d %B %Y"))
+    }
+
+    html_template = loader.get_template('create-residence.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+# View to display license details
+@login_required(login_url="/login/")
+#@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+def residence_detail(request, residence_id):
+    residence = get_object_or_404(Residence, id=residence_id)
+    syndic = residence.syndic  # Access the syndic associated with this license
+    supersyndic = residence.supersyndic
+    coproprietaires = syndic.coproprietaire_set.all() if syndic else []
+    prestataires = syndic.prestataire_set.all() if syndic else []
+    residences = syndic.residence_set.all() if syndic else []
+    
+    context = {
+        'segment': 'license-detail',
+        'residence': residence,
+        'syndic': syndic,
+        'supersyndic': supersyndic,
+        'coproprietaires': coproprietaires,
+        'prestataires': prestataires,
+        'residences': residences,
+        'titlePage': _('Residence Details') + f" n° {residence.id}",
+        'nom': request.user.nom,
+        'date': timezone.now().strftime(_("%a %d %B %Y"))
+    }
+    
+    html_template = loader.get_template('residence-detail.html')
+    return HttpResponse(html_template.render(context, request))
+
+
 # View for license customization
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
@@ -471,7 +530,7 @@ def license_detail(request, license_id):
     supersyndic = license.supersyndic
     coproprietaires = syndic.coproprietaire_set.all() if syndic else []
     prestataires = syndic.prestataire_set.all() if syndic else []
-    immeubles = syndic.immeuble_set.all() if syndic else []
+    residences = syndic.residence_set.all() if syndic else []
     
     context = {
         'segment': 'license-detail',
@@ -480,7 +539,7 @@ def license_detail(request, license_id):
         'supersyndic': supersyndic,
         'coproprietaires': coproprietaires,
         'prestataires': prestataires,
-        'immeubles': immeubles,
+        'residences': residences,
         'titlePage': _('License Details') + f" n° {license.id}",
         'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
@@ -520,6 +579,7 @@ def user_profile(request, user_id):
     syndic = None
     supersyndic = None
     license = None
+    residences = None
     coproprietaire = None
     prestataire = None
     coproprietaires = None
@@ -531,10 +591,13 @@ def user_profile(request, user_id):
         superadmin = get_object_or_404(Superadmin, user=user)
         profile = get_object_or_404(Superadmin, user=user)
 
+        residences = Residence.objects.filter(superadmin=superadmin)
+
     elif user.role == 'Syndic':
         syndic = get_object_or_404(Syndic, user=user)
         profile = get_object_or_404(Syndic, user=user)
 
+        residences = Residence.objects.filter(syndic=syndic)
         # Retrieve the license associated with the syndic
         license = License.objects.filter(syndic=syndic).order_by('-date_debut').first()
         # Fetch associated coproprietaires
@@ -545,6 +608,8 @@ def user_profile(request, user_id):
     elif user.role == 'SuperSyndic':
         supersyndic = get_object_or_404(SuperSyndic, user=user)
         profile = get_object_or_404(SuperSyndic, user=user)
+
+        residences = Residence.objects.filter(supersyndic=supersyndic)
         license = License.objects.filter(supersyndic=supersyndic).order_by('-date_debut').first()
         # Fetch associated coproprietaires
         coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
@@ -565,6 +630,7 @@ def user_profile(request, user_id):
 
     context = {
         'profile': profile,
+        'residences': residences,
         'nom': user.nom,
         'superadmin': superadmin,
         'syndic': syndic,

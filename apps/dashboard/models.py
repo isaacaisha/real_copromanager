@@ -151,7 +151,6 @@ class Prestataire(models.Model):
 class Residence(models.Model):
     nom = models.CharField(max_length=255, verbose_name=_('Name'))
     adresse = models.TextField(verbose_name=_('Address'))
-    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'))
     nombre_appartements = models.IntegerField(verbose_name=_('Number of Apartments'))
     superficie_totale = models.FloatField(verbose_name=_('Total Area'))
     date_construction = models.DateField(verbose_name=_('Construction Date'))
@@ -159,6 +158,8 @@ class Residence(models.Model):
     zones_communes = models.TextField(verbose_name=_('Common Areas'))  # Example: "Hall, Garden, Parking"
     date_dernier_controle = models.DateField(null=True, blank=True, verbose_name=_('Last Inspection Date'))
     type_chauffage = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Heating Type'))
+    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True)
+    supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True)
 
     def __str__(self):
         return _("Building {name} ({address})").format(name=self.nom, address=self.adresse)

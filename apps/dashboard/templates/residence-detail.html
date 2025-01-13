@@ -1,0 +1,26 @@
+<!-- apps/dashboard/templates/residence-detail.html -->
+
+{% extends "layouts/base.html" %}
+
+{% load static i18n %}
+
+{% block title %} {% trans "Residence Details" %} - {{ residence.id }} {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="d-flex justify-content-center mb-3">
+    <a href="#" class="btn btn-warning btn-sm">
+        {% trans "Modify Residence" %}
+    </a>
+</div>
+
+<div class="container">
+    {% include 'users-datas.html' %}
+</div>
+
+{% endblock %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

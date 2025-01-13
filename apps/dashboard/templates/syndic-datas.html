@@ -25,10 +25,15 @@
 <div class="container">
     <a href="{% url 'register' %}" class="btn btn-success btn-sm pull-left">{% trans "Inscription" %}</a>
     
-    <a href="{% url 'update-profile' %}" class="btn btn-warning btn-sm pull-right">
-        {% trans "Modify Profile" %}
+    <a href="{% url 'create-residence' %}" class="btn btn-success btn-sm pull-right">
+        {% trans "Create Residence" %}
     </a>
-    <br>
+
+    <div class="container text-center">
+        <a href="{% url 'update-profile' %}" class="btn btn-warning btn-sm">
+            {% trans "Modify Profile" %}
+        </a>     
+    </div>
 </div>
 {% endif %}
 
@@ -269,7 +274,7 @@
         {% endif %}
     </div>
 
-    {% if coproprietaires or prestataires %}
+    {% if residences or coproprietaires or prestataires %}
     <!-- Nouvelle card "Nombre de Résidences" alignée à droite -->
     <div class="row mt-2 justify-content-end">
         <!-- List of Co-owners (Coproprietaires) -->
@@ -279,7 +284,7 @@
                     <div class="card-icon">
                         <i class="fa-solid fa-city"></i>
                     </div>
-                    <h5 class="card-title">{% trans "Nombre De Résidences" %}: 19{{ residences.count }}</h5>
+                    <h5 class="card-title">{% trans "Nombre De Résidences" %}: {{ residences.count }}</h5>
                 </div>
                 <div class="card-body p-2">
                     <div>
