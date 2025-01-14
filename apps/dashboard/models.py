@@ -158,8 +158,8 @@ class Residence(models.Model):
     zones_communes = models.TextField(verbose_name=_('Common Areas'))  # Example: "Hall, Garden, Parking"
     date_dernier_controle = models.DateField(null=True, blank=True, verbose_name=_('Last Inspection Date'))
     type_chauffage = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Heating Type'))
-    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True)
-    supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True)
+    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True, related_name='residences')
+    supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True, related_name='residences')
 
     def __str__(self):
         return _("Building {name} ({address})").format(name=self.nom, address=self.adresse)

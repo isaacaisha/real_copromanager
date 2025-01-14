@@ -20,7 +20,7 @@ from django.utils import timezone
 from apps.authentication.models import CustomUser
 from .forms import LoginForm, SignUpForm, CustomPasswordResetConfirmForm, SuperSyndicForm
 
-from apps.dashboard.models import License, Superadmin, Syndic, SuperSyndic, Coproprietaire, Prestataire
+from apps.dashboard.models import License, Residence, Superadmin, Syndic, SuperSyndic, Coproprietaire, Prestataire
 from apps.dashboard.forms import LicenseForm
 
 # Create your views here.# auth_views.py
@@ -231,6 +231,13 @@ def register_supersyndic(request, syndic_id):
                         license.syndic = None  # Remove the license from the old syndic
                         license.save()
 
+                    # Transfer residences to the SuperSyndic
+                    residences = Residence.objects.filter(syndic=None, supersyndic=None)
+                    for residence in residences:
+                        residence.supersyndic = supersyndic
+                        residence.save()
+
+
                     messages.success(request, _('Please fill the form below for upgrade to Super Syndic!'))
                     return redirect('two_factor:setup')  # Or your desired next step
 
@@ -360,6 +367,12 @@ def update_profile(request, user_id=None):
                             license.supersyndic = supersyndic  # Link license to the updated SuperSyndic
                             license.syndic = None  # Remove the license from the old syndic (if applicable)
                             license.save()
+
+                        # Transfer residences to the SuperSyndic
+                        residences = Residence.objects.filter(syndic=None, supersyndic=None)
+                        for residence in residences:
+                            residence.supersyndic = supersyndic
+                            residence.save()
 
                         # Transfer associated Coproprietaires and Prestataires
                         coproprietaires = Coproprietaire.objects.filter(syndic=None, supersyndic=None)

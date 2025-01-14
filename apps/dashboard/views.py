@@ -320,18 +320,23 @@ def dashboard_prestataire(request, prestataire_id):
 
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
-def gestion_residence(request, license_id=None):
+def gestion_residence(request):
     """
     View for managing SuperSyndic users.
-    Only accessible to users with the role of 'Superadmin"""
+    Only accessible to users with the role of 'Superadmin', 'Syndic', or 'SuperSyndic'.
+    """
     # Add a license field to each syndic
-    
+    try:
+        license = request.user.licences.first()  # Assuming the user has a related 'licences' field
+    except AttributeError:
+        license = None  # Handle cases where the user has no associated license
+
     # Query all residences
     residences = Residence.objects.all()
 
     context = {
         'segment': 'gestion-residence',
-        'license': license,
+        'license': license,  # Ensure 'license' is defined before adding to context
         'residences': residences,
         'titlePage': _('Residence Gestion'),
         'nom': request.user.nom,
@@ -472,7 +477,7 @@ def residence_detail(request, residence_id):
     supersyndic = residence.supersyndic
     coproprietaires = syndic.coproprietaire_set.all() if syndic else []
     prestataires = syndic.prestataire_set.all() if syndic else []
-    residences = syndic.residence_set.all() if syndic else []
+    residences = Residence.objects.all()
     
     context = {
         'segment': 'license-detail',
