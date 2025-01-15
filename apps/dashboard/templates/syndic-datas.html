@@ -3,21 +3,27 @@
 {% load static i18n %}
 
 {% if user.role == 'Superadmin' %}
-<div class="container">
-    <div class="text-center">
-        <a href="{% url 'register' %}" class="btn btn-success btn-sm">{% trans "Inscription" %}</a>
+<div class="mb-5">
+    <div>
+        <a href="{% url 'register' %}" class="btn btn-success btn-sm pull-left">{% trans "Inscription" %}</a>
+        <a href="{% url 'create-residence' profile.user_id %}" class="btn btn-success btn-sm pull-right">
+            {% trans "Create Residence" %}
+        </a>
     </div>
+    
+    <br><br>
 
-    {% if license %}
-    <a href="{% url 'customize-license' license.id %}" class="btn btn-warning btn-sm pull-left">
-        {% trans "License" %} <i class="fa fa-key"></i>
-    </a>
-    {% endif %}
-
-    <a href="{% url 'update-profile' profile.user_id %}" class="btn btn-warning btn-sm pull-right">
-        {% trans "Profile" %} <i class="fa fa-key"></i>
-    </a>
-    <br>
+    <div>
+        {% if license %}
+        <a href="{% url 'customize-license' license.id %}" class="btn btn-warning btn-sm pull-left">
+            {% trans "License" %} <i class="fa fa-key"></i>
+        </a>
+        {% endif %}
+        
+        <a href="{% url 'update-profile' profile.user_id %}" class="btn btn-warning btn-sm pull-right">
+            {% trans "Profile" %} <i class="fa fa-key"></i>
+        </a>
+    </div>
 </div>
 {% endif %}
 
@@ -25,7 +31,7 @@
 <div class="container">
     <a href="{% url 'register' %}" class="btn btn-success btn-sm pull-left">{% trans "Inscription" %}</a>
     
-    <a href="{% url 'create-residence' %}" class="btn btn-success btn-sm pull-right">
+    <a href="{% url 'create-residence' user.id %}" class="btn btn-success btn-sm pull-right">
         {% trans "Create Residence" %}
     </a>
 
@@ -282,9 +288,12 @@
             <div class="card shadow-sm">
                 <div class="card-header fs-8 card-header-icon">
                     <div class="card-icon">
-                        <i class="fa-solid fa-city"></i>
+                        <i class="fa-solid fa-city fa-2x"></i>
                     </div>
-                    <h5 class="card-title">{% trans "Nombre De Résidences" %}: {{ residences.count }}</h5>
+                    <h5 class="card-title">{% trans "Residence Information" %}</h5>
+                    {% if user.role == 'Superadmin' %}
+                    <p class="card-category">{% trans "Nombre De Résidences" %} {{ residences.count }}</p>
+                    {% endif %}
                 </div>
                 <div class="card-body p-2">
                     <div>

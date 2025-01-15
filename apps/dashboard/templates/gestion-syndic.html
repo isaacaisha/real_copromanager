@@ -32,30 +32,21 @@
     </div>
     
     <div class="card">
-        <div class="card-header">
-            <h3>{% trans "Backoffice - Managing Syndics" %}</h3>
+        <div class="card-header card-header-icon">
+            <div class="card-icon">
+                <i class="material-icons">group</i>
+            </div>
+            <h3 class="card-title">{% trans "Backoffice - Managing Syndics" %}</h3>
+        </div>
+        <div class="card-footer">
+            <div class="stats">
+                <i class="material-icons">info</i> 
+                <span class="card-title">{{ syndics.count }} {% trans "Total Syndics" %}</span>
+            </div>
         </div>
         <div class="card-body">
 
             <!-- Syndics Section -->
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-12">
-                    <div class="card card-stats">
-                        <div class="card-header card-header-icon">
-                            <div class="card-icon">
-                                <i class="material-icons">group</i>
-                            </div>
-                            <p class="card-category">{% trans "Syndics" %}</p>
-                            <h3 class="card-title">{{ syndics.count }}</h3>
-                        </div>
-                        <div class="card-footer">
-                            <div class="stats">
-                                <i class="material-icons">info</i> {% trans "Total Syndics" %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <h3>{% trans "Details of Syndics" %}</h3>
             <div class="table-responsive mb-5" style="max-height: 455px; overflow-y: auto;">
                 <table class="table table-striped">

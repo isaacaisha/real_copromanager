@@ -54,7 +54,7 @@ urlpatterns = [
     path('dashboard-superadmin/<int:superadmin_id>/', dashboard_superadmin, name='dashboard-superadmin'),
     path('customize-license/<int:license_id>/', customize_license, name='customize-license'),
     path('license-detail/<int:license_id>/', license_detail, name='license-detail'),
-    path('create-residence/', create_residence, name='create-residence'),
+    path('create-residence/<int:user_id>/', create_residence, name='create-residence'),
     path('residence-detail/<int:residence_id>/', residence_detail, name='residence-detail'),
 
     path('gestion-residence/', gestion_residence, name='gestion-residence'),

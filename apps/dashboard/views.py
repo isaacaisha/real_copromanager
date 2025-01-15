@@ -38,6 +38,7 @@ def dashboard_superadmin(request, superadmin_id):
     if request.user.role == 'Superadmin':
         # Query by user__id when accessed by Superadmin
         #superadmin = get_object_or_404(Superadmin, user__id=superadmin_id)
+        #profile = get_object_or_404(Superadmin, user__id=superadmin_id)
         superadmin = get_object_or_404(Superadmin, user=request.user)
         profile = get_object_or_404(Superadmin, user=request.user)
     else:
@@ -240,11 +241,14 @@ def dashboard_coproprietaire(request, coproprietaire_id):
      # Only fetch the coproprietaires associated with the current syndic
     if request.user.role == 'Superadmin':
         coproprietaires = Coproprietaire.objects.all()  # Superadmin can see all
-    elif request.user.role in ['Syndic', 'SuperSyndic']:
+    elif request.user.role == ['Syndic']:
         coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
+    elif request.user.role == ['SuperSyndic']:
+        coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
     else:
-        coproprietaires = Coproprietaire.objects.filter(syndic=syndic, user=request.user)  # Filter by syndic for others
-    
+        #coproprietaires = Coproprietaire.objects.filter(syndic=syndic, user=request.user)  # Filter by syndic for others
+        coproprietaires = None
+
     context = {
         'segment': 'dashboard-coproprietaire',
         'coproprietaire': coproprietaire,
@@ -295,10 +299,13 @@ def dashboard_prestataire(request, prestataire_id):
     # Only fetch the prestataires associated with the current syndic
     if request.user.role == 'Superadmin':
         prestataires = Prestataire.objects.all()  # Superadmin can see all
-    elif request.user.role in ['Syndic', 'SuperSyndic']:
+    elif request.user.role == ['Syndic']:
         prestataires = Prestataire.objects.filter(syndic=syndic)
+    elif request.user.role == ['SuperSyndic']:
+        prestataires = Prestataire.objects.filter(supersyndic=supersyndic)
     else:
-        prestataires = Prestataire.objects.filter(syndic=syndic, user=request.user)  # Filter by syndic for others
+        #prestataires = Prestataire.objects.filter(syndic=syndic, user=request.user)  # Filter by syndic for others
+        prestataires = None
 
     context = {
         'segment': 'dashboard-prestataire',
@@ -331,13 +338,30 @@ def gestion_residence(request):
     except AttributeError:
         license = None  # Handle cases where the user has no associated license
 
-    # Query all residences
-    residences = Residence.objects.all()
+    # Filter residences based on the user's role and related field
+    if request.user.role == 'Syndic':
+        if not hasattr(request.user, 'syndic_profile'):
+            messages.error(request, _("You are not authorized to view this page."))
+        residences = Residence.objects.filter(syndic=request.user.syndic_profile)
+        coproprietaires = Coproprietaire.objects.filter(syndic=request.user.syndic_profile)
+        prestataires = Prestataire.objects.filter(syndic=request.user.syndic_profile)
+    elif request.user.role == 'SuperSyndic':
+        if not hasattr(request.user, 'supersyndic_profile'):
+            messages.error(request, _("You are not authorized to view this page."))
+        residences = Residence.objects.filter(syndic=request.user.syndic_profile)
+        coproprietaires = Coproprietaire.objects.filter(syndic=request.user.syndic_profile)
+        prestataires = Prestataire.objects.filter(supersyndic=request.user.supersyndic_profile)
+    else:  # For Superadmin or other roles, display all residences
+        residences = Residence.objects.all()
+        coproprietaires = Coproprietaire.objects.all()
+        prestataires = Prestataire.objects.all()
 
     context = {
         'segment': 'gestion-residence',
         'license': license,  # Ensure 'license' is defined before adding to context
         'residences': residences,
+        'coproprietaires': coproprietaires,
+        'prestataires': prestataires,
         'titlePage': _('Residence Gestion'),
         'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
@@ -414,11 +438,29 @@ def gestion_supersyndic(request):
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def gestion_coproprietaire(request):
-    coproprietaires = CustomUser.objects.filter(role='Coproprietaire')
+    # Filter coproprietaires based on the user's role
+    if request.user.role == 'Syndic':
+        if not hasattr(request.user, 'syndic_profile'):
+            messages.error(request, _("You are not authorized to view this page."))
+        coproprietaires = Coproprietaire.objects.filter(syndic=request.user.syndic_profile)
+        prestataires = Prestataire.objects.filter(syndic=request.user.syndic_profile)
+    elif request.user.role == 'SuperSyndic':
+        if not hasattr(request.user, 'supersyndic_profile'):
+            messages.error(request, _("You are not authorized to view this page."))
+        coproprietaires = Coproprietaire.objects.filter(supersyndic=request.user.supersyndic_profile)
+        prestataires = Prestataire.objects.filter(syndic__supersyndic=request.user.supersyndic_profile)
+    else:  # Superadmin can view all Coproprietaires
+        coproprietaires = Coproprietaire.objects.all()
+        prestataires = Prestataire.objects.all()
+
+    # Calculate the total count
+    total_count = coproprietaires.count() + prestataires.count()
 
     context = {
         'segment': 'gestion-coproprietaire',
         'coproprietaires': coproprietaires,
+        'prestataires': prestataires,
+        'total_count': total_count,
         'titlePage': _('Coproprietaire Gestion'),
         'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
@@ -431,11 +473,29 @@ def gestion_coproprietaire(request):
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def gestion_prestataire(request):
-    prestataires = CustomUser.objects.filter(role='Prestataire')
+    # Filter coproprietaires based on the user's role
+    if request.user.role == 'Syndic':
+        if not hasattr(request.user, 'syndic_profile'):
+            messages.error(request, _("You are not authorized to view this page."))
+        prestataires = Prestataire.objects.filter(syndic=request.user.syndic_profile)
+        coproprietaires = Coproprietaire.objects.filter(syndic=request.user.syndic_profile)
+    elif request.user.role == 'SuperSyndic':
+        if not hasattr(request.user, 'supersyndic_profile'):
+            messages.error(request, _("You are not authorized to view this page."))
+        prestataires = Prestataire.objects.filter(supersyndic=request.user.supersyndic_profile)
+        coproprietaires = Coproprietaire.objects.filter(supersyndic=request.user.supersyndic_profile)
+    else:  # Superadmin can view all Coproprietaires
+        prestataires = Prestataire.objects.all()
+        coproprietaires = Coproprietaire.objects.all()
+
+    # Calculate the total count
+    total_count = coproprietaires.count() + prestataires.count()
 
     context = {
         'segment': 'gestion-prestataire',
         'prestataires': prestataires,
+        'coproprietaires': coproprietaires,
+        'total_count': total_count,
         'titlePage': _('Prestataire Gestion'),
         'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
@@ -445,27 +505,51 @@ def gestion_prestataire(request):
     return HttpResponse(html_template.render(context, request))
 
 
-def create_residence(request):
-    if request.method == 'POST':
-        residence_form = ResidenceForm(request.POST)
-        if residence_form.is_valid():
-            residence_form.save()
+@login_required(login_url="/login/")
+@user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role in ['Syndic', 'SuperSyndic']))
+def create_residence(request, user_id):
+    """
+    Create a new residence. Allows a Superadmin to create a residence for a syndic or supersyndic.
+    """
+    try:
+        # Determine the acting user and the target profile
+        if request.user.role == 'Superadmin':
+            profile = CustomUser.objects.get(id=user_id)  # Target Syndic or SuperSyndic
+        elif request.user.role in ['Syndic', 'SuperSyndic']:
+            profile = request.user  # Acting Syndic or SuperSyndic
+        else:
+            messages.error(request, _("You do not have permission to create a residence."))
             return redirect('home')
-    else:
-        residence_form = ResidenceForm()
 
-    context = {
-        'segment': 'create-residence',
-        'residence_form': residence_form,
-        #'license': license,
-        #'id': license.id if license else None,
-        'titlePage': _('Residence Creation'),
-        'nom': request.user.nom,
-        'date': timezone.now().strftime(_("%a %d %B %Y"))
-    }
+        if request.method == "POST":
+            residence_form = ResidenceForm(request.POST)
+            if residence_form.is_valid():
+                # Pass the profile to the save method explicitly
+                residence = residence_form.save(user=request.user)
+                messages.success(request, _('Residence created successfully: ') + f"{residence.nom}")
+                return redirect('residence-detail', user_id)
+        else:
+            residence_form = ResidenceForm()
 
-    html_template = loader.get_template('create-residence.html')
-    return HttpResponse(html_template.render(context, request))
+        # Context and rendering
+        context = {
+            'segment': 'create-residence',
+            'residence_form': residence_form,
+            'profile': profile,
+            'titlePage': _('Residence Creation'),
+            'nom': profile.nom if hasattr(profile, 'nom') else '',
+            'date': timezone.now().strftime(_("%a %d %B %Y")),
+        }
+
+        html_template = loader.get_template('create-residence.html')
+        return HttpResponse(html_template.render(context, request))
+
+    except CustomUser.DoesNotExist:
+        messages.error(request, _("User not found."))
+        return redirect('home')
+    except ValueError as e:
+        messages.error(request, str(e))
+        return redirect('home')
 
 
 # View to display license details
@@ -473,20 +557,39 @@ def create_residence(request):
 #@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def residence_detail(request, residence_id):
     residence = get_object_or_404(Residence, id=residence_id)
-    syndic = residence.syndic  # Access the syndic associated with this license
-    supersyndic = residence.supersyndic
-    coproprietaires = syndic.coproprietaire_set.all() if syndic else []
-    prestataires = syndic.prestataire_set.all() if syndic else []
-    residences = Residence.objects.all()
+    #syndic = residence.syndic  # Access the syndic associated with this license
+    #supersyndic = residence.supersyndic
+
+    # Filter coproprietaires based on the user's role
+    if request.user.role == 'Syndic':
+        if not hasattr(request.user, 'syndic_profile'):
+            messages.error(request, _("You are not authorized to view this page."))
+        residences = Residence.objects.filter(syndic=request.user.syndic_profile)
+        coproprietaires = Coproprietaire.objects.filter(syndic=request.user.syndic_profile)
+        prestataires = Prestataire.objects.filter(syndic=request.user.syndic_profile)
+    elif request.user.role == 'SuperSyndic':
+        if not hasattr(request.user, 'supersyndic_profile'):
+            messages.error(request, _("You are not authorized to view this page."))
+        residences = Residence.objects.filter(supersyndic=request.user.supersyndic_profile)
+        coproprietaires = Coproprietaire.objects.filter(supersyndic=request.user.supersyndic_profile)
+        prestataires = Prestataire.objects.filter(supersyndic=request.user.supersyndic_profile)
+    else:  # Superadmin can view all Coproprietaires
+        residences = Residence.objects.all()
+        coproprietaires = Coproprietaire.objects.all()
+        prestataires = Prestataire.objects.all()
+
+    # Calculate the total count
+    total_count = coproprietaires.count() + prestataires.count()
     
     context = {
         'segment': 'license-detail',
         'residence': residence,
-        'syndic': syndic,
-        'supersyndic': supersyndic,
+        #'syndic': syndic,
+        #supersyndic': supersyndic,
         'coproprietaires': coproprietaires,
         'prestataires': prestataires,
         'residences': residences,
+        'total_count': total_count,
         'titlePage': _('Residence Details') + f" n° {residence.id}",
         'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
@@ -506,6 +609,7 @@ def customize_license(request, license_id):
         if license_form.is_valid():
             license.est_personnalise = license_form.cleaned_data.get('est_personnalise', True)
             license.save()
+            messages.success(request, _('Updated successfully') + f" License: {license.id}")
             return redirect('license-detail', license_id=license.id)
         else:
             messages.error(request, _("There were errors in the form. Please correct them."))
@@ -535,7 +639,7 @@ def license_detail(request, license_id):
     supersyndic = license.supersyndic
     coproprietaires = syndic.coproprietaire_set.all() if syndic else []
     prestataires = syndic.prestataire_set.all() if syndic else []
-    residences = syndic.residence_set.all() if syndic else []
+    residences = None
     
     context = {
         'segment': 'license-detail',
@@ -558,7 +662,6 @@ def license_detail(request, license_id):
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def user_search(request):
     query = request.GET.get('q', '').strip()  # Get the search query from the GET request
-    print(f"Search Query: {query}")  # Debug statement
     
     # Filter by 'nom' or 'email', case-insensitive
     users = CustomUser.objects.filter(
@@ -595,8 +698,6 @@ def user_profile(request, user_id):
     if user.role == 'Superadmin':
         superadmin = get_object_or_404(Superadmin, user=user)
         profile = get_object_or_404(Superadmin, user=user)
-
-        residences = Residence.objects.filter(superadmin=superadmin)
 
     elif user.role == 'Syndic':
         syndic = get_object_or_404(Syndic, user=user)

@@ -13,30 +13,21 @@
 <div>
 
     <div class="card">
-        <div class="card-header">
-            <h3>{% trans "Backoffice - Management of Co-owners" %}</h3>
-        </div>
-        <div class="card-body">
-
-            <!-- Co-owners Section -->
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="card card-stats">
-                        <div class="card-header card-header-icon">
-                            <div class="card-icon">
-                                <i class="material-icons">people</i>
-                            </div>
-                            <p class="card-category">{% trans "Co-owners" %}</p>
-                            <h3 class="card-title">{{ coproprietaires.count }}</h3>
-                        </div>
-                        <div class="card-footer">
-                            <div class="stats">
-                                <i class="material-icons">info</i> {% trans "Total Co-owners" %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="card-header card-header-icon">
+            <div class="card-icon">
+                <i class="material-icons">people</i>
             </div>
+            <h3 class="card-title">{% trans "Backoffice - Management of Co-owners" %}</h3>
+        </div>
+        <div class="card-footer">
+            <div class="stats">
+                <i class="material-icons">info</i> 
+                <span class="card-title">{{ coproprietaires.count }} {% trans "Total Co-owners" %}</span>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            <!-- Co-owners Section -->
             <h3>{% trans "Details of Co-owners" %}</h3>
             <div class="table-responsive mb-5" style="max-height: 455px; overflow-y: auto;">
                 <table class="table table-striped">
@@ -51,21 +42,21 @@
                     <tbody>
                         {% for coproprietaire in coproprietaires %}
                         <tr>
-                            <td>{{ coproprietaire.nom }}</td>
+                            <td>{{ coproprietaire.user.nom }}</td>
                             <td>
-                                <a href="mailto:{{ coproprietaire.email }}" class="a_link">
-                                    {{ coproprietaire.email }}
+                                <a href="mailto:{{ coproprietaire.user.email }}" class="a_link">
+                                    {{ coproprietaire.user.email }}
                                 </a>
                             </td>
                             <td>
-                                <a href="{% url 'dashboard-coproprietaire' coproprietaire_id=coproprietaire.id %}"
+                                <a href="{% url 'dashboard-coproprietaire' coproprietaire_id=coproprietaire.user.id %}"
                                     class="btn btn-sm">
                                     <i class="material-icons">search</i> {% trans "View Details" %}
                                 </a>
                             </td>
                             <!-- Co-owners Delete Button -->
                             <td>
-                                <form method="post" action="{% url 'delete-coproprietaire' coproprietaire.id %}"
+                                <form method="post" action="{% url 'delete-coproprietaire' coproprietaire.user.id %}"
                                     style="display:inline;">
                                     {% csrf_token %}
                                     <button type="submit" rel="tooltip" title="{% trans 'Delete' %}"

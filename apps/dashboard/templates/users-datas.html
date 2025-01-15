@@ -228,7 +228,7 @@
                         </p>
                         <p>
                             <strong>Statut:</strong>
-                            &nbsp; <span class="fs-5">Actif{{ supersyndic.user.status }}</span>
+                            &nbsp; <span class="fs-5">{{ supersyndic.user.status }}</span>
                         </p>
                         <p>
                             <strong>Commercial:</strong>
@@ -347,7 +347,10 @@
                         <div class="card-icon">
                             <i class="fa-solid fa-city"></i>
                         </div>
-                        <h5 class="card-title">{% trans "Nombre De Résidences" %}: {{ residences.count }}</h5>
+                        <h5 class="card-title">{% trans "Co-owners & Co-Prestataires Information" %}</h5>
+                        {% if user.role == 'Superadmin' %}
+                        <p class="card-category">{% trans "Totals" %} {{ total_count }}</p>
+                        {% endif %}
                     </div>
                     <div class="card-body p-2">
                         <div>
@@ -377,14 +380,20 @@
             <div class="card shadow-sm">
                 <div class="card-header card-header-icon">
                     <div class="card-icon">
-                        <i class="fas fa-building"></i>
+                        <i class="fas fa-building fa-2x"></i>
                     </div>
                     <h5 class="card-title">{% trans "Managed Buildings" %}</h5>
                 </div>
                 <div class="card-body p-2">
                     <ul>
                         {% for residence in residences %}
-                        <li>{{ residence.nom }}</li>
+                        <div class="stats">
+                            <span>{% trans "Residence" %}<strong> {{ residence.nom }}</strong></span>
+                            <a href="{% url 'residence-detail' residence.id %}" class="view-details">
+                                <span>{% trans "View Details" %}</span>
+                            </a>
+                        </div>
+                        <!--<li>{{ residence.nom }}</li>
                         <li>{{ residence.adresse }}</li>
                         <li>{{ residence.nombre_appartements }}</li>
                         <li>{{ residence.superficie_totale }}</li>
@@ -394,8 +403,7 @@
                         <li>{{ residence.date_dernier_controle }}</li>
                         <li>{{ residence.type_chauffage }}</li>
                         <li>{{ residence.syndic }}</li>
-                        <li>{{ residence.supersyndic }}</li>
-                        <br>
+                        <li>{{ residence.supersyndic }}</li>-->
                         {% empty %}
                         <p>{% trans "No building found for this user." %}</p>
                         {% endfor %}
@@ -411,7 +419,7 @@
 
 <!-- Go Back Button -->
 <div class="text-center mt-3">
-    {% if user.is_authenticated and user.role == 'Superadmin' %}
+    {% if user.is_authenticated and user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
     <a href="javascript:history.back()" class="btn btn-sm">
         <i class="material-icons">arrow_back</i> {% trans "Go back" %}
     </a>

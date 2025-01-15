@@ -11,19 +11,23 @@
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="mt-5">
     <div class="card">
         <div class="card-header card-header-icon">
             <div class="card-icon">
-                <i class="fa-solid fa-id-card fa-beat fa-2x"></i>
+                <i class="fas fa-building fa-2x"></i>
             </div>
             <span class="card-title">
-                {% trans "Residence ID" %} {{ residence.id }}
+                {% trans "Create Residence for" %} {{ user.nom }}
+                <br>
+                {% if user.role == 'Superadmin' %}
+                {% trans "Residence ID" %} {{ profile.id }}
+                {% endif %}
             </span>
         </div>
 
         <div class="card-body">
-            <form method="POST" action="{% url 'create-residence' %}">
+            <form method="POST" action="{% url 'create-residence' user.id %}">
                 {% csrf_token %}
                 {{ residence_form.as_p }}
 

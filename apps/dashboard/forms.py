@@ -6,7 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django import forms
 
-from apps.dashboard.models import License, Residence
+from apps.dashboard.models import License, Residence, SuperSyndic, Syndic
 
 from django.utils.translation import gettext as _
 
@@ -84,8 +84,6 @@ class ResidenceForm(forms.ModelForm):
             'zones_communes',
             'date_dernier_controle',
             'type_chauffage',
-            'syndic',
-            'supersyndic',
         ]
         widgets = {
             'nom': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Enter building name')}),
@@ -97,8 +95,6 @@ class ResidenceForm(forms.ModelForm):
             'zones_communes': forms.Textarea(attrs={'class': 'form-control', 'placeholder': _('List common areas (e.g., Hall, Garden, Parking)'), 'rows': 3}),
             'date_dernier_controle': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'type_chauffage': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Enter heating type')}),
-            'syndic': forms.Select(attrs={'class': 'form-control'}),
-            'supersyndic': forms.Select(attrs={'class': 'form-control'}),
         }
         labels = {
             'nom': _('Building Name'),
@@ -110,7 +106,25 @@ class ResidenceForm(forms.ModelForm):
             'zones_communes': _('Common Areas'),
             'date_dernier_controle': _('Last Inspection Date'),
             'type_chauffage': _('Heating Type'),
-            'syndic': _('Syndic'),
-            'supersyndic': _('Super Syndic'),
         }
         
+    def save(self, user, commit=True):
+        residence = super().save(commit=False)
+        try:
+            if user.role == 'Syndic':
+                residence.syndic = Syndic.objects.get(user=user)
+            elif user.role == 'SuperSyndic':
+                residence.supersyndic = SuperSyndic.objects.get(user=user)
+            elif user.role == 'Superadmin':
+                residence.syndic = Syndic.objects.get(user=user)
+                #residence.supersyndic = SuperSyndic.objects.get(user=user)
+            else:
+                raise ValueError("Invalid user role or missing profile.")
+        except Syndic.DoesNotExist:
+            raise ValueError("Syndic not found for the user.")
+        except SuperSyndic.DoesNotExist:
+            raise ValueError("SuperSyndic not found for the user.")
+    
+        if commit:
+            residence.save()
+        return residence

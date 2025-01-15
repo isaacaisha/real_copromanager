@@ -13,29 +13,22 @@
 <div>
 
     <div class="card">
-        <div class="card-header">
-            <h3>{% trans "Backoffice - Manage Providers" %}</h3>
+        <div class="card-header card-header-icon">
+            <div class="card-icon">
+                <i class="material-icons">business_center</i>
+            </div>
+            <h3 class="card-title">
+                {% trans "Backoffice - Manage Providers" %}
+            </h3>
+        </div>
+        <div class="card-footer">
+        <div class="stats">
+            <i class="material-icons">info</i>  
+            <span class="card-title">{{ prestataires.count }} {% trans "Total Providers" %}</span>
+        </div>
         </div>
         <div class="card-body">
             <!-- Providers Section -->
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="card card-stats">
-                        <div class="card-header card-header-icon">
-                            <div class="card-icon">
-                                <i class="material-icons">business_center</i>
-                            </div>
-                            <p class="card-category">{% trans "Providers" %}</p>
-                            <h3 class="card-title">{{ prestataires.count }}</h3>
-                        </div>
-                        <div class="card-footer">
-                            <div class="stats">
-                                <i class="material-icons">info</i> {% trans "Total Providers" %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <h3>{% trans "Provider Details" %}</h3>
             <div class="table-responsive mb-5" style="max-height: 455px; overflow-y: auto;">
                 <table class="table table-striped">
@@ -50,20 +43,20 @@
                     <tbody>
                         {% for prestataire in prestataires %}
                         <tr>
-                            <td>{{ prestataire.nom }}</td>
+                            <td>{{ prestataire.user.nom }}</td>
                             <td>
-                                <a href="mailto:{{ prestataire.email }}" class="a_link">
-                                    {{ prestataire.email }}
+                                <a href="mailto:{{ prestataire.user.email }}" class="a_link">
+                                    {{ prestataire.user.email }}
                                 </a>
                             </td>
                             <td>
-                                <a href="{% url 'dashboard-prestataire' prestataire.id %}" class="btn btn-sm">
+                                <a href="{% url 'dashboard-prestataire' prestataire.user.id %}" class="btn btn-sm">
                                     <i class="material-icons">search</i> {% trans "View Details" %}
                                 </a>
                             </td>
                             <!-- Provider Delete Button -->
                             <td>
-                                <form method="post" action="{% url 'delete-prestataire' prestataire.id %}"
+                                <form method="post" action="{% url 'delete-prestataire' prestataire.user.id %}"
                                     style="display:inline;">
                                     {% csrf_token %}
                                     <button type="submit" rel="tooltip" title="{% trans 'Delete' %}"

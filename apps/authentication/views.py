@@ -386,7 +386,7 @@ def update_profile(request, user_id=None):
                             prestataire.syndic = supersyndic
                             prestataire.save()
 
-                        messages.success(request, _("Profile updated successfully!"))
+                        messages.success(request, _("Profile updated successfully for") + f" {profile.nom}")
                         return redirect('dashboard-supersyndic', supersyndic_id=user_id)
 
                 except Exception as e:
@@ -397,8 +397,8 @@ def update_profile(request, user_id=None):
             form = SignUpForm(request.POST, instance=profile)
             if form.is_valid():
                 form.save()
-                messages.success(request, _("Profile updated successfully!"))
-                return redirect('home')
+                messages.success(request, _("Profile updated successfully for") + f" {profile.nom}")
+                return redirect('user-profile', user_id)
             else:
                 messages.error(request, _("There were errors in the form. Please correct them."))
 
