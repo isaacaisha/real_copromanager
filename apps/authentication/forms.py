@@ -149,18 +149,16 @@ class SignUpForm(UserCreationForm):
         logged_in_user_role = kwargs.pop('logged_in_user_role', None)
         super().__init__(*args, **kwargs)
 
-        ## Only allow 'Superadmin' to select 'Syndic'
-        #if logged_in_user_role == 'Superadmin':
-        #    self.fields['role'].choices = [
-        #        ('Syndic', _('Syndic')),
-        #        ('Coproprietaire', _('Coproprietaire')),
-        #        ('Prestataire', _('Prestataire')),
-        #    ]
-        #else:
-        #    self.fields['role'].choices = [
-        #        ('Coproprietaire', _('Coproprietaire')),
-        #        ('Prestataire', _('Prestataire')),
-        #    ]
+        # Only allow 'Superadmin' to select 'Syndic'
+        if logged_in_user_role == 'Superadmin':
+            self.fields['role'].choices = [
+                ('Syndic', _('Syndic')),
+            ]
+        else:
+            self.fields['role'].choices = [
+                ('Coproprietaire', _('Coproprietaire')),
+                ('Prestataire', _('Prestataire')),
+            ]
 
         for field_name, field in self.fields.items():
             field.label = ""  # Remove labels
@@ -184,6 +182,30 @@ class LoginForm(forms.Form):
     
     # Use reCAPTCHA v2 for login
     captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
+
+
+class SyndicForm(SignUpForm):
+    class Meta(SignUpForm.Meta):
+        model = CustomUser
+        fields = SignUpForm.Meta.fields
+
+    def __init__(self, *args, **kwargs):
+        # Extract the logged-in user's role from kwargs
+        logged_in_user_role = kwargs.pop('logged_in_user_role', None)
+        super().__init__(*args, **kwargs)
+
+        # Only allow 'Superadmin' to select 'Syndic'
+        if logged_in_user_role == 'Superadmin':
+            self.fields['role'].choices = [
+                ('Syndic', _('Syndic')),
+            ]
+        else:
+            self.fields['role'].choices = [
+                ('Syndic', _('Syndic')),
+            ]
+
+        for field_name, field in self.fields.items():
+            field.label = ""  # Remove labels
 
 
 class SuperSyndicForm(forms.ModelForm):

@@ -9,12 +9,12 @@ from .views import (
     ResetPasswordView, CustomPasswordResetConfirmView, CustomPasswordResetCompleteView,
     register_supersyndic, login_supersyndic,
     register_user, login_view, logout_view, update_profile,
-    delete_supersyndic, delete_syndic, delete_coproprietaire, delete_prestataire
+    delete_residence, delete_supersyndic, delete_syndic, delete_coproprietaire, delete_prestataire
     )
 
 from apps.dashboard.views import (
     user_search, user_profile,
-    dashboard_superadmin, customize_license, license_detail, create_residence, residence_detail,
+    dashboard_superadmin, customize_license, license_detail, create_residence, update_residence, residence_detail,
     dashboard_supersyndic, dashboard_syndic, dashboard_coproprietaire, dashboard_prestataire,
     gestion_residence, gestion_supersyndic, gestion_syndic, gestion_coproprietaire, gestion_prestataire
     )
@@ -45,6 +45,7 @@ urlpatterns = [
     path('update-profile/<int:user_id>/', update_profile, name='update-profile'),  # For Superadmin to update other users
 
     # Delete operations for syndic, supersyndic, coproprietaire, prestataire
+    path('delete-residence/<int:residence_id>/', delete_residence, name='delete-residence'),
     path('delete-syndic/<int:syndic_id>/', delete_syndic, name='delete-syndic'),
     path('delete-supersyndic/<int:supersyndic_id>/', delete_supersyndic, name='delete-supersyndic'),
     path('delete-coproprietaire/<int:coproprietaire_id>/', delete_coproprietaire, name='delete-coproprietaire'),
@@ -55,6 +56,7 @@ urlpatterns = [
     path('customize-license/<int:license_id>/', customize_license, name='customize-license'),
     path('license-detail/<int:license_id>/', license_detail, name='license-detail'),
     path('create-residence/<int:user_id>/', create_residence, name='create-residence'),
+    path('update-residence/<int:residence_id>/', update_residence, name='update-residence'), 
     path('residence-detail/<int:residence_id>/', residence_detail, name='residence-detail'),
 
     path('gestion-residence/', gestion_residence, name='gestion-residence'),

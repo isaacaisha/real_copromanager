@@ -61,6 +61,7 @@
                             <th>{% trans "Residence Name" %}</th>
                             <th>{% trans "Email" %}</th>
                             <th>{% trans "Syndic Info" %}</th>
+                            <th>{% trans "Configure" %}</th>
                             <th>{% trans "Delete" %}</th>
                         </tr>
                     </thead>
@@ -82,9 +83,22 @@
                                 <p>{% trans "No license details for this residence." %}</p>
                                 {% endif %}
                             </td>
+
+                            <td>
+                                {% if residence %}
+                                <a href="{% url 'update-residence' residence.id %}" class="a_link">
+                                    <button type="su" rel="tooltip" title="{% trans 'Configure' %}" class="btn btn-primary btn-link btn-sm">
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                </a>
+                                {% else %}
+                                <p>{% trans "No Residence found for this user." %}</p>
+                                {% endif %}
+                            </td>
+                            
                             <!-- Add Delete Button -->
                             <td>
-                                <form method="post" action="#"
+                                <form method="post" action="{% url 'delete-residence' residence.id %}"
                                     style="display:inline;">
                                     {% csrf_token %}
                                     <!--<button type="submit" class="btn btn-danger btn-sm"

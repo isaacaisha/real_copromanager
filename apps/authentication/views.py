@@ -18,7 +18,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 
 from apps.authentication.models import CustomUser
-from .forms import LoginForm, SignUpForm, CustomPasswordResetConfirmForm, SuperSyndicForm
+from .forms import LoginForm, SignUpForm, CustomPasswordResetConfirmForm, SuperSyndicForm, SyndicForm
 
 from apps.dashboard.models import License, Residence, Superadmin, Syndic, SuperSyndic, Coproprietaire, Prestataire
 from apps.dashboard.forms import LicenseForm
@@ -326,36 +326,34 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 @login_required
 def update_profile(request, user_id=None):
     """
-    View to update a user's profile. 
-    - Superadmin can update any profile without specifying the ID in the URL.
-    - Regular users can only update their own profile.
+    View to update a user's profile.
+    - Superadmin can update any profile if `user_id` is provided.
+    - SuperSyndic updates use `supersyndic_form`.
+    - Syndic updates use `syndic_form`.
+    - Superadmin updates or creates profiles using `form`.
     """
 
     form = None
+    syndic_form = None
     supersyndic_form = None
     
     # Determine the user to update based on the role
     if request.user.role == "Superadmin" and user_id:
         # Superadmin is updating another user's profile
         profile = get_object_or_404(CustomUser, id=user_id)
-    #elif request.user.role != "Superadmin" and user_id:
-    #    # Non-superadmin users are not allowed to update another user's profile
-    #    messages.error(request, _("You do not have permission to update this profile."))
-    #    return redirect('home')
     else:
         # Default to updating the current user's profile
         profile = request.user
 
     # Handle form submission
     if request.method == "POST":
-        if request.user.role == "Superadmin" and profile.role == "SuperSyndic" or profile.role == 'SuperSyndic':
+        if request.user.role == "Superadmin" and profile.role == "SuperSyndic" or request.user.role == "SuperSyndic" and profile.role == 'SuperSyndic':
             # Use the SuperSyndic form for SuperSyndic profiles
             supersyndic_form = SuperSyndicForm(request.POST, instance=profile)
             if supersyndic_form.is_valid():
                 try:
                     with transaction.atomic():
                         user = supersyndic_form.save(commit=False)
-                        
                         # Preserve current role and upgrade to 'SuperSyndic'
                         user.role = 'SuperSyndic'
                         user.save()
@@ -393,6 +391,21 @@ def update_profile(request, user_id=None):
                     messages.error(request, f"An error occurred: {e}")
             else:
                 messages.error(request, _("Form is not valid."))
+
+        elif profile.role == "Syndic":
+            # Use SyndicForm for Syndic role
+            syndic_form = SyndicForm(request.POST, instance=profile)
+            if syndic_form.is_valid():
+                try:
+                    with transaction.atomic():
+                        syndic_form.save()
+                        messages.success(request, _("Syndic profile updated successfully."))
+                        return redirect('dashboard-syndic', syndic_id=user_id)
+                except Exception as e:
+                    messages.error(request, f"An error occurred: {e}")
+            else:
+                messages.error(request, _("Please correct the errors in the form."))
+
         else:
             form = SignUpForm(request.POST, instance=profile)
             if form.is_valid():
@@ -403,13 +416,17 @@ def update_profile(request, user_id=None):
                 messages.error(request, _("There were errors in the form. Please correct them."))
 
     else:
-        if request.user.role == "Superadmin" and profile.role == "SuperSyndic" or profile.role == 'SuperSyndic':
+        # Prepopulate forms for GET requests
+        if profile.role == "SuperSyndic":
             supersyndic_form = SuperSyndicForm(instance=profile)
+        elif profile.role == "Syndic":
+            syndic_form = SyndicForm(instance=profile)
         else:
             form = SignUpForm(instance=profile)
 
     context = {
         'form': form,
+        'syndic_form': syndic_form,
         'supersyndic_form': supersyndic_form,
         'profile': profile,
         'id': profile.id if profile else None,
@@ -418,6 +435,19 @@ def update_profile(request, user_id=None):
         'date': timezone.now().strftime(_("%a %d %B %Y")),
     }
     return render(request, "accounts/update_profile.html", context)
+
+
+# Delete Syndic View
+@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+def delete_residence(request, residence_id):
+    # Fetch the residence or return a 404 if not found
+    residence = get_object_or_404(Residence, id=residence_id)
+    # Delete the residence
+    residence_name = residence.nom  # Save the name for the success message
+    residence.delete()
+    # Notify the user and redirect to the residence management page
+    messages.success(request, _('Residence "%(nom)s" has been deleted.') % {'nom': residence_name})
+    return redirect('gestion-residence')
 
 
 # Delete Syndic View

@@ -246,20 +246,23 @@ def dashboard_coproprietaire(request, coproprietaire_id):
     elif request.user.role == ['SuperSyndic']:
         coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
     else:
-        #coproprietaires = Coproprietaire.objects.filter(syndic=syndic, user=request.user)  # Filter by syndic for others
-        coproprietaires = None
+        coproprietaires = Coproprietaire.objects.filter(user=request.user)
+
+    # Calculate the total count
+    total_count = coproprietaires.count()
 
     context = {
         'segment': 'dashboard-coproprietaire',
-        'coproprietaire': coproprietaire,
+        'titlePage': _('Dashboard') + f" {coproprietaire.user.nom}",
         'profile': profile,
+        'coproprietaire': coproprietaire,
         'coproprietaires': coproprietaires,
         'syndic': syndic,
         'supersyndic': supersyndic,
         'license': license,
-        'titlePage': _('Dashboard') + f" {coproprietaire.user.nom}",
         'nom': coproprietaire.user.nom,
         'phone': coproprietaire.user.phone,
+        'total_count': total_count,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
 
@@ -304,20 +307,23 @@ def dashboard_prestataire(request, prestataire_id):
     elif request.user.role == ['SuperSyndic']:
         prestataires = Prestataire.objects.filter(supersyndic=supersyndic)
     else:
-        #prestataires = Prestataire.objects.filter(syndic=syndic, user=request.user)  # Filter by syndic for others
-        prestataires = None
+        prestataires = Prestataire.objects.filter(user=request.user)
+
+    # Calculate the total count
+    total_count = prestataires.count()
 
     context = {
         'segment': 'dashboard-prestataire',
-        'prestataire': prestataire,
+        'titlePage': _('Dashboard') + f" {prestataire.user.nom}",
         'profile': profile,
+        'prestataire': prestataire,
         'prestataires': prestataires,
         'syndic': syndic,
         'supersyndic': supersyndic,
         'license': license,
-        'titlePage': _('Dashboard') + f" {prestataire.user.nom}",
         'nom': prestataire.user.nom,
         'phone': prestataire.user.phone,
+        'total_count': total_count,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
 
@@ -448,7 +454,7 @@ def gestion_coproprietaire(request):
         if not hasattr(request.user, 'supersyndic_profile'):
             messages.error(request, _("You are not authorized to view this page."))
         coproprietaires = Coproprietaire.objects.filter(supersyndic=request.user.supersyndic_profile)
-        prestataires = Prestataire.objects.filter(syndic__supersyndic=request.user.supersyndic_profile)
+        prestataires = Prestataire.objects.filter(supersyndic=request.user.supersyndic_profile)
     else:  # Superadmin can view all Coproprietaires
         coproprietaires = Coproprietaire.objects.all()
         prestataires = Prestataire.objects.all()
@@ -552,13 +558,53 @@ def create_residence(request, user_id):
         return redirect('home')
 
 
+@login_required(login_url="/login/")
+@user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role in ['Syndic', 'SuperSyndic']))
+def update_residence(request, residence_id):
+    """
+    Update an existing residence.
+    Allows a user to update a residence they created or manage.
+    """
+    residence = get_object_or_404(Residence, id=residence_id)
+
+    # Check if the user is authorized to edit this residence
+    if request.user.role == 'Syndic' and residence.syndic != request.user:
+        messages.error(request, _("You do not have permission to edit this residence."))
+        return redirect('update-residence', residence_id)
+    if request.user.role == 'SuperSyndic' and residence.supersyndic != request.user:
+        messages.error(request, _("You do not have permission to edit this residence."))
+        return redirect('update-residence', residence_id)
+
+    if request.method == "POST":
+        residence_form = ResidenceForm(request.POST, instance=residence)
+        if residence_form.is_valid():
+            residence = residence_form.save(user=request.user)
+            messages.success(request, _('Residence updated successfully: ') + f"{residence.nom}")
+            return redirect('residence-detail', residence_id=residence.id)
+        else:
+            messages.error(request, _("Please correct the errors below."))
+    else:
+        residence_form = ResidenceForm(instance=residence)
+
+    # Render the form for editing
+    context = {
+        'segment': 'update-residence',
+        'residence_form': residence_form,
+        'residence': residence,
+        'titlePage': _('Update Residence'),
+        'nom': request.user.nom,
+        'date': timezone.now().strftime(_("%a %d %B %Y")),
+    }
+
+    html_template = loader.get_template('update-residence.html')
+    return HttpResponse(html_template.render(context, request))
+
+
 # View to display license details
 @login_required(login_url="/login/")
 #@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def residence_detail(request, residence_id):
     residence = get_object_or_404(Residence, id=residence_id)
-    #syndic = residence.syndic  # Access the syndic associated with this license
-    #supersyndic = residence.supersyndic
 
     # Filter coproprietaires based on the user's role
     if request.user.role == 'Syndic':
@@ -584,8 +630,6 @@ def residence_detail(request, residence_id):
     context = {
         'segment': 'license-detail',
         'residence': residence,
-        #'syndic': syndic,
-        #supersyndic': supersyndic,
         'coproprietaires': coproprietaires,
         'prestataires': prestataires,
         'residences': residences,
