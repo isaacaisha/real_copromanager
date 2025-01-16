@@ -107,24 +107,19 @@ class ResidenceForm(forms.ModelForm):
             'date_dernier_controle': _('Last Inspection Date'),
             'type_chauffage': _('Heating Type'),
         }
-        
+
     def save(self, user, commit=True):
+        """
+        Override save method to assign the residence to the current user.
+        """
         residence = super().save(commit=False)
-        try:
-            if user.role == 'Syndic':
-                residence.syndic = Syndic.objects.get(user=user)
-            elif user.role == 'SuperSyndic':
-                residence.supersyndic = SuperSyndic.objects.get(user=user)
-            elif user.role == 'Superadmin':
-                residence.syndic = Syndic.objects.get(user=user)
-                #residence.supersyndic = SuperSyndic.objects.get(user=user)
-            else:
-                raise ValueError("Invalid user role or missing profile.")
-        except Syndic.DoesNotExist:
-            raise ValueError("Syndic not found for the user.")
-        except SuperSyndic.DoesNotExist:
-            raise ValueError("SuperSyndic not found for the user.")
-    
+        print(f"User role: {user.role}")  # Debug log
+
+        if user.role == 'Syndic':
+            residence.syndic = Syndic.objects.get(user=user)
+        elif user.role == 'SuperSyndic':
+            residence.supersyndic = SuperSyndic.objects.get(user=user)
         if commit:
             residence.save()
         return residence
+        

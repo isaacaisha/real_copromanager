@@ -438,7 +438,7 @@ def update_profile(request, user_id=None):
 
 
 # Delete Syndic View
-@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+@user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role in ['Syndic', 'SuperSyndic']))
 def delete_residence(request, residence_id):
     # Fetch the residence or return a 404 if not found
     residence = get_object_or_404(Residence, id=residence_id)

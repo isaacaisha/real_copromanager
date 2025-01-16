@@ -30,7 +30,7 @@ ALLOWED_HOSTS = [
     'test-cop.copromanager.com', 'www.test-cop.copromanager.com', '35.180.33.83',
     'your.copromanager.pro', 'www.your.copromanager.pro', '142.93.235.205',
     'localhost', '127.0.0.1', config('SERVER', default='127.0.0.1'),
-    '192.168.160.182', '0.0.0.0'
+    '192.168.177.182', '0.0.0.0'
 ]
 
 # To route traffic through OWASP ZAP for testing

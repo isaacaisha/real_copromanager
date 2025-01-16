@@ -10,11 +10,14 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-<div class="d-flex justify-content-center mb-3">
-    <a href="#" class="btn btn-warning btn-sm">
-        {% trans "Modify Residence" %}
+
+{% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+<div class="container text-center">
+    <a href="{% url 'create-residence' residence.id %}" class="btn btn-success btn-sm">
+        {% trans "Create Residence" %}
     </a>
 </div>
+{% endif %}
 
 <div>
     <!-- apps/dashboard/templates/users-datas.html -->
@@ -33,25 +36,14 @@
                 <div class="nav-wrapper position-relative end-0">
                     <ul class="nav nav-pills nav-fill p-0" role="tablist">
                         <li class="nav-item">
-                            {% if user.role == 'Superadmin' %}
                             <div>
-                                {% if profile %}
-                                <a href="{% url 'update-profile' profile.user_id %}" class="btn btn-warning btn-sm">
-                                    <i class="material-icons text-lg position-relative">settings</i>
-                                    <span class="ms-0">{% trans "Settings" %}</span>
-                                </a>
-                                {% endif %}
-                            </div>
-                            {% endif %}
-    
-                            {% if user.role != 'Superadmin' %}
-                            <div>
-                                <a href="{% url 'update-profile' %}" class="btn btn-warning btn-sm">
+                                <a href="{% url 'update-residence' residence.id %}"
+                                   rel="tooltip" title="{% trans 'Settings' %}" 
+                                   class="btn btn-warning btn-sm">
                                     <i class="material-icons text-lg position-relative">settings</i>
                                     <span class="ms-0">{% trans "Settings" %}</span>
                                 </a>
                             </div>
-                            {% endif %}
                         </li>
                     </ul>
                 </div>
@@ -128,12 +120,6 @@
                     <div class="card-body p-2">
                         <ul>
                             {% if residence %}
-                            <!--<div class="stats">
-                                <span>{% trans "Residence" %}<strong> {{ residence.nom }}</strong></span>
-                                <a href="{% url 'residence-detail' residence.id %}" class="view-details">
-                                    <span>{% trans "View Details" %}</span>
-                                </a>
-                            </div>-->
                             <li>{{ residence.nom }}</li>
                             <li>{{ residence.adresse }}</li>
                             <li>{{ residence.nombre_appartements }}</li>
@@ -154,6 +140,20 @@
             </div>
             {% endif %}
     
+        </div>
+
+        <div class="text-center">
+            {% if residence %}
+            <a href="{% url 'update-residence' residence.id %}" class="a_link">
+                <button type="submit" rel="tooltip" title="{% trans 'Configure' %}" class="btn btn-warning btn-sm">
+                    <i class="material-icons">edit</i>
+                </button>
+                <br>
+                <label for="">{% trans "Configure Residence" %}</label>
+            </a>
+            {% else %}
+            <p>{% trans "No Residence found for this user." %}</p>
+            {% endif %}
         </div>
     
     </div>

@@ -354,8 +354,8 @@ def gestion_residence(request):
     elif request.user.role == 'SuperSyndic':
         if not hasattr(request.user, 'supersyndic_profile'):
             messages.error(request, _("You are not authorized to view this page."))
-        residences = Residence.objects.filter(syndic=request.user.syndic_profile)
-        coproprietaires = Coproprietaire.objects.filter(syndic=request.user.syndic_profile)
+        residences = Residence.objects.filter(supersyndic=request.user.supersyndic_profile)
+        coproprietaires = Coproprietaire.objects.filter(supersyndic=request.user.supersyndic_profile)
         prestataires = Prestataire.objects.filter(supersyndic=request.user.supersyndic_profile)
     else:  # For Superadmin or other roles, display all residences
         residences = Residence.objects.all()
@@ -533,7 +533,7 @@ def create_residence(request, user_id):
                 # Pass the profile to the save method explicitly
                 residence = residence_form.save(user=request.user)
                 messages.success(request, _('Residence created successfully: ') + f"{residence.nom}")
-                return redirect('residence-detail', user_id)
+                return redirect('residence-detail', residence.id)
         else:
             residence_form = ResidenceForm()
 
@@ -567,20 +567,12 @@ def update_residence(request, residence_id):
     """
     residence = get_object_or_404(Residence, id=residence_id)
 
-    # Check if the user is authorized to edit this residence
-    if request.user.role == 'Syndic' and residence.syndic != request.user:
-        messages.error(request, _("You do not have permission to edit this residence."))
-        return redirect('update-residence', residence_id)
-    if request.user.role == 'SuperSyndic' and residence.supersyndic != request.user:
-        messages.error(request, _("You do not have permission to edit this residence."))
-        return redirect('update-residence', residence_id)
-
     if request.method == "POST":
         residence_form = ResidenceForm(request.POST, instance=residence)
         if residence_form.is_valid():
-            residence = residence_form.save(user=request.user)
+            residence = residence_form.save(user=request.user)  # Pass the user argument here
             messages.success(request, _('Residence updated successfully: ') + f"{residence.nom}")
-            return redirect('residence-detail', residence_id=residence.id)
+            return redirect('residence-detail', residence_id=residence_id)
         else:
             messages.error(request, _("Please correct the errors below."))
     else:
