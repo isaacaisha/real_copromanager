@@ -108,18 +108,29 @@ class ResidenceForm(forms.ModelForm):
             'type_chauffage': _('Heating Type'),
         }
 
-    def save(self, user, commit=True):
-        """
-        Override save method to assign the residence to the current user.
-        """
+    def save(self, user, target_user=None, commit=True):
         residence = super().save(commit=False)
-        print(f"User role: {user.role}")  # Debug log
 
-        if user.role == 'Syndic':
-            residence.syndic = Syndic.objects.get(user=user)
-        elif user.role == 'SuperSyndic':
-            residence.supersyndic = SuperSyndic.objects.get(user=user)
+        try:
+            if target_user:  # For residence creation with a target user
+                if target_user.role in ['Syndic', 'SuperSyndic']:
+                    residence.syndic = Syndic.objects.filter(user=target_user).first() or None
+                    residence.supersyndic = SuperSyndic.objects.filter(user=target_user).first() or None
+                else:
+                    raise ValueError(_("Target user must be a Syndic or SuperSyndic."))
+            else:  # For updates or creation without a target user
+                if user.role in ['Syndic', 'SuperSyndic']:
+                    residence.syndic = Syndic.objects.filter(user=user).first() or None
+                    residence.supersyndic = SuperSyndic.objects.filter(user=user).first() or None
+                elif user.role == 'Superadmin':  # Allow Superadmin to update without specific syndic assignment
+                    pass
+                else:
+                    raise ValueError(_("Only Syndics or SuperSyndics can create or update residences."))
+        except Syndic.DoesNotExist:
+            raise ValueError(_("No Syndic instance found for the target user."))
+        except SuperSyndic.DoesNotExist:
+            raise ValueError(_("No SuperSyndic instance found for the target user."))
+
         if commit:
             residence.save()
         return residence
-        

@@ -27,7 +27,7 @@
         </div>
 
         <div class="card-body">
-            <form method="POST" action="{% url 'create-residence' user.id %}">
+            <form method="POST" action="{% url 'create-residence' profile.id %}">
                 {% csrf_token %}
                 {{ residence_form.as_p }}
 

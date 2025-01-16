@@ -87,7 +87,7 @@ def dashboard_superadmin(request, superadmin_id):
         'syndics': syndics,
         'coproprietaires': coproprietaires,
         'prestataires': prestataires,
-        'titlePage':  _('Super Admin') + f" {request.user.nom}",
+        'titlePage':  _('Super Admin "%s"') % request.user.nom,
         'nom': superadmin.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
@@ -129,7 +129,7 @@ def dashboard_syndic(request, syndic_id):
             'coproprietaires': coproprietaires,
             'prestataires': prestataires,
             'residences': residences,
-            'titlePage': _('Dashboard') + f" {syndic.user.nom}",
+            'titlePage': _('Dashboard "%s"') % syndic.user.nom,
             'nom': syndic.user.nom,
             'phone': syndic.user.phone,
             'date': timezone.now().strftime(_("%a %d %B %Y"))
@@ -187,7 +187,7 @@ def dashboard_supersyndic(request, supersyndic_id):
             'residences': residences,
             'coproprietaires': coproprietaires,
             'prestataires': prestataires,
-            'titlePage': _('Super Syndic') + f" {supersyndic.user.nom}",
+            'titlePage': _('Super Syndic "%s"') % supersyndic.user.nom,
             'nom': supersyndic.user.nom,
             'phone': supersyndic.user.phone,
             'date': timezone.now().strftime(_("%a %d %B %Y"))
@@ -253,7 +253,7 @@ def dashboard_coproprietaire(request, coproprietaire_id):
 
     context = {
         'segment': 'dashboard-coproprietaire',
-        'titlePage': _('Dashboard') + f" {coproprietaire.user.nom}",
+        'titlePage': _('Dashboard "%s"') % coproprietaire.user.nom,
         'profile': profile,
         'coproprietaire': coproprietaire,
         'coproprietaires': coproprietaires,
@@ -314,7 +314,7 @@ def dashboard_prestataire(request, prestataire_id):
 
     context = {
         'segment': 'dashboard-prestataire',
-        'titlePage': _('Dashboard') + f" {prestataire.user.nom}",
+        'titlePage': _('Dashboard "%s"') % prestataire.user.nom,
         'profile': profile,
         'prestataire': prestataire,
         'prestataires': prestataires,
@@ -512,82 +512,68 @@ def gestion_prestataire(request):
 
 
 @login_required(login_url="/login/")
-@user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role in ['Syndic', 'SuperSyndic']))
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def create_residence(request, user_id):
-    """
-    Create a new residence. Allows a Superadmin to create a residence for a syndic or supersyndic.
-    """
     try:
-        # Determine the acting user and the target profile
-        if request.user.role == 'Superadmin':
-            profile = CustomUser.objects.get(id=user_id)  # Target Syndic or SuperSyndic
-        elif request.user.role in ['Syndic', 'SuperSyndic']:
-            profile = request.user  # Acting Syndic or SuperSyndic
+        profile = None
+        if request.user.role == 'Superadmin':  # For Superadmin, target a specific user
+            profile = CustomUser.objects.filter(id=user_id, role__in=['Syndic', 'SuperSyndic']).first()
+            if not profile:
+                messages.error(request, _("Target user must be a Syndic or SuperSyndic."))
+                return redirect('home')
         else:
-            messages.error(request, _("You do not have permission to create a residence."))
-            return redirect('home')
+            profile = request.user  # For Syndic or SuperSyndic, target themselves
 
         if request.method == "POST":
             residence_form = ResidenceForm(request.POST)
             if residence_form.is_valid():
-                # Pass the profile to the save method explicitly
-                residence = residence_form.save(user=request.user)
-                messages.success(request, _('Residence created successfully: ') + f"{residence.nom}")
-                return redirect('residence-detail', residence.id)
+                residence = residence_form.save(user=request.user, target_user=profile)
+                messages.success(request, _('Residence "%s" created successfully.') % residence.nom)
+                return redirect('residence-detail', residence_id=residence.id)
+            else:
+                messages.error(request, _("Please correct the errors below."))
         else:
             residence_form = ResidenceForm()
 
-        # Context and rendering
         context = {
             'segment': 'create-residence',
-            'residence_form': residence_form,
-            'profile': profile,
             'titlePage': _('Residence Creation'),
-            'nom': profile.nom if hasattr(profile, 'nom') else '',
-            'date': timezone.now().strftime(_("%a %d %B %Y")),
+            'profile': profile,
+            'residence_form': residence_form,
         }
-
         html_template = loader.get_template('create-residence.html')
         return HttpResponse(html_template.render(context, request))
 
-    except CustomUser.DoesNotExist:
-        messages.error(request, _("User not found."))
-        return redirect('home')
-    except ValueError as e:
-        messages.error(request, str(e))
+    except Exception as e:
+        messages.error(request, _("An unexpected error occurred: %s") % str(e))
         return redirect('home')
 
 
 @login_required(login_url="/login/")
-@user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role in ['Syndic', 'SuperSyndic']))
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def update_residence(request, residence_id):
-    """
-    Update an existing residence.
-    Allows a user to update a residence they created or manage.
-    """
     residence = get_object_or_404(Residence, id=residence_id)
 
     if request.method == "POST":
         residence_form = ResidenceForm(request.POST, instance=residence)
         if residence_form.is_valid():
-            residence = residence_form.save(user=request.user)  # Pass the user argument here
-            messages.success(request, _('Residence updated successfully: ') + f"{residence.nom}")
-            return redirect('residence-detail', residence_id=residence_id)
+            try:
+                residence = residence_form.save(user=request.user)
+                messages.success(request, _('Residence "%s" updated successfully.') % residence.nom)
+                return redirect('residence-detail', residence_id=residence.id)
+            except ValueError as e:
+                messages.error(request, str(e))
         else:
             messages.error(request, _("Please correct the errors below."))
     else:
         residence_form = ResidenceForm(instance=residence)
 
-    # Render the form for editing
     context = {
         'segment': 'update-residence',
         'residence_form': residence_form,
         'residence': residence,
-        'titlePage': _('Update Residence'),
-        'nom': request.user.nom,
-        'date': timezone.now().strftime(_("%a %d %B %Y")),
+        'titlePage': _('Update Residence "%s"') % residence.nom,
     }
-
     html_template = loader.get_template('update-residence.html')
     return HttpResponse(html_template.render(context, request))
 
@@ -626,7 +612,7 @@ def residence_detail(request, residence_id):
         'prestataires': prestataires,
         'residences': residences,
         'total_count': total_count,
-        'titlePage': _('Residence Details') + f" n° {residence.id}",
+        'titlePage': _('Residence "%s" Details') % residence.nom,
         'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
