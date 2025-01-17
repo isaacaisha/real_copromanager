@@ -116,6 +116,9 @@ def dashboard_syndic(request, syndic_id):
         residences = Residence.objects.filter(syndic=syndic)
         coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
         prestataires = Prestataire.objects.filter(syndic=syndic)
+        # Calculate the total count
+        total_count = coproprietaires.count() + prestataires.count()
+
         # Retrieve the license for the logged-in syndic, handle multiple licenses if necessary
         license = License.objects.filter(syndic=syndic).order_by('-date_debut').first()
         if not license:
@@ -123,13 +126,14 @@ def dashboard_syndic(request, syndic_id):
         
         context = {
             'segment': 'dashboard-syndic',
+            'titlePage': _('Dashboard "%s"') % syndic.user.nom,
             'syndic': syndic,
             'profile': profile,
             'license': license,
+            'residences': residences,
             'coproprietaires': coproprietaires,
             'prestataires': prestataires,
-            'residences': residences,
-            'titlePage': _('Dashboard "%s"') % syndic.user.nom,
+            'total_count': total_count,
             'nom': syndic.user.nom,
             'phone': syndic.user.phone,
             'date': timezone.now().strftime(_("%a %d %B %Y"))
@@ -173,6 +177,8 @@ def dashboard_supersyndic(request, supersyndic_id):
         residences = Residence.objects.filter(supersyndic=supersyndic)
         coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
         prestataires = Prestataire.objects.filter(supersyndic=supersyndic)
+        # Calculate the total count
+        total_count = coproprietaires.count() + prestataires.count()
             
         # Retrieve the license for the logged-in syndic, handle multiple licenses if necessary
         license = License.objects.filter(supersyndic=supersyndic).order_by('-date_debut').first()
@@ -181,13 +187,14 @@ def dashboard_supersyndic(request, supersyndic_id):
         
         context = {
             'segment': 'dashboard-supersyndic',
+            'titlePage': _('Super Syndic "%s"') % supersyndic.user.nom,
             'supersyndic': supersyndic,
             'profile': profile,
             'license': license,
             'residences': residences,
             'coproprietaires': coproprietaires,
             'prestataires': prestataires,
-            'titlePage': _('Super Syndic "%s"') % supersyndic.user.nom,
+            'total_count': total_count,
             'nom': supersyndic.user.nom,
             'phone': supersyndic.user.phone,
             'date': timezone.now().strftime(_("%a %d %B %Y"))
@@ -335,8 +342,8 @@ def dashboard_prestataire(request, prestataire_id):
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def gestion_residence(request):
     """
-    View for managing SuperSyndic users.
-    Only accessible to users with the role of 'Superadmin', 'Syndic', or 'SuperSyndic'.
+    View for managing residences.
+    Superadmins can view residences for specific users if specified.
     """
     # Add a license field to each syndic
     try:
@@ -357,7 +364,8 @@ def gestion_residence(request):
         residences = Residence.objects.filter(supersyndic=request.user.supersyndic_profile)
         coproprietaires = Coproprietaire.objects.filter(supersyndic=request.user.supersyndic_profile)
         prestataires = Prestataire.objects.filter(supersyndic=request.user.supersyndic_profile)
-    else:  # For Superadmin or other roles, display all residences
+    else:
+        # For Superadmin or other roles, display all residences
         residences = Residence.objects.all()
         coproprietaires = Coproprietaire.objects.all()
         prestataires = Prestataire.objects.all()
@@ -631,7 +639,7 @@ def customize_license(request, license_id):
         if license_form.is_valid():
             license.est_personnalise = license_form.cleaned_data.get('est_personnalise', True)
             license.save()
-            messages.success(request, _('Updated successfully') + f" License: {license.id}")
+            messages.success(request, _('License n° "%s" Updated successfully') % license.id)
             return redirect('license-detail', license_id=license.id)
         else:
             messages.error(request, _("There were errors in the form. Please correct them."))
@@ -643,7 +651,7 @@ def customize_license(request, license_id):
         'license_form': license_form,
         'license': license,
         'id': license.id if license else None,
-        'titlePage': _('License Configuration') + f" n° {license.id}",
+        'titlePage': _('Configuration License n° "%s"') % license.id,
         'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
@@ -671,7 +679,7 @@ def license_detail(request, license_id):
         'coproprietaires': coproprietaires,
         'prestataires': prestataires,
         'residences': residences,
-        'titlePage': _('License Details') + f" n° {license.id}",
+        'titlePage': _('Details License n° "%s"') % license.id,
         'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
@@ -710,56 +718,60 @@ def user_profile(request, user_id):
     supersyndic = None
     license = None
     residences = None
+    residences = None
     coproprietaire = None
     prestataire = None
-    coproprietaires = None
-    prestataires = None
+    # Initialize as empty querysets
+    coproprietaires = Coproprietaire.objects.none()
+    prestataires = Prestataire.objects.none()
+
     user = get_object_or_404(CustomUser, id=user_id)  # Get the user by ID
 
     # Fetch role-specific data
     if user.role == 'Superadmin':
         superadmin = get_object_or_404(Superadmin, user=user)
-        profile = get_object_or_404(Superadmin, user=user)
+        profile = superadmin
 
     elif user.role == 'Syndic':
         syndic = get_object_or_404(Syndic, user=user)
-        profile = get_object_or_404(Syndic, user=user)
+        profile = syndic
 
         residences = Residence.objects.filter(syndic=syndic)
         # Retrieve the license associated with the syndic
         license = License.objects.filter(syndic=syndic).order_by('-date_debut').first()
-        # Fetch associated coproprietaires
+        # Fetch associated coproprietaires and prestataires
         coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
-        # Fetch associated prestataires
         prestataires = Prestataire.objects.filter(syndic=syndic)
 
     elif user.role == 'SuperSyndic':
         supersyndic = get_object_or_404(SuperSyndic, user=user)
-        profile = get_object_or_404(SuperSyndic, user=user)
+        profile = supersyndic
 
         residences = Residence.objects.filter(supersyndic=supersyndic)
         license = License.objects.filter(supersyndic=supersyndic).order_by('-date_debut').first()
-        # Fetch associated coproprietaires
+        # Fetch associated coproprietaires and prestataires
         coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
-        # Fetch associated prestataires
         prestataires = Prestataire.objects.filter(supersyndic=supersyndic)
 
     elif user.role == 'Coproprietaire':
         coproprietaire = get_object_or_404(Coproprietaire, user=user)
-        profile = get_object_or_404(Coproprietaire, user=user)
-        syndic = coproprietaire.syndic if hasattr(coproprietaire, 'syndic') else None
-        supersyndic = coproprietaire.supersyndic if hasattr(coproprietaire, 'supersyndic') else None
+        profile = coproprietaire
+        syndic = getattr(coproprietaire, 'syndic', None)
+        supersyndic = getattr(coproprietaire, 'supersyndic', None)
 
     elif user.role == 'Prestataire':
         prestataire = get_object_or_404(Prestataire, user=user)
-        profile = get_object_or_404(Prestataire, user=user)
-        syndic = prestataire.syndic if hasattr(prestataire, 'syndic') else None
-        supersyndic = prestataire.supersyndic if hasattr(prestataire, 'supersyndic') else None
+        profile = prestataire
+        syndic = getattr(prestataire, 'syndic', None)
+        supersyndic = getattr(prestataire, 'supersyndic', None)
+
+    # Calculate the total count
+    total_count = coproprietaires.count() + prestataires.count()
 
     context = {
         'profile': profile,
-        'residences': residences,
         'nom': user.nom,
+        'residences': residences,
         'superadmin': superadmin,
         'syndic': syndic,
         'supersyndic': supersyndic,
@@ -768,6 +780,7 @@ def user_profile(request, user_id):
         'prestataire': prestataire,
         'coproprietaires': coproprietaires,
         'prestataires': prestataires,
+        'total_count': total_count,
         'titlePage': _('Profile of %s') % user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y")),
     }

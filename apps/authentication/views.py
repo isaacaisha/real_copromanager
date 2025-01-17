@@ -97,7 +97,7 @@ def register_user(request):
                     syndic.license = license
                     syndic.save()
 
-                    messages.success(request, _('Syndic created successfully.'))
+                    messages.success(request, _('Syndic "%s" created successfully.') % syndic.nom)
                     return redirect('dashboard-syndic', syndic_id=user.id)
                 else:
                     messages.error(request, _('License form is not valid.'))
@@ -113,13 +113,13 @@ def register_user(request):
                         return redirect('register')
 
                     if user.role == 'Coproprietaire':
-                        Coproprietaire.objects.create(user=user, syndic=syndic)
-                        messages.success(request, _('Coproprietaire created successfully.'))
+                        coproprietaire = Coproprietaire.objects.create(user=user, syndic=syndic)
+                        messages.success(request, _('Coproprietaire "%s" created successfully.') % coproprietaire.user.nom)
                         return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
 
                     elif user.role == 'Prestataire':
-                        Prestataire.objects.create(user=user, syndic=syndic)
-                        messages.success(request, _('Prestataire created successfully.'))
+                        prestataire = Prestataire.objects.create(user=user, syndic=syndic)
+                        messages.success(request, _('Prestataire "%s" created successfully.') % prestataire.user.nom)
                         return redirect('dashboard-prestataire', prestataire_id=user.id)
 
                 elif creator.role == 'SuperSyndic':
@@ -130,12 +130,12 @@ def register_user(request):
 
                     if user.role == 'Coproprietaire':
                         Coproprietaire.objects.create(user=user, supersyndic=supersyndic)
-                        messages.success(request, _('Coproprietaire created successfully.'))
+                        messages.success(request, _('Coproprietaire "%s" created successfully.') % coproprietaire.user.nom)
                         return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
 
                     elif user.role == 'Prestataire':
                         Prestataire.objects.create(user=user, supersyndic=supersyndic)
-                        messages.success(request, _('Prestataire created successfully.'))
+                        messages.success(request, _('Prestataire "%s" created successfully.') % prestataire.user.nom)
                         return redirect('dashboard-prestataire', prestataire_id=user.id)
 
         else:
@@ -207,6 +207,12 @@ def register_supersyndic(request, syndic_id):
                     # Create or get a SuperSyndic instance for this user
                     supersyndic, created = SuperSyndic.objects.get_or_create(user=user, id=supersyndic_id)
                     
+                    # Transfer residences to the SuperSyndic
+                    residences = Residence.objects.filter(syndic=None, supersyndic=None)
+                    for residence in residences:
+                        residence.supersyndic = supersyndic
+                        residence.save()
+
                     # Transfer associated Coproprietaires and Prestataires
                     coproprietaires = Coproprietaire.objects.filter(syndic=syndic)  # Get all linked to the current Syndic
                     prestataires = Prestataire.objects.filter(syndic=syndic)  # Get all linked to the current Syndic
@@ -230,13 +236,6 @@ def register_supersyndic(request, syndic_id):
                         license.supersyndic = supersyndic
                         license.syndic = None  # Remove the license from the old syndic
                         license.save()
-
-                    # Transfer residences to the SuperSyndic
-                    residences = Residence.objects.filter(syndic=None, supersyndic=None)
-                    for residence in residences:
-                        residence.supersyndic = supersyndic
-                        residence.save()
-
 
                     messages.success(request, _('Please fill the form below for upgrade to Super Syndic!'))
                     return redirect('two_factor:setup')  # Or your desired next step
@@ -268,7 +267,6 @@ def login_supersyndic(request, supersyndic_id):
 
     try:
         supersyndic = get_object_or_404(SuperSyndic, id=supersyndic_id)
-        #supersyndic, created = SuperSyndic.objects.get_or_create(id=supersyndic_id)
     except SuperSyndic.DoesNotExist:
         supersyndic = None
 
@@ -384,7 +382,7 @@ def update_profile(request, user_id=None):
                             prestataire.syndic = supersyndic
                             prestataire.save()
 
-                        messages.success(request, _("Profile updated successfully for") + f" {profile.nom}")
+                        messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
                         return redirect('dashboard-supersyndic', supersyndic_id=user_id)
 
                 except Exception as e:
@@ -400,7 +398,7 @@ def update_profile(request, user_id=None):
                     with transaction.atomic():
                         syndic_form.save()
                         messages.success(request, _("Syndic profile updated successfully."))
-                        return redirect('dashboard-syndic', syndic_id=user_id)
+                        return redirect('dashboard-syndic', user_id)
                 except Exception as e:
                     messages.error(request, f"An error occurred: {e}")
             else:
@@ -410,7 +408,7 @@ def update_profile(request, user_id=None):
             form = SignUpForm(request.POST, instance=profile)
             if form.is_valid():
                 form.save()
-                messages.success(request, _("Profile updated successfully for") + f" {profile.nom}")
+                messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
                 return redirect('user-profile', user_id)
             else:
                 messages.error(request, _("There were errors in the form. Please correct them."))
@@ -430,7 +428,7 @@ def update_profile(request, user_id=None):
         'supersyndic_form': supersyndic_form,
         'profile': profile,
         'id': profile.id if profile else None,
-        'titlePage': _("Update Profile for ") + profile.nom,
+        'titlePage': _("Update '%s' Profile ") % profile.nom,
         'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y")),
     }

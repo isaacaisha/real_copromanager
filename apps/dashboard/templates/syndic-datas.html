@@ -2,6 +2,12 @@
 
 {% load static i18n %}
 
+<style>
+    label {
+        font-size: x-small;
+    }
+</style>
+
 {% if user.role == 'Superadmin' %}
 <div class="mb-5">
     <div>
@@ -280,9 +286,10 @@
         {% endif %}
     </div>
 
-    {% if residences or coproprietaires or prestataires %}
     <!-- Nouvelle card "Nombre de Résidences" alignée à droite -->
-    <div class="row mt-2 justify-content-end">
+    <div class="row mt-2" style="max-height: 400px; overflow-y: auto;">
+        <!-- List of Managed Buildings (Immeubles) -->
+        {% if coproprietaires or prestataires %}
         <!-- List of Co-owners (Coproprietaires) -->
         <div class="col-12 col-md-6 col-xl-4">
             <div class="card shadow-sm">
@@ -290,9 +297,9 @@
                     <div class="card-icon">
                         <i class="fa-solid fa-city fa-2x"></i>
                     </div>
-                    <h5 class="card-title">{% trans "Residence Information" %}</h5>
+                    <h5 class="card-title">{% trans "Co- Information" %}</h5>
                     {% if user.role == 'Superadmin' %}
-                    <p class="card-category">{% trans "Nombre De Résidences" %} {{ residences.count }}</p>
+                    <p class="card-category">{% trans "Totals Co-" %} {{ total_count }}</p>
                     {% endif %}
                 </div>
                 <div class="card-body p-2">
@@ -315,8 +322,38 @@
                 </div>
             </div>
         </div>
+        {% endif %}
+        
+        {% if residences %}
+        <div class="col-12 col-md-6 col-xl-4 offset-xl-4">
+            <div class="card shadow-sm">
+                <div class="card-header card-header-icon">
+                    <div class="card-icon">
+                        <i class="fas fa-building fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">{% trans "Managed Buildings" %}</h5>
+                    {% if user.role == 'Superadmin' %}
+                    <p class="card-category">{% trans "Totals" %} {{ residences.count }}</p>
+                    {% endif %}
+                </div>
+                <div class="card-body p-2">
+                    <ul>
+                        {% for residence in residences %}
+                        <div class="stats">
+                            <span>{% trans "Residence" %}<strong> {{ residence.nom }}</strong></span>
+                            <a href="{% url 'residence-detail' residence.id %}" class="view-details">
+                                <span>{% trans "View Details" %}</span>
+                            </a>
+                        </div>
+                        {% empty %}
+                        <p>{% trans "No building found for this user." %}</p>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
 
 </div>
 
