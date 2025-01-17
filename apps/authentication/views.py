@@ -129,12 +129,12 @@ def register_user(request):
                         return redirect('register')
 
                     if user.role == 'Coproprietaire':
-                        Coproprietaire.objects.create(user=user, supersyndic=supersyndic)
+                        coproprietaire = Coproprietaire.objects.create(user=user, supersyndic=supersyndic)
                         messages.success(request, _('Coproprietaire "%s" created successfully.') % coproprietaire.user.nom)
                         return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
 
                     elif user.role == 'Prestataire':
-                        Prestataire.objects.create(user=user, supersyndic=supersyndic)
+                        prestataire = Prestataire.objects.create(user=user, supersyndic=supersyndic)
                         messages.success(request, _('Prestataire "%s" created successfully.') % prestataire.user.nom)
                         return redirect('dashboard-prestataire', prestataire_id=user.id)
 
