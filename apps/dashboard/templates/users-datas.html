@@ -343,6 +343,41 @@
             </div>
         </div>
         {% endif %}
+        
+        {% if user.role == 'Superadmin' and coproprietaires or prestataires %}
+        <!-- List of Co-owners (Coproprietaires) -->
+        <div class="col-12 col-md-6 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header fs-8 card-header-icon">
+                    <div class="card-icon">
+                        <i class="fa-solid fa-city fa-2x"></i>
+                    </div>
+                    <h5 class="card-title">{% trans "Co- Information" %}</h5>
+                    {% if user.role == 'Superadmin' %}
+                    <p class="card-category">{% trans "Totals Co-" %} {{ total_count }}</p>
+                    {% endif %}
+                </div>
+                <div class="card-body p-2">
+                    <div>
+                        <div class="stats">
+                            <span><strong>{% trans "Total Co-owners" %}:</strong> {{ coproprietaires.count }}</span>
+                            <a href="{% url 'gestion-coproprietaire' %}" class="view-details">
+                                <span><i class="material-icons">search</i> {% trans "View Details" %}</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="stats">
+                            <span><strong>{% trans "Associated Co-Prestataires" %}:</strong> {{ prestataires.count }}</span>
+                            <a href="{% url 'gestion-prestataire' %}" class="view-details">
+                                <span><i class="material-icons">search</i> {% trans "View Details" %}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
         {% if residences %}
         <!-- List of Managed Buildings (Immeubles) -->

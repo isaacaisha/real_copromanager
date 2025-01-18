@@ -14,7 +14,21 @@ class Superadmin(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='superadmin_profile',
+        null=True,
+        blank=True,
         verbose_name=_('User'),
+    )
+    syndics = models.ManyToManyField(
+        'Syndic',
+        related_name='managed_by_superadmins',
+        blank=True,
+        verbose_name=_('Syndics'),
+    )
+    supersyndics = models.ManyToManyField(
+        'SuperSyndic',
+        related_name='managed_by_superadmins',
+        blank=True,
+        verbose_name=_('SuperSyndics'),
     )
     
     def __str__(self):
@@ -88,6 +102,14 @@ class Syndic(models.Model):
         verbose_name=_('User'),
     )
     email = models.EmailField(verbose_name=_('Email'))
+    superadmin = models.ForeignKey(
+        'SuperAdmin',
+        on_delete=models.CASCADE,
+        related_name='superadmin_syndics',
+        null=True,
+        blank=True,
+        verbose_name=_('SuperAdmin'),
+    )
 
     def __str__(self):
         return self.nom
@@ -104,6 +126,14 @@ class SuperSyndic(models.Model):
         verbose_name=_('User'),
     )
     email = models.EmailField(verbose_name=_('Email'))
+    superadmin = models.ForeignKey(
+        'SuperAdmin',
+        on_delete=models.CASCADE,
+        related_name='superadmin_supersyndics',
+        null=True,
+        blank=True,
+        verbose_name=_('SuperAdmin'),
+    )
 
     def __str__(self):
         return self.nom

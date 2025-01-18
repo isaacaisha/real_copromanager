@@ -246,9 +246,7 @@ def dashboard_coproprietaire(request, coproprietaire_id):
     #license = supersyndic.licence if supersyndic and hasattr(supersyndic, 'license') else None
     
      # Only fetch the coproprietaires associated with the current syndic
-    if request.user.role == 'Superadmin':
-        coproprietaires = Coproprietaire.objects.all()  # Superadmin can see all
-    elif request.user.role == ['Syndic']:
+    if request.user.role == ['Syndic'] or request.user.role == 'Superadmin':
         coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
     elif request.user.role == ['SuperSyndic']:
         coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
@@ -307,9 +305,7 @@ def dashboard_prestataire(request, prestataire_id):
     #license = supersyndic.licence if supersyndic and hasattr(supersyndic, 'license') else None
     
     # Only fetch the prestataires associated with the current syndic
-    if request.user.role == 'Superadmin':
-        prestataires = Prestataire.objects.all()  # Superadmin can see all
-    elif request.user.role == ['Syndic']:
+    if request.user.role == ['Syndic'] or request.user.role == 'Superadmin':
         prestataires = Prestataire.objects.filter(syndic=syndic)
     elif request.user.role == ['SuperSyndic']:
         prestataires = Prestataire.objects.filter(supersyndic=supersyndic)
@@ -337,52 +333,68 @@ def dashboard_prestataire(request, prestataire_id):
     html_template = loader.get_template('dashboard-prestataire.html')
     return HttpResponse(html_template.render(context, request))
 
-
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def gestion_residence(request):
     """
     View for managing residences.
-    Superadmins can view residences for specific users if specified.
+    - Superadmins see only their Syndic and SuperSyndic related data.
+    - Syndics and SuperSyndics see only their own residences.
     """
-    # Add a license field to each syndic
     try:
-        license = request.user.licences.first()  # Assuming the user has a related 'licences' field
-    except AttributeError:
-        license = None  # Handle cases where the user has no associated license
+        if request.user.role == 'Syndic':
+            syndic_profile = getattr(request.user, 'syndic_profile', None)
+            if syndic_profile is None:
+                messages.error(request, _("You are not authorized to view this page."))
+                return HttpResponse(status=403)
+            residences = Residence.objects.filter(syndic=syndic_profile)
+            coproprietaires = Coproprietaire.objects.filter(syndic=syndic_profile)
+            prestataires = Prestataire.objects.filter(syndic=syndic_profile)
 
-    # Filter residences based on the user's role and related field
-    if request.user.role == 'Syndic':
-        if not hasattr(request.user, 'syndic_profile'):
+        elif request.user.role == 'SuperSyndic':
+            supersyndic_profile = getattr(request.user, 'supersyndic_profile', None)
+            if supersyndic_profile is None:
+                messages.error(request, _("You are not authorized to view this page."))
+                return HttpResponse(status=403)
+            residences = Residence.objects.filter(supersyndic=supersyndic_profile)
+            coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic_profile)
+            prestataires = Prestataire.objects.filter(supersyndic=supersyndic_profile)
+
+        elif request.user.role == 'Superadmin':
+            # For Superadmin or other roles, display all residences
+            residences = Residence.objects.all()
+            coproprietaires = Coproprietaire.objects.all()
+            prestataires = Prestataire.objects.all()
+            
+            #syndic_ids = Syndic.objects.filter(superadmin=request.user).values_list('id', flat=True)
+            #supersyndic_ids = SuperSyndic.objects.filter(superadmin=request.user).values_list('id', flat=True)
+#
+            #residences = Residence.objects.filter(syndic__id__in=syndic_ids) | Residence.objects.filter(supersyndic__id__in=supersyndic_ids)
+            #coproprietaires = Coproprietaire.objects.filter(syndic__id__in=syndic_ids) | Coproprietaire.objects.filter(supersyndic__id__in=supersyndic_ids)
+            #prestataires = Prestataire.objects.filter(syndic__id__in=syndic_ids) | Prestataire.objects.filter(supersyndic__id__in=supersyndic_ids)
+
+        else:
             messages.error(request, _("You are not authorized to view this page."))
-        residences = Residence.objects.filter(syndic=request.user.syndic_profile)
-        coproprietaires = Coproprietaire.objects.filter(syndic=request.user.syndic_profile)
-        prestataires = Prestataire.objects.filter(syndic=request.user.syndic_profile)
-    elif request.user.role == 'SuperSyndic':
-        if not hasattr(request.user, 'supersyndic_profile'):
-            messages.error(request, _("You are not authorized to view this page."))
-        residences = Residence.objects.filter(supersyndic=request.user.supersyndic_profile)
-        coproprietaires = Coproprietaire.objects.filter(supersyndic=request.user.supersyndic_profile)
-        prestataires = Prestataire.objects.filter(supersyndic=request.user.supersyndic_profile)
-    else:
-        # For Superadmin or other roles, display all residences
-        residences = Residence.objects.all()
-        coproprietaires = Coproprietaire.objects.all()
-        prestataires = Prestataire.objects.all()
+            return HttpResponse(status=403)
 
-    context = {
-        'segment': 'gestion-residence',
-        'license': license,  # Ensure 'license' is defined before adding to context
-        'residences': residences,
-        'coproprietaires': coproprietaires,
-        'prestataires': prestataires,
-        'titlePage': _('Residence Gestion'),
-        'nom': request.user.nom,
-        'date': timezone.now().strftime(_("%a %d %B %Y"))
-    }
+        # Context for the template
+        context = {
+            'segment': 'gestion-residence',
+            'license': request.user.licences.first() if hasattr(request.user, 'licences') else None,
+            'residences': residences,
+            'coproprietaires': coproprietaires,
+            'prestataires': prestataires,
+            'titlePage': _('Residence Gestion'),
+            'nom': request.user.nom,
+            'date': timezone.now().strftime(_("%a %d %B %Y")),
+        }
 
-    html_template = loader.get_template('gestion-residence.html')
-    return HttpResponse(html_template.render(context, request))
+        html_template = loader.get_template('gestion-residence.html')
+        return HttpResponse(html_template.render(context, request))
+
+    except Syndic.DoesNotExist:
+        messages.error(request, _("The requested syndic does not exist."))
+        return HttpResponse(status=404)
 
 
 @login_required(login_url="/login/")

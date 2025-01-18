@@ -66,45 +66,39 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% if residences %}
                         {% for residence in residences %}
                         <tr>
                             <td>{{ residence.nom }}</td>
                             <td>
-                                <a href="mailto:{{ residence.syndic.email }}" class="a_link">
-                                    {{ residence.syndic.user.email }}{{ residence.supersyndic.user.email }}
+                                {% if residence.syndic and residence.syndic.user %}
+                                <a href="mailto:{{ residence.syndic.user.email }}" class="a_link">
+                                    {{ residence.syndic.user.email }}
                                 </a>
+                                {% elif residence.supersyndic and residence.supersyndic.user %}
+                                <a href="mailto:{{ residence.supersyndic.user.email }}" class="a_link">
+                                    {{ residence.supersyndic.user.email }}
+                                </a>
+                                {% else %}
+                                <p>{% trans "No email available" %}</p>
+                                {% endif %}
                             </td>
                             <td>
-                                {% if residence %}
                                 <a href="{% url 'residence-detail' residence.id %}" class="btn btn-sm">
                                     <i class="material-icons">search</i> {% trans "View Details" %}
                                 </a>
-                                {% else %}
-                                <p>{% trans "No license details for this residence." %}</p>
-                                {% endif %}
                             </td>
-
                             <td>
-                                {% if residence %}
                                 <a href="{% url 'update-residence' residence.id %}" class="a_link">
                                     <button type="submit" rel="tooltip" title="{% trans 'Configure' %}" class="btn btn-primary btn-link btn-sm">
                                         <i class="material-icons">edit</i>
                                     </button>
                                 </a>
-                                {% else %}
-                                <p>{% trans "No Residence found for this user." %}</p>
-                                {% endif %}
                             </td>
-                            
-                            <!-- Add Delete Button -->
                             <td>
                                 <form method="post" action="{% url 'delete-residence' residence.id %}"
                                     style="display:inline;">
                                     {% csrf_token %}
-                                    <!--<button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete this syndic?');">
-                                            Delete
-                                        </button>-->
                                     <button type="submit" rel="tooltip" title="Supprimer"
                                         class="btn btn-danger btn-link btn-sm"
                                         data-confirm="{% trans 'Are you sure you want to delete this residence?' %}">
@@ -114,6 +108,13 @@
                             </td>
                         </tr>
                         {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                {% trans "No residences available." %}
+                            </td>
+                        </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>

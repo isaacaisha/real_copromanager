@@ -12961,8 +12961,9 @@ body.dark-mode .sidebar .nav li > a:hover, body.dark-mode div.card-body.p-2 {
 }
 
 /* Greetings User, <input> Tags in dark mode */
-body.dark-mode > div.wrapper > div.sidebar > div.logo > a
-body.dark-mode .prenom, body.dark-mode .titlePage, body.dark-mode input, body.dark-mode select {
+body.dark-mode > div.wrapper > div.sidebar > div.logo > a,
+body.dark-mode .prenom, body.dark-mode .titlePage, body.dark-mode input, body.dark-mode select,
+body.dark-mode #id_adresse, body.dark-mode #id_zones_communes {
   color: #e7e7e7 !important;
 }
 

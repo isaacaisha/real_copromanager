@@ -7,7 +7,13 @@
 {% block title %} {% trans "Residence Details" %} - {{ residence.id }} {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+{% block stylesheets %}
+<style>
+    label {
+        font-size: x-small;
+    }
+</style>
+{% endblock stylesheets %}
 
 {% block content %}
 
@@ -145,11 +151,11 @@
         <div class="text-center">
             {% if residence %}
             <a href="{% url 'update-residence' residence.id %}" class="a_link">
-                <button type="submit" rel="tooltip" title="{% trans 'Configure' %}" class="btn btn-warning btn-sm">
+                <button type="submit" rel="tooltip" title="{% trans 'Update' %}" class="btn btn-warning btn-sm">
                     <i class="material-icons">edit</i>
                 </button>
                 <br>
-                <label for="">{% trans "Configure Residence" %}</label>
+                <label for="">{% trans "Update Residence" %}</label>
             </a>
             {% else %}
             <p>{% trans "No Residence found for this user." %}</p>

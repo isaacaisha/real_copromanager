@@ -191,8 +191,6 @@ def register_supersyndic(request, syndic_id):
     titlePage = _('Register Super Syndic')
     supersyndic_form = SuperSyndicForm(request.POST or None)
     syndic = get_object_or_404(Syndic, id=syndic_id)
-    supersyndic_id = None
-    supersyndic = None
 
     if request.method == "POST":
         supersyndic_form = SuperSyndicForm(request.POST, instance=syndic.user)  # Load the existing user instance
@@ -205,54 +203,54 @@ def register_supersyndic(request, syndic_id):
                     user.save()
 
                     # Create or get a SuperSyndic instance for this user
-                    supersyndic, created = SuperSyndic.objects.get_or_create(user=user, id=supersyndic_id)
-                    
+                    supersyndic, created = SuperSyndic.objects.get_or_create(user=user)
+
                     # Transfer residences to the SuperSyndic
-                    residences = Residence.objects.filter(syndic=None, supersyndic=None)
+                    residences = Residence.objects.filter(syndic=syndic)
                     for residence in residences:
+                        residence.syndic = None
                         residence.supersyndic = supersyndic
                         residence.save()
 
-                    # Transfer associated Coproprietaires and Prestataires
-                    coproprietaires = Coproprietaire.objects.filter(syndic=syndic)  # Get all linked to the current Syndic
-                    prestataires = Prestataire.objects.filter(syndic=syndic)  # Get all linked to the current Syndic
-                    
+                    # Transfer associated Coproprietaires
+                    coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
                     for coproprietaire in coproprietaires:
-                        coproprietaire.syndic = None  # Remove old syndic reference
-                        coproprietaire.supersyndic = supersyndic  # Assign new SuperSyndic
+                        coproprietaire.syndic = None
+                        coproprietaire.supersyndic = supersyndic
                         coproprietaire.save()
-                    
+
+                    # Transfer associated Prestataires
+                    prestataires = Prestataire.objects.filter(syndic=syndic)
                     for prestataire in prestataires:
-                        prestataire.syndic = None  # Remove old syndic reference
-                        prestataire.supersyndic = supersyndic  # Assign new SuperSyndic
+                        prestataire.syndic = None
+                        prestataire.supersyndic = supersyndic
                         prestataire.save()
 
-
                     # Handle the license transfer
-                    # Assuming that a syndic can have multiple licenses, we fetch the latest one
                     license = License.objects.filter(syndic=syndic).order_by('-date_debut').first()
                     if license:
-                        # Assign the license to the SuperSyndic (if needed)
                         license.supersyndic = supersyndic
-                        license.syndic = None  # Remove the license from the old syndic
+                        license.syndic = None
                         license.save()
 
-                    messages.success(request, _('Please fill the form below for upgrade to Super Syndic!'))
-                    return redirect('two_factor:setup')  # Or your desired next step
+                    # Delete the old Syndic record
+                    syndic.delete()
+
+                    messages.success(request, _('Syndic successfully upgraded to Super Syndic.'))
+                    return redirect('two_factor:setup')
 
             except Exception as e:
                 messages.error(request, f"An error occurred: {e}")
         else:
             messages.error(request, _('Form is not valid.'))
+
     else:
-        # Pre-fill the form with the current user's data
         supersyndic_form = SuperSyndicForm(instance=syndic.user)
 
     context = {
         'titlePage': titlePage,
         'nom': request.user.nom,
         'syndic': syndic,
-        'supersyndic': supersyndic,
         'supersyndic_form': supersyndic_form,
         'date': timezone.now().strftime(_("%a %d %B %Y")),
     }
