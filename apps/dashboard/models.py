@@ -139,6 +139,25 @@ class SuperSyndic(models.Model):
         return self.nom
 
 
+# Building Information
+class Residence(models.Model):
+    nom = models.CharField(max_length=255, verbose_name=_('Name'))
+    adresse = models.TextField(verbose_name=_('Address'))
+    nombre_appartements = models.IntegerField(verbose_name=_('Number of Apartments'))
+    superficie_totale = models.FloatField(verbose_name=_('Total Area'))
+    date_construction = models.DateField(verbose_name=_('Construction Date'))
+    nombre_etages = models.IntegerField(verbose_name=_('Number of Floors'))
+    zones_communes = models.TextField(verbose_name=_('Common Areas'))  # Example: "Hall, Garden, Parking"
+    date_dernier_controle = models.DateField(null=True, blank=True, verbose_name=_('Last Inspection Date'))
+    type_chauffage = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Heating Type'))
+    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True, related_name='syndic_residences')
+    supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True, related_name='supersyndic_residences')
+
+    def __str__(self):
+        return _("Building {name} ({address})").format(name=self.nom, address=self.adresse)
+        #return _("Building: {name}").format(name=self.nom)
+
+
 # Co-owner Information
 class Coproprietaire(models.Model):
     nom = models.CharField(max_length=255, verbose_name=_('Name'))
@@ -151,11 +170,12 @@ class Coproprietaire(models.Model):
         verbose_name=_('User'),
     )
     email = models.EmailField(verbose_name=_('Email'))
-    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True)
-    supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True)
+    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True, related_name='syndic_coproprietaires')
+    supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True, related_name='supersyndic_coproprietaires')
+    residence = models.ForeignKey(Residence, on_delete=models.CASCADE, verbose_name=_('Residences'), null=True, blank=True, related_name='coproprietaire_residences')
 
     def __str__(self):
-        return self.nom
+        return self.user.nom
 
 
 # Provider Information
@@ -175,24 +195,6 @@ class Prestataire(models.Model):
 
     def __str__(self):
         return self.nom
-
-
-# Building Information
-class Residence(models.Model):
-    nom = models.CharField(max_length=255, verbose_name=_('Name'))
-    adresse = models.TextField(verbose_name=_('Address'))
-    nombre_appartements = models.IntegerField(verbose_name=_('Number of Apartments'))
-    superficie_totale = models.FloatField(verbose_name=_('Total Area'))
-    date_construction = models.DateField(verbose_name=_('Construction Date'))
-    nombre_etages = models.IntegerField(verbose_name=_('Number of Floors'))
-    zones_communes = models.TextField(verbose_name=_('Common Areas'))  # Example: "Hall, Garden, Parking"
-    date_dernier_controle = models.DateField(null=True, blank=True, verbose_name=_('Last Inspection Date'))
-    type_chauffage = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Heating Type'))
-    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True, related_name='residences')
-    supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True, related_name='residences')
-
-    def __str__(self):
-        return _("Building {name} ({address})").format(name=self.nom, address=self.adresse)
 
 
 # Apartment Information

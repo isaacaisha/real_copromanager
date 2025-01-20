@@ -61,11 +61,13 @@ def redirect_based_on_role(request, user):
     return redirect(role_redirects.get(user.role, 'home'))
 
 
-#@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def register_user(request):
+    role = request.GET.get('role')  # Extract the role from the URL query parameter
+    logged_in_user = request.user
+
     if request.method == "POST":
-        form = SignUpForm(request.POST, logged_in_user_role=request.user.role)
+        form = SignUpForm(request.POST, logged_in_user=logged_in_user)
         license_form = LicenseForm(request.POST)
 
         if form.is_valid():
@@ -109,11 +111,17 @@ def register_user(request):
                 if creator.role == 'Syndic':
                     syndic = Syndic.objects.filter(user=creator).first()
                     if not syndic:
-                        messages.error(request, _('Could not find associated Syndic.'))
+                        messages.error(request, _('Associated Syndic for this user was not found. Please contact support.'))
                         return redirect('register')
 
+                    # Get the residence from the form data
+                    residence = form.cleaned_data.get('residence')
+                    if user.role == 'Coproprietaire' and not residence:
+                        messages.error(request, _('Residence is required for Coproprietaire.'))
+                        return redirect('register')
+                
                     if user.role == 'Coproprietaire':
-                        coproprietaire = Coproprietaire.objects.create(user=user, syndic=syndic)
+                        coproprietaire = Coproprietaire.objects.create(user=user, syndic=syndic, residence=residence)
                         messages.success(request, _('Coproprietaire "%s" created successfully.') % coproprietaire.user.nom)
                         return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
 
@@ -125,11 +133,17 @@ def register_user(request):
                 elif creator.role == 'SuperSyndic':
                     supersyndic = SuperSyndic.objects.filter(user=creator).first()
                     if not supersyndic:
-                        messages.error(request, _('Could not find associated SuperSyndic.'))
+                        messages.error(request, _('Associated SuperSyndic for this user was not found. Please contact support.'))
+                        return redirect('register')
+
+                    # Get the residence from the form data
+                    residence = form.cleaned_data.get('residence')
+                    if user.role == 'Coproprietaire' and not residence:
+                        messages.error(request, _('Residence is required for Coproprietaire.'))
                         return redirect('register')
 
                     if user.role == 'Coproprietaire':
-                        coproprietaire = Coproprietaire.objects.create(user=user, supersyndic=supersyndic)
+                        coproprietaire = Coproprietaire.objects.create(user=user, supersyndic=supersyndic, residence=residence)
                         messages.success(request, _('Coproprietaire "%s" created successfully.') % coproprietaire.user.nom)
                         return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
 
@@ -142,7 +156,8 @@ def register_user(request):
             messages.error(request, _('Form is not valid'))
 
     else:
-        form = SignUpForm(logged_in_user_role=request.user.role)
+        # Prepopulate the role field
+        form = SignUpForm(initial={'role': role}, logged_in_user=logged_in_user)
         license_form = LicenseForm()
 
     context = {
@@ -403,7 +418,7 @@ def update_profile(request, user_id=None):
                 messages.error(request, _("Please correct the errors in the form."))
 
         else:
-            form = SignUpForm(request.POST, instance=profile)
+            form = SignUpForm(request.POST, instance=profile, exclude_residence=True)
             if form.is_valid():
                 form.save()
                 messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
@@ -418,7 +433,7 @@ def update_profile(request, user_id=None):
         elif profile.role == "Syndic":
             syndic_form = SyndicForm(instance=profile)
         else:
-            form = SignUpForm(instance=profile)
+            form = SignUpForm(instance=profile, exclude_residence=True)
 
     context = {
         'form': form,

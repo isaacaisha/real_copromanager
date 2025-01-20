@@ -6,7 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django import forms
 
-from apps.dashboard.models import License, Residence, SuperSyndic, Syndic
+from apps.dashboard.models import License, Residence, SuperSyndic, Syndic, Coproprietaire
 
 from django.utils.translation import gettext as _
 
@@ -134,3 +134,24 @@ class ResidenceForm(forms.ModelForm):
         if commit:
             residence.save()
         return residence
+
+
+class AssociateCoproprietaireForm(forms.Form):
+    coproprietaire = forms.ModelChoiceField(
+        queryset=Coproprietaire.objects.none(),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        label="Coproprietaire"
+    )
+    residence = forms.ModelChoiceField(
+        queryset=Residence.objects.none(),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        label="Residence"
+    )
+
+    def __init__(self, *args, coproprietaire_queryset=None, residence_queryset=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if coproprietaire_queryset is not None:
+            self.fields['coproprietaire'].queryset = coproprietaire_queryset
+            self.fields['coproprietaire'].label_from_instance = lambda obj: str(obj)  # Custom label from instance
+        if residence_queryset is not None:
+            self.fields['residence'].queryset = residence_queryset

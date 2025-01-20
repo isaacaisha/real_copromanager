@@ -17,7 +17,7 @@
             <i class="material-icons">person</i>
           </div>
           <h4 class="card-title">
-            {% trans "Create Syndic, Co-Owner..." %}
+            {% trans "Create User" %}
           </h4>
         </div>
         <div class="card-body">
@@ -205,11 +205,25 @@
               </div>
             </div>
             <span class="text-danger">{{ form.about_me.errors }}</span>
+            
+            <br />
+            
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating text-success">{% trans "Residences" %}:</label>
+                  {{ form.residence }}
+                </div>
+              </div>
+            </div>
+            <span class="text-danger">{{ form.residence.errors }}</span>
+            
+            <br />
 
             {% if user.role == 'Superadmin' %}
-            <br />
+            <label class="bmd-label-floating text-success">{% trans "Licence" %}</label>
             {{ license_form.as_p }}
-            <br>
+            <br />
             {% endif %}
 
             <button type="submit" name="register" class="btn btn-success btn-sm pull-left">{% trans "Sign Up" %}</button>

@@ -1,10 +1,10 @@
-<!-- apps/dashboard/templates/update-residence.html -->
+<!-- apps/dashboard/templates/associate-coproprietaire.html -->
 
 {% extends "layouts/base.html" %}
 
 {% load static i18n %}
 
-{% block title %} - {% trans "Update Residence for" %} {{ residence.nom }} {% endblock %}
+{% block title %} {% trans "Associate Co-Owner with a Residence" %} {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -12,26 +12,33 @@
 {% block content %}
 
 <div class="mt-5">
-    {% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
     <div class="card">
         <div class="card-header card-header-icon">
             <div class="card-icon">
                 <i class="fa-solid fa-id-card fa-beat fa-2x"></i>
             </div>
             <h5 class="card-title">
-                {% trans "Update Residence for" %}
-                {{ residence.nom }}
-                <br>
-                {% if user.role == 'Superadmin' %}
-                {% trans "Residence ID" %} {{ residence.id }}
-                {% endif %}
+                {% trans "Associate Co-Owner with a Residence" %}
             </h5>
         </div>
 
         <div class="card-body">
-            <form method="POST" action="{% url 'update-residence' residence.id %}">
+            <form method="POST" action="">
                 {% csrf_token %}
-                {{ residence_form.as_p }}
+                <div class="mb-3">
+                    {{ form.coproprietaire.label_tag }}
+                    {{ form.coproprietaire }}
+                    {% if form.coproprietaire.errors %}
+                    <span class="text-danger">{{ form.coproprietaire.errors }}</span>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.residence.label_tag }}
+                    {{ form.residence }}
+                    {% if form.residence.errors %}
+                    <span class="text-danger">{{ form.residence.errors }}</span>
+                    {% endif %}
+                </div>
                 <br>
 
                 <div class="text-center">
@@ -41,7 +48,6 @@
             </form>
         </div>
     </div>
-    {% endif %}
 </div>
 
 {% endblock %}

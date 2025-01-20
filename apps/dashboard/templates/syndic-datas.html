@@ -11,7 +11,7 @@
 {% if user.role == 'Superadmin' %}
 <div class="mb-5">
     <div>
-        <a href="{% url 'register' %}" class="btn btn-success btn-sm pull-left">{% trans "Inscription" %}</a>
+        <a href="{% url 'register' %}?role=Syndic" class="btn btn-success btn-sm pull-left">{% trans "Create Syndic" %}</a>
         <a href="{% url 'create-residence' profile.user_id %}" class="btn btn-success btn-sm pull-right">
             {% trans "Create Residence" %}
         </a>
@@ -35,7 +35,9 @@
 
 {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
 <div class="container">
-    <a href="{% url 'register' %}" class="btn btn-success btn-sm pull-left">{% trans "Inscription" %}</a>
+    <a href="{% url 'register' %}?role=Prestataire" class="btn btn-success btn-sm pull-left">{
+        % trans "Create Provider" %}
+    </a>
     
     <a href="{% url 'create-residence' user.id %}" class="btn btn-success btn-sm pull-right">
         {% trans "Create Residence" %}

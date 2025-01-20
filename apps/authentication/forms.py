@@ -9,7 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext as _
 
 from apps.authentication.models import CustomUser
-from apps.dashboard.models import SuperSyndic
+from apps.dashboard.models import SuperSyndic, Residence
 
 # Import ReCaptchaField correctly
 from django_recaptcha.fields import ReCaptchaField
@@ -39,15 +39,35 @@ class SignUpForm(UserCreationForm):
                 "class": "form-control"
             }
         ))
-    role = forms.ChoiceField(
-        choices=[
-                ('Syndic', _('Syndic')),
-                ('Coproprietaire', _('Coproprietaire')),
-                ('Prestataire', _('Prestataire')),
-            ],
+    #role = forms.CharField(
+    #    choices=[
+    #            ('Syndic', _('Syndic')),
+    #            ('Coproprietaire', _('Coproprietaire')),
+    #            ('Prestataire', _('Prestataire')),
+    #        ],
+    #    #widget=forms.HiddenInput()  # Make it hidden
+    #    widget=forms.Select(
+    #        attrs={
+    #            "readonly": True,  # Make the field read-only
+    #            "placeholder": _("Role:"),
+    #            "class": "form-control"
+    #        }
+    #    ))
+    role = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "readonly": True,  # Make the field read-only
+                "class": "form-control",  # Apply styling
+                "placeholder": _("Role")
+            }
+        ))
+    residence = forms.ModelChoiceField(
+        queryset=Residence.objects.none(),  # Default to an empty queryset
+        required=False,
         widget=forms.Select(
             attrs={
-                "placeholder": _("Role:"),
+                "placeholder": _("Residences"),
                 "class": "form-control"
             }
         ))
@@ -138,30 +158,35 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = [
-            'email', 'nom', 'prenom', 'role', 
+            'email', 'nom', 'prenom', 'role', 'residence', 
             'phone', 'status', 'commercial', 'address', 
             'city', 'country', 'postal_code', 'about_me', 
             'password1', 'password2'
         ]
-
+    
     def __init__(self, *args, **kwargs):
-        # Extract the logged-in user's role from kwargs
-        logged_in_user_role = kwargs.pop('logged_in_user_role', None)
+        exclude_residence = kwargs.pop('exclude_residence', False)
+        logged_in_user = kwargs.pop('logged_in_user', None)
         super().__init__(*args, **kwargs)
 
-        # Only allow 'Superadmin' to select 'Syndic'
-        if logged_in_user_role == 'Superadmin':
-            self.fields['role'].choices = [
-                ('Syndic', _('Syndic')),
-            ]
+        if exclude_residence:
+            self.fields.pop('residence', None)
+
+        # Restrict the role if it's provided in initial data
+        if 'role' in self.initial:
+            self.fields['role'].initial = self.initial['role']
+
+        # Dynamically filter residences based on logged-in user
+        if logged_in_user and logged_in_user.role == 'Syndic':
+            self.fields['residence'].queryset = Residence.objects.filter(syndic__user=logged_in_user)
+        elif logged_in_user and logged_in_user.role == 'SuperSyndic':
+            self.fields['residence'].queryset = Residence.objects.filter(supersyndic__user=logged_in_user)
         else:
-            self.fields['role'].choices = [
-                ('Coproprietaire', _('Coproprietaire')),
-                ('Prestataire', _('Prestataire')),
-            ]
+            #self.fields['residence'].queryset = Residence.objects.all()
+            pass
 
         for field_name, field in self.fields.items():
-            field.label = ""  # Remove labels
+            field.label = ""  # Remove labels for other fields
 
 
 class LoginForm(forms.Form):

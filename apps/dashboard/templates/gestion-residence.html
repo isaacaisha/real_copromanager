@@ -10,7 +10,7 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-<div class="mt-5">
+<div class="mt-4">
 
     <!-- Backoffice Co-owners & Providers -->
     <div class="mb-5">
@@ -37,13 +37,17 @@
                 <i class="fa-solid fa-city"></i>
             </div>
             <h3 class="card-title">
-                {% trans "Backoffice - Managing Residences" %} {{ residences.count }} {% trans "Total" %}
+                {% trans "Backoffice - Managing Residences" %}
             </h3>
         </div>
         <div class="card-footer">
             <div class="stats">
                 <i class="material-icons">info</i>
-                <span class="card-title">{{ coproprietaires.count }} {% trans "Total Co-owners" %}</span>
+                <span class="card-title">{{ residences.count }} {% trans "Residences" %}</span>
+            </div>
+            <div class="stats">
+                <i class="material-icons">info</i>
+                <span class="card-title">{{ coproprietaires.count }} {% trans "Co-owners" %}</span>
             </div>
         </div>
         <div class="card-body">

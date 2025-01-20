@@ -18,11 +18,16 @@
 {% block content %}
 
 {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
-<div class="container text-center">
-    <a href="{% url 'create-residence' residence.id %}" class="btn btn-success btn-sm">
-        {% trans "Create Residence" %}
+<div class="container">
+    <a href="{% url 'register' %}?role=Coproprietaire" class="btn btn-success btn-sm pull-left">
+        {% trans "Create Co-Owner" %}
+    </a>
+    
+    <a href="{% url 'associate-coproprietaire' %}" class="btn btn-success btn-sm pull-right">
+        {% trans "add to Residence" %}
     </a>
 </div>
+<br>
 {% endif %}
 
 <div>
@@ -123,25 +128,31 @@
                         </div>
                         <h5 class="card-title">{% trans "Managed Buildings" %}</h5>
                     </div>
+                    {% if residence %}
                     <div class="card-body p-2">
-                        <ul>
-                            {% if residence %}
-                            <li>{{ residence.nom }}</li>
-                            <li>{{ residence.adresse }}</li>
-                            <li>{{ residence.nombre_appartements }}</li>
-                            <li>{{ residence.superficie_totale }}</li>
-                            <li>{{ residence.date_construction }}</li>
-                            <li>{{ residence.nombre_etages }}</li>
-                            <li>{{ residence.zones_communes }}</li>
-                            <li>{{ residence.date_dernier_controle }}</li>
-                            <li>{{ residence.type_chauffage }}</li>
-                            <li>{{ residence.syndic }}</li>
-                            <li>{{ residence.supersyndic }}</li><hr>
-                            {% else %}
-                            <p>{% trans "No building found for this user." %}</p>
-                            {% endif %}
-                        </ul>
+                        <div>
+                            <strong>{% trans "Email" %}:</strong>{{ residence.nom }}<br>
+                            <strong>{% trans "Address" %}:</strong> {{ residence.adresse }}<br>
+                            <strong>{% trans "nombre_appartements" %}:</strong> {{ residence.nombre_appartements }}<br>
+                            <strong>{% trans "superficie_totale" %}:</strong> {{ residence.superficie_totale }}<br>
+                            <strong>{% trans "date_construction" %}:</strong> {{ residence.date_construction }}<br>
+                            <strong>{% trans "nombre_etages" %}:</strong> {{ residence.nombre_etages }}<br>
+                            <strong>{% trans "zones_communes" %}:</strong> {{ residence.zones_communes }}<br>
+                            <strong>{% trans "date_dernier_controle" %}:</strong> {{ residence.date_dernier_controle }}<br>
+                            <strong>{% trans "syndic Name" %}:</strong> {{ residence.syndic.user.nom }}<br>
+                            <strong>{% trans "supersyndic Name" %}:</strong> {{ residence.supersyndic.user.nom }}
+                        </div>
+                        {% if coproprietaires %}
+                            <hr>
+                            <span class="d-flex justify-content-center"">
+                                {% trans " Co-Owners Associated" %}:
+                            </span>
+                            {% for coproprietaire in coproprietaires %}
+                                <li>{{ coproprietaire.user.nom }}</li>
+                            {% endfor %}
+                        {% endif %}
                     </div>
+                    {% endif %}
                 </div>
             </div>
             {% endif %}

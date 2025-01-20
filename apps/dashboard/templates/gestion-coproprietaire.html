@@ -10,7 +10,7 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
-<div>
+<div class="mt-5">
 
     <div class="card">
         <div class="card-header card-header-icon">
@@ -40,6 +40,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% if coproprietaires %}
                         {% for coproprietaire in coproprietaires %}
                         <tr>
                             <td>{{ coproprietaire.user.nom }}</td>
@@ -68,6 +69,13 @@
                             </td>
                         </tr>
                         {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                {% trans "No co-owners available." %}
+                            </td>
+                        </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>

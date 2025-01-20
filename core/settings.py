@@ -92,7 +92,7 @@ SESSION_COOKIE_SECURE = not config('DEBUG', default=True, cast=bool)
 CSRF_COOKIE_SECURE = not config('DEBUG', default=True, cast=bool)
 SECURE_SSL_REDIRECT = not config('DEBUG', default=True, cast=bool)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE = 3600  # 1h 
+SESSION_COOKIE_AGE = 10800  # 3h 
 
 # Use production email settings only if DEBUG is False
 if not DEBUG:
