@@ -155,3 +155,9 @@ class AssociateCoproprietaireForm(forms.Form):
             self.fields['coproprietaire'].label_from_instance = lambda obj: str(obj)  # Custom label from instance
         if residence_queryset is not None:
             self.fields['residence'].queryset = residence_queryset
+
+    def save(self, commit=True):
+        coproprietaire = super().save(commit=False)
+        if commit:
+            coproprietaire.save()
+        return coproprietaire

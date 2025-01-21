@@ -207,7 +207,8 @@
             <span class="text-danger">{{ form.about_me.errors }}</span>
             
             <br />
-            
+
+            {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
@@ -219,6 +220,7 @@
             <span class="text-danger">{{ form.residence.errors }}</span>
             
             <br />
+            {% endif %}
 
             {% if user.role == 'Superadmin' %}
             <label class="bmd-label-floating text-success">{% trans "Licence" %}</label>

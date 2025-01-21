@@ -66,6 +66,8 @@ def register_user(request):
     role = request.GET.get('role')  # Extract the role from the URL query parameter
     logged_in_user = request.user
 
+    exclude_residence = (role == 'Prestataire')
+
     if request.method == "POST":
         form = SignUpForm(request.POST, logged_in_user=logged_in_user)
         license_form = LicenseForm(request.POST)
@@ -107,6 +109,11 @@ def register_user(request):
                     return redirect('register')
 
             elif user.role in ['Coproprietaire', 'Prestataire']:
+                residence = form.cleaned_data.get('residence')
+                if user.role == 'Coproprietaire' and not residence:
+                    messages.error(request, _('Residence is required for Coproprietaire.'))
+                    return redirect('register')
+                
                 # Assign the new user to the creator (either a Syndic or SuperSyndic)
                 if creator.role == 'Syndic':
                     syndic = Syndic.objects.filter(user=creator).first()
@@ -157,7 +164,7 @@ def register_user(request):
 
     else:
         # Prepopulate the role field
-        form = SignUpForm(initial={'role': role}, logged_in_user=logged_in_user)
+        form = SignUpForm(initial={'role': role}, logged_in_user=logged_in_user, exclude_residence=exclude_residence)
         license_form = LicenseForm()
 
     context = {

@@ -58,13 +58,14 @@ class SignUpForm(UserCreationForm):
         widget=forms.TextInput(
             attrs={
                 "readonly": True,  # Make the field read-only
-                "class": "form-control",  # Apply styling
-                "placeholder": _("Role")
+                "placeholder": _("Role"),
+                "class": "form-control",
+                "style": "background-color: transparent;" 
             }
         ))
     residence = forms.ModelChoiceField(
         queryset=Residence.objects.none(),  # Default to an empty queryset
-        required=False,
+        required=False,  # Default to not required
         widget=forms.Select(
             attrs={
                 "placeholder": _("Residences"),
@@ -169,24 +170,33 @@ class SignUpForm(UserCreationForm):
         logged_in_user = kwargs.pop('logged_in_user', None)
         super().__init__(*args, **kwargs)
 
+        # Optionally exclude the residence field
         if exclude_residence:
             self.fields.pop('residence', None)
+        else:
+            # Filter residences based on logged-in user's role only if the field is present
+            if logged_in_user:
+                if logged_in_user.role == 'Syndic':
+                    self.fields['residence'].queryset = Residence.objects.filter(syndic__user=logged_in_user)
+                elif logged_in_user.role == 'SuperSyndic':
+                    self.fields['residence'].queryset = Residence.objects.filter(supersyndic__user=logged_in_user)
 
-        # Restrict the role if it's provided in initial data
+        # Restrict the initial role from provided data
         if 'role' in self.initial:
             self.fields['role'].initial = self.initial['role']
 
-        # Dynamically filter residences based on logged-in user
-        if logged_in_user and logged_in_user.role == 'Syndic':
-            self.fields['residence'].queryset = Residence.objects.filter(syndic__user=logged_in_user)
-        elif logged_in_user and logged_in_user.role == 'SuperSyndic':
-            self.fields['residence'].queryset = Residence.objects.filter(supersyndic__user=logged_in_user)
-        else:
-            #self.fields['residence'].queryset = Residence.objects.all()
-            pass
-
+        # Remove field labels
         for field_name, field in self.fields.items():
-            field.label = ""  # Remove labels for other fields
+            field.label = ""  # Removing labels as per requirement
+
+    def clean(self):
+        cleaned_data = super().clean()
+        role = cleaned_data.get('role')
+        residence = cleaned_data.get('residence')
+
+        # Check if residence is required for the Coproprietaire role
+        if role == 'Coproprietaire' and not residence:
+            self.add_error('residence', _("Residence is required for Coproprietaire registration."))
 
 
 class LoginForm(forms.Form):
@@ -218,6 +228,10 @@ class SyndicForm(SignUpForm):
         # Extract the logged-in user's role from kwargs
         logged_in_user_role = kwargs.pop('logged_in_user_role', None)
         super().__init__(*args, **kwargs)
+
+        # Remove the 'residence' field if it exists
+        if 'residence' in self.fields:
+            self.fields.pop('residence')
 
         # Only allow 'Superadmin' to select 'Syndic'
         if logged_in_user_role == 'Superadmin':
