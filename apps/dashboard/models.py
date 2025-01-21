@@ -172,7 +172,7 @@ class Coproprietaire(models.Model):
     email = models.EmailField(verbose_name=_('Email'))
     syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True, related_name='syndic_coproprietaires')
     supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True, related_name='supersyndic_coproprietaires')
-    residence = models.ForeignKey(Residence, on_delete=models.CASCADE, verbose_name=_('Residences'), null=True, blank=True, related_name='coproprietaire_residences')
+    residence = models.ManyToManyField(Residence, verbose_name=_('Residences'), blank=True, related_name='coproprietaire_residences')
 
     def __str__(self):
         return self.user.nom

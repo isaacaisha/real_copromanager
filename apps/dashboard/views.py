@@ -215,52 +215,59 @@ def dashboard_supersyndic(request, supersyndic_id):
         return HttpResponse(html_template.render(context, request))
 
 
+
+
+
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic', 'Coproprietaire'])
 def dashboard_coproprietaire(request, coproprietaire_id):
     """
     View for the coproprietaire dashboard.
     This view should display information relevant to coproprietaires, 
-    such as co-owner documents, charges, and announcements.
+    such as co-owner documents, charges, announcements, and residences.
     """
 
     # Fetch the current coproprietaire profile  
     if request.user.role in ['Superadmin', 'Syndic', 'SuperSyndic']:
         # Allow Superadmin, Syndic, and SuperSyndic to query by user__id
         coproprietaire = get_object_or_404(Coproprietaire, user__id=coproprietaire_id)
-        profile = get_object_or_404(Coproprietaire, user__id=coproprietaire_id)
     elif request.user.role == 'Coproprietaire':
         # Restrict to the currently logged-in coproprietaire
         coproprietaire = get_object_or_404(Coproprietaire, user=request.user)
-        profile = get_object_or_404(Coproprietaire, user=request.user)
     else:
         # Forbid access for other roles
         return HttpResponse(status=403)
     
-    # Retrieve the syndic or supersyndic associated with this prestataire
+    # Fetch all residences associated with the coproprietaire
+    residences = coproprietaire.residence.all()
+
+    # Retrieve the syndic or supersyndic associated with this coproprietaire
     syndic = coproprietaire.syndic if hasattr(coproprietaire, 'syndic') else None
     supersyndic = coproprietaire.supersyndic if hasattr(coproprietaire, 'supersyndic') else None
 
     # Retrieve the license associated with the syndic or supersyndic
-    license = syndic.licence if syndic and hasattr(syndic, 'license') else None
-    #license = supersyndic.licence if supersyndic and hasattr(supersyndic, 'license') else None
+    license = syndic.licence if syndic and hasattr(syndic, 'licence') else None
     
-     # Only fetch the coproprietaires associated with the current syndic
-    if request.user.role == ['Syndic'] or request.user.role == 'Superadmin':
+    # Fetch the coproprietaires associated with the current syndic
+    coproprietaires = None
+    if request.user.role in ['Syndic', 'Superadmin']:
         coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
-    elif request.user.role == ['SuperSyndic']:
+    elif request.user.role == 'SuperSyndic':
         coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
     else:
         coproprietaires = Coproprietaire.objects.filter(user=request.user)
 
+    # Convert ManyRelatedManager fields to lists or querysets explicitly
+    coproprietaires = list(coproprietaires) if coproprietaires else []
+
     # Calculate the total count
-    total_count = coproprietaires.count()
+    total_count = len(coproprietaires)
 
     context = {
         'segment': 'dashboard-coproprietaire',
         'titlePage': _('Dashboard "%s"') % coproprietaire.user.nom,
-        'profile': profile,
         'coproprietaire': coproprietaire,
+        'residences': residences,
         'coproprietaires': coproprietaires,
         'syndic': syndic,
         'supersyndic': supersyndic,
