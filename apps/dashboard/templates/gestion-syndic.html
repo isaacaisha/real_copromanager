@@ -61,6 +61,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% if syndics %}
                         {% for syndic in syndics %}
                         <tr>
                             <td>{{ syndic.nom }}</td>
@@ -116,6 +117,13 @@
                             </td>
                         </tr>
                         {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                {% trans "No syndics available." %}
+                            </td>
+                        </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>

@@ -215,9 +215,6 @@ def dashboard_supersyndic(request, supersyndic_id):
         return HttpResponse(html_template.render(context, request))
 
 
-
-
-
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic', 'Coproprietaire'])
 def dashboard_coproprietaire(request, coproprietaire_id):
@@ -314,13 +311,16 @@ def dashboard_prestataire(request, prestataire_id):
     # Only fetch the prestataires associated with the current syndic
     if request.user.role == ['Syndic'] or request.user.role == 'Superadmin':
         prestataires = Prestataire.objects.filter(syndic=syndic)
+        coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
     elif request.user.role == ['SuperSyndic']:
-        prestataires = Prestataire.objects.filter(supersyndic=supersyndic)
+        prestataires = Prestataire.objects.filter(syndic=syndic)
+        coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
     else:
-        prestataires = Prestataire.objects.filter(user=request.user)
+        prestataires = Prestataire.objects.all()
+        coproprietaires = Coproprietaire.objects.all()
 
     # Calculate the total count
-    total_count = prestataires.count()
+    total_count_presta = prestataires.count()
 
     context = {
         'segment': 'dashboard-prestataire',
@@ -328,12 +328,13 @@ def dashboard_prestataire(request, prestataire_id):
         'profile': profile,
         'prestataire': prestataire,
         'prestataires': prestataires,
+        'coproprietaires': coproprietaires,
         'syndic': syndic,
         'supersyndic': supersyndic,
         'license': license,
         'nom': prestataire.user.nom,
         'phone': prestataire.user.phone,
-        'total_count': total_count,
+        'total_count_presta': total_count_presta,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
 
@@ -700,8 +701,11 @@ def associate_coproprietaire(request):
         if form.is_valid():
             coproprietaire = form.cleaned_data['coproprietaire']
             residence = form.cleaned_data['residence']
-            coproprietaire.residence = residence
+
+            # Update many-to-many relationship
+            coproprietaire.residence.add(residence)
             coproprietaire.save()
+            
             messages.success(
                 request,
                 _("Coproprietaire {copro_name} successfully associated with Residence {res_name}.").format(

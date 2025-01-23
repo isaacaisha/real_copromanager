@@ -192,11 +192,14 @@ class SignUpForm(UserCreationForm):
     def clean(self):
         cleaned_data = super().clean()
         role = cleaned_data.get('role')
-        residence = cleaned_data.get('residence')
+    
+        # Only validate residence if the field is present in the form
+        if 'residence' in self.fields:
+            residence = cleaned_data.get('residence')
 
-        # Check if residence is required for the Coproprietaire role
-        if role == 'Coproprietaire' and not residence:
-            self.add_error('residence', _("Residence is required for Coproprietaire registration."))
+            # Check if residence is required for the Coproprietaire role
+            if role == 'Coproprietaire' and not residence:
+                self.add_error('residence', _("Residence is required for Coproprietaire registration."))
 
 
 class LoginForm(forms.Form):

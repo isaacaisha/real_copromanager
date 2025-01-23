@@ -61,120 +61,129 @@ def redirect_based_on_role(request, user):
     return redirect(role_redirects.get(user.role, 'home'))
 
 
+@login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def register_user(request):
     role = request.GET.get('role')  # Extract the role from the URL query parameter
     logged_in_user = request.user
 
-    exclude_residence = (role == 'Prestataire')
+    exclude_residence = (role == 'Prestataire')  # Prestataire doesn't require a residence
 
     if request.method == "POST":
         form = SignUpForm(request.POST, logged_in_user=logged_in_user)
-        license_form = LicenseForm(request.POST)
+        license_form = LicenseForm(request.POST) if role == 'Syndic' else None
 
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data.get("password1"))
 
-            # Determine the creator's role (Superadmin, Syndic, SuperSyndic)
-            creator = request.user  # The user performing the registration
+            creator = request.user
             if creator.role not in ['Superadmin', 'Syndic', 'SuperSyndic']:
                 messages.error(request, _("You do not have permission to register new users."))
                 return redirect('register')
 
             user.save()
 
-            if user.role == 'Superadmin':
-                # Create a Superadmin instance
+            if role == 'Coproprietaire':
+                # Handle Coproprietaire registration
+                return create_coproprietaire(request, user, form.cleaned_data.get('residence'), creator)
+
+            elif role == 'Prestataire':
+                # Handle Prestataire registration
+                return create_prestataire(request, user, creator)
+
+            elif role == 'Syndic' and license_form and license_form.is_valid():
+                # Handle Syndic registration with a license
+                return create_syndic(request, user, license_form)
+
+            elif role == 'Superadmin':
+                # Handle Superadmin registration
                 Superadmin.objects.create(user=user)
                 messages.success(request, _('Superadmin created successfully.'))
                 return redirect('dashboard-superadmin', superadmin_id=user.id)
 
-            elif user.role == 'Syndic':
-                # Create a Syndic and associate a license
-                syndic = Syndic.objects.create(user=user, nom=user.nom, email=user.email)
-                if license_form.is_valid():
-                    license = license_form.save(commit=False)
-                    license.syndic = syndic
-                    license.save()
-
-                    syndic.license = license
-                    syndic.save()
-
-                    messages.success(request, _('Syndic "%s" created successfully.') % syndic.nom)
-                    return redirect('dashboard-syndic', syndic_id=user.id)
-                else:
-                    messages.error(request, _('License form is not valid.'))
-                    syndic.delete()  # Rollback syndic creation
-                    return redirect('register')
-
-            elif user.role in ['Coproprietaire', 'Prestataire']:
-                residence = form.cleaned_data.get('residence')
-                if user.role == 'Coproprietaire' and not residence:
-                    messages.error(request, _('Residence is required for Coproprietaire.'))
-                    return redirect('register')
-                
-                # Assign the new user to the creator (either a Syndic or SuperSyndic)
-                if creator.role == 'Syndic':
-                    syndic = Syndic.objects.filter(user=creator).first()
-                    if not syndic:
-                        messages.error(request, _('Associated Syndic for this user was not found. Please contact support.'))
-                        return redirect('register')
-
-                    # Get the residence from the form data
-                    residence = form.cleaned_data.get('residence')
-                    if user.role == 'Coproprietaire' and not residence:
-                        messages.error(request, _('Residence is required for Coproprietaire.'))
-                        return redirect('register')
-                
-                    if user.role == 'Coproprietaire':
-                        coproprietaire = Coproprietaire.objects.create(user=user, syndic=syndic, residence=residence)
-                        messages.success(request, _('Coproprietaire "%s" created successfully.') % coproprietaire.user.nom)
-                        return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
-
-                    elif user.role == 'Prestataire':
-                        prestataire = Prestataire.objects.create(user=user, syndic=syndic)
-                        messages.success(request, _('Prestataire "%s" created successfully.') % prestataire.user.nom)
-                        return redirect('dashboard-prestataire', prestataire_id=user.id)
-
-                elif creator.role == 'SuperSyndic':
-                    supersyndic = SuperSyndic.objects.filter(user=creator).first()
-                    if not supersyndic:
-                        messages.error(request, _('Associated SuperSyndic for this user was not found. Please contact support.'))
-                        return redirect('register')
-
-                    # Get the residence from the form data
-                    residence = form.cleaned_data.get('residence')
-                    if user.role == 'Coproprietaire' and not residence:
-                        messages.error(request, _('Residence is required for Coproprietaire.'))
-                        return redirect('register')
-
-                    if user.role == 'Coproprietaire':
-                        coproprietaire = Coproprietaire.objects.create(user=user, supersyndic=supersyndic, residence=residence)
-                        messages.success(request, _('Coproprietaire "%s" created successfully.') % coproprietaire.user.nom)
-                        return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
-
-                    elif user.role == 'Prestataire':
-                        prestataire = Prestataire.objects.create(user=user, supersyndic=supersyndic)
-                        messages.success(request, _('Prestataire "%s" created successfully.') % prestataire.user.nom)
-                        return redirect('dashboard-prestataire', prestataire_id=user.id)
-
+            else:
+                messages.error(request, _('Invalid role specified.'))
         else:
-            messages.error(request, _('Form is not valid'))
+            messages.error(request, _('Form is not valid.'))
 
     else:
-        # Prepopulate the role field
         form = SignUpForm(initial={'role': role}, logged_in_user=logged_in_user, exclude_residence=exclude_residence)
-        license_form = LicenseForm()
+        license_form = LicenseForm() if role == 'Syndic' else None
 
     context = {
         'form': form,
         'license_form': license_form,
-        'titlePage': _('Incriptions'),
-        'date': timezone.now().strftime(_("%a %d %B %Y"))
+        'titlePage': _('Registration'),
+        'date': timezone.now().strftime(_("%a %d %B %Y")),
     }
-
     return render(request, "accounts/register.html", context)
+
+
+def create_coproprietaire(request, user, residence, creator):
+    """Helper function to create a Coproprietaire."""
+    if not residence:
+        messages.error(request, _('Residence is required for Coproprietaire.'))
+        return redirect('register')
+
+    if creator.role == 'Syndic':
+        syndic = Syndic.objects.filter(user=creator).first()
+        if not syndic:
+            messages.error(request, _('No associated Syndic found for the current user.'))
+            return redirect('register')
+
+        coproprietaire = Coproprietaire.objects.create(user=user, syndic=syndic)
+        coproprietaire.residence.add(residence)
+        messages.success(request, _('Coproprietaire "%s" created successfully.') % coproprietaire.user.nom)
+        return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
+
+    elif creator.role == 'SuperSyndic':
+        supersyndic = SuperSyndic.objects.filter(user=creator).first()
+        if not supersyndic:
+            messages.error(request, _('No associated SuperSyndic found for the current user.'))
+            return redirect('register')
+
+        coproprietaire = Coproprietaire.objects.create(user=user, supersyndic=supersyndic)
+        coproprietaire.residence.add(residence)
+        messages.success(request, _('Coproprietaire "%s" created successfully.') % coproprietaire.user.nom)
+        return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
+
+
+def create_prestataire(request, user, creator):
+    """Helper function to create a Prestataire."""
+    if creator.role == 'Syndic':
+        syndic = Syndic.objects.filter(user=creator).first()
+        if not syndic:
+            messages.error(request, _('No associated Syndic found for the current user.'))
+            return redirect('register')
+
+        prestataire = Prestataire.objects.create(user=user, syndic=syndic)
+        messages.success(request, _('Prestataire "%s" created successfully.') % prestataire.user.nom)
+        return redirect('dashboard-prestataire', prestataire_id=user.id)
+
+    elif creator.role == 'SuperSyndic':
+        supersyndic = SuperSyndic.objects.filter(user=creator).first()
+        if not supersyndic:
+            messages.error(request, _('No associated SuperSyndic found for the current user.'))
+            return redirect('register')
+
+        prestataire = Prestataire.objects.create(user=user, supersyndic=supersyndic)
+        messages.success(request, _('Prestataire "%s" created successfully.') % prestataire.user.nom)
+        return redirect('dashboard-prestataire', prestataire_id=user.id)
+
+
+def create_syndic(request, user, license_form):
+    """Helper function to create a Syndic with a license."""
+    syndic = Syndic.objects.create(user=user, nom=user.nom, email=user.email)
+    license = license_form.save(commit=False)
+    license.syndic = syndic
+    license.save()
+
+    syndic.license = license
+    syndic.save()
+
+    messages.success(request, _('Syndic "%s" created successfully.') % syndic.nom)
+    return redirect('dashboard-syndic', syndic_id=user.id)
 
 
 def login_view(request):
@@ -403,7 +412,8 @@ def update_profile(request, user_id=None):
                             prestataire.save()
 
                         messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
-                        return redirect('dashboard-supersyndic', supersyndic_id=user_id)
+                        supersyndic = get_object_or_404(SuperSyndic, user=profile)
+                        return redirect('dashboard-supersyndic', supersyndic_id=supersyndic.id)
 
                 except Exception as e:
                     messages.error(request, f"An error occurred: {e}")
@@ -417,8 +427,9 @@ def update_profile(request, user_id=None):
                 try:
                     with transaction.atomic():
                         syndic_form.save()
-                        messages.success(request, _("Syndic profile updated successfully."))
-                        return redirect('dashboard-syndic', user_id)
+                        messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
+                        syndic = get_object_or_404(Syndic, user=profile)
+                        return redirect('dashboard-syndic', syndic_id=syndic.id)
                 except Exception as e:
                     messages.error(request, f"An error occurred: {e}")
             else:
@@ -429,7 +440,7 @@ def update_profile(request, user_id=None):
             if form.is_valid():
                 form.save()
                 messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
-                return redirect('user-profile', user_id)
+                return redirect('home')
             else:
                 messages.error(request, _("There were errors in the form. Please correct them."))
 
@@ -473,7 +484,7 @@ def delete_residence(request, residence_id):
 def delete_syndic(request, syndic_id):
     syndic = get_object_or_404(CustomUser, id=syndic_id, role='Syndic')
     syndic.delete()
-    messages.success(request, _('Syndic %(nom)s has been deleted.') % {'nom': syndic.nom})
+    messages.success(request, _('Syndic "%s" and their data have been deleted.') % syndic.nom)
     return redirect('gestion-syndic')
 
 # Delete SuperSyndic View
@@ -482,18 +493,9 @@ def delete_supersyndic(request, supersyndic_id):
     """
     View to delete a SuperSyndic and their associated user.
     """
-    supersyndic = get_object_or_404(SuperSyndic, id=supersyndic_id)
-    user = supersyndic.user  # Get the associated CustomUser
-
-    # Delete the SuperSyndic and associated licenses
-    License.objects.filter(supersyndic=supersyndic).delete()
+    supersyndic = get_object_or_404(CustomUser, id=supersyndic_id, role='SuperSyndic')
     supersyndic.delete()
-
-    # Delete the user (optional, depending on the logic)
-    if user:
-        user.delete()
-
-    messages.success(request, _('SuperSyndic %(nom)s and their data have been deleted.') % {'nom': supersyndic.nom})
+    messages.success(request, _('SuperSyndic "%s" and their data have been deleted.') % supersyndic.nom)
     return redirect('gestion-supersyndic')
 
 # Delete Coproprietaire View
@@ -502,7 +504,7 @@ def delete_coproprietaire(request, coproprietaire_id):
     coproprietaire = get_object_or_404(Coproprietaire, user__id=coproprietaire_id)
     user = coproprietaire.user  # Access the linked CustomUser
     user.delete()  # Delete the CustomUser, which cascades the deletion to Coproprietaire
-    messages.success(request, _('Coproprietaire %(nom)s has been deleted.') % {'nom': user.nom})
+    messages.success(request, _('Coproprietaire "%s" has been deleted.') % user.nom)
     return redirect('gestion-coproprietaire')
 
 # Delete Prestataire View
@@ -511,5 +513,5 @@ def delete_prestataire(request, prestataire_id):
     prestataire = get_object_or_404(Prestataire, user__id=prestataire_id)
     user = prestataire.user  # Access the linked CustomUser
     user.delete()  # Delete the CustomUser, which cascades the deletion to Prestataire
-    messages.success(request, _('Prestataire %(nom)s has been deleted.') % {'nom': user.nom})
+    messages.success(request, _('Prestataire "%s" has been deleted.') % user.nom)
     return redirect('gestion-prestataire')

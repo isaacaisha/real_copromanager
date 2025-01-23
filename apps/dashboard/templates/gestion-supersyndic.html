@@ -62,6 +62,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% if supersyndics %}
                         {% for supersyndic in supersyndics %}
                         <tr>
                             <td>{{ supersyndic.nom }}</td>
@@ -102,7 +103,7 @@
                             </td>
                             <!-- Add Delete Button -->
                             <td>
-                               <form method="post" action="{% url 'delete-supersyndic' supersyndic.id }" style="display:inline;">
+                                <form method="post" action="{% url 'delete-supersyndic' supersyndic.id %}" style="display:inline;">
                                     {% csrf_token %}
                                     <button type="submit" rel="tooltip" title="{% trans 'Delete' %}"
                                         class="btn btn-danger btn-link btn-sm"
@@ -113,6 +114,13 @@
                             </td>
                         </tr>
                         {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                {% trans "No supersyndics available." %}
+                            </td>
+                        </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>

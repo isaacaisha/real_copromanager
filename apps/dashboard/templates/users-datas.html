@@ -3,7 +3,7 @@
 {% load static i18n %}
 
 <style>
-    span {
+    .icons_span {
         font-size: x-small;
     }
 </style>
@@ -61,28 +61,28 @@
                 <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="tel:{{ phone }}"
                     role="tab" aria-selected="true">
                     <i class="material-icons text-lg position-relative icones-syndic" rel="tooltip" title="{% trans 'Phone' %}">phone</i><br>
-                    <span class="a_link">phone</span>
+                    <span class="icons_span a_link">phone</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="mailto:{{ syndic.user.email }}"
                     role="tab" aria-selected="false">
                     <i class="material-icons text-lg position-relative icones-syndic" rel="tooltip" title="{% trans 'Message' %}">message</i><br>
-                    <span class="a_link">message</span>
+                    <span class="icons_span a_link">message</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="https://calendar.google.com/" role="tab"
                     aria-selected="false">
                     <i class="material-icons text-lg position-relative icones-syndic" rel="tooltip" title="{% trans 'Event' %}">event</i><br>
-                    <span class="a_link">event</span>
+                    <span class="icons_span a_link">event</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link mb-0 px-0 py-0.5" data-bs-toggle="tab" href="javascript:;" role="tab"
                     aria-selected="false">
                     <i class="material-icons text-lg position-relative icones-syndic" rel="tooltip" title="{% trans 'Check box' %}">check_box</i><br>
-                    <span class="a_link">check box</span>
+                    <span class="icons_span a_link">check box</span>
                 </a>
             </li>
         </ul>
@@ -122,20 +122,20 @@
                 <div class="card-body p-2">
                     <div>
                         <p>
-                            <strong>Contact Principal: </strong>
-                            &nbsp; <span class="fs-5">{{ syndic.user.prenom }}</span>
+                            <strong>Contact Principal:</strong>
+                            <span class="fs-5">{{ syndic.user.prenom }}</span>
                         </p>
                         <p>
                             <strong>Email:</strong>
-                            &nbsp; <span class="fs-5">
+                            <span class="fs-5">
                                 <a href="mailto:{{ syndic.user.email }}" class="a_link">
                                     {{ syndic.user.email }}
                                 </a>
                             </span>
                         </p>
                         <p>
-                            <strong>Phone:</strong> &nbsp;
-                            &nbsp; <span class="fs-5">
+                            <strong>Phone:</strong>
+                            <span class="fs-5">
                                 <a href="tel:{{ syndic.user.phone }}" class="a_link">
                                     {{ syndic.user.phone }}
                                 </a>
@@ -143,36 +143,32 @@
                         </p>
                         <p>
                             <strong>Adresse du siège:</strong>
-                            &nbsp; <span class="fs-5">
-                                {{ syndic.user.address }}</span>
+                            <span class="fs-5">{{ syndic.user.address }}</span>
                         </p>
                         <p>
                             <strong>Postal Code:</strong>
-                            &nbsp; <span class="fs-5">
-                                {{ syndic.user.postal_code }}</span>
+                            <span class="fs-5">{{ syndic.user.postal_code }}</span>
                         </p>
                         <p>
-                            <strong>City</strong>
-                            &nbsp; <span class="fs-5">
-                                {{ syndic.user.city }}</span>
+                            <strong>City:</strong>
+                            <span class="fs-5">{{ syndic.user.city }}</span>
                         </p>
                         {% if user.role == 'Superadmin' %}
                         <p>
                             <strong>User ID:</strong>
-                            &nbsp; <span class="fs-5">
-                                {{ syndic.user.id }}</span>
+                            <span class="fs-5">{{ syndic.user.id }}</span>
                         </p>
                         <p>
                             <strong>Role:</strong>
-                            &nbsp; <span class="fs-5">{{ syndic.user.role }}</span>
+                            <span class="fs-5">{{ syndic.user.role }}</span>
                         </p>
                         <p>
                             <strong>Statut:</strong>
-                            &nbsp; <span class="fs-5">{{ syndic.user.status }}</span>
+                            <span class="fs-5">{{ syndic.user.status }}</span>
                         </p>
                         <p>
                             <strong>Commercial:</strong>
-                            &nbsp; <span class="fs-5">{{ syndic.user.commercial }}</span>
+                            <span class="fs-5">{{ syndic.user.commercial }}</span>
                         </p>
                         {% endif %}
                     </div>
@@ -197,20 +193,20 @@
                 <div class="card-body p-2">
                     <div>
                         <p>
-                            <strong>Contact Principal: </strong>
-                            &nbsp; <span class="fs-5">{{ supersyndic.user.prenom }}</span>
+                            <strong>Contact Principal:</strong>
+                            <span class="fs-5">{{ supersyndic.user.prenom }}</span>
                         </p>
                         <p>
                             <strong>Email:</strong>
-                            &nbsp; <span class="fs-5">
+                            <span class="fs-5">
                                 <a href="mailto:{{ supersyndic.user.email }}" class="a_link">
                                     {{ supersyndic.user.email }}
                                 </a>
                             </span>
                         </p>
                         <p>
-                            <strong>Phone:</strong> &nbsp;
-                            &nbsp; <span class="fs-5">
+                            <strong>Phone:</strong>
+                            <span class="fs-5">
                                 <a href="tel:{{ supersyndic.user.phone }}" class="a_link">
                                     {{ supersyndic.user.phone }}
                                 </a>
@@ -218,35 +214,32 @@
                         </p>
                         <p>
                             <strong>Adresse du siège:</strong>
-                            &nbsp; <span class="fs-5">{{ supersyndic.user.address }}</span>
+                            <span class="fs-5">{{ supersyndic.user.address }}</span>
                         </p>
                         <p>
                             <strong>Postal Code:</strong>
-                            &nbsp; <span class="fs-5">
-                                {{ supersyndic.user.postal_code }}</span>
+                             <span class="fs-5">{{ supersyndic.user.postal_code }}</span>
                         </p>
                         <p>
-                            <strong>City</strong>
-                            &nbsp; <span class="fs-5">
-                                {{ supersyndic.user.city }}</span>
+                            <strong>City:</strong>
+                            <span class="fs-5">{{ supersyndic.user.city }}</span>
                         </p>
                         {% if user.role == 'Superadmin' %}
                         <p>
                             <strong>User ID:</strong>
-                            &nbsp; <span class="fs-5">
-                                {{ supersyndic.user.id }}</span>
+                            <span class="fs-5">{{ supersyndic.user.id }}</span>
                         </p>
                         <p>
                             <strong>Role:</strong>
-                            &nbsp; <span class="fs-5">{{ syndic.user.role }}</span>
+                            <span class="fs-5">{{ syndic.user.role }}</span>
                         </p>
                         <p>
                             <strong>Statut:</strong>
-                            &nbsp; <span class="fs-5">{{ supersyndic.user.status }}</span>
+                            <span class="fs-5">{{ supersyndic.user.status }}</span>
                         </p>
                         <p>
                             <strong>Commercial:</strong>
-                            &nbsp; <span class="fs-5">{{ supersyndic.user.commercial }}</span>
+                            <span class="fs-5">{{ supersyndic.user.commercial }}</span>
                         </p>
                         {% endif %}
                     </div>
@@ -274,12 +267,13 @@
                         <strong>{% trans "Email" %}:</strong>
                         <a href="mailto:{{ coproprietaire.user.email }}" class="a_link">
                             {{ coproprietaire.user.email }}
-                        </a><br>
+                        </a>
+                        <br>
                         <p>
                             <strong>{% trans "Last Name" %}:</strong> {{ coproprietaire.user.nom }}<br>
                             <strong>{% trans "First Name" %}:</strong> {{ coproprietaire.user.prenom }}<br>
-                            <strong>Phone:</strong> &nbsp;
-                            &nbsp; <span class="fs-5">
+                            <strong>Phone:</strong>
+                            <span class="fs-5">
                                 <a href="tel:{{ coproprietaire.user.phone }}" class="a_link">
                                     {{ coproprietaire.user.phone }}
                                 </a>
@@ -293,7 +287,8 @@
                             {% for residence in residences %}
                             <hr>
                             <span>
-                                <strong>{% trans "Name" %}:</strong> {{ residence.nom }}<br>
+                                <strong>{% trans "Residence" %}:</strong> {{ residence.nom }}
+                                <br>
                                 <strong>{% trans "Address" %}:</strong> {{ residence.adresse }}
                             </span>
                             {% empty %}
@@ -325,12 +320,13 @@
                         <strong>{% trans "Email" %}:</strong>
                         <a href="mailto:{{ prestataire.user.email }}" class="a_link">
                             {{ prestataire.user.email }}
-                        </a><br>
+                        </a>
+                        <br>
                         <p>
                             <strong>{% trans "Last Name" %}:</strong> {{ prestataire.user.nom }}<br>
                             <strong>{% trans "First Name" %}:</strong> {{ prestataire.user.prenom }}<br>
-                            <strong>Phone:</strong> &nbsp;
-                            &nbsp; <span class="fs-5">
+                            <strong>Phone:</strong>
+                            <span class="fs-5">
                                 <a href="tel:{{ prestataire.user.phone }}" class="a_link">
                                     {{ prestataire.user.phone }}
                                 </a>
@@ -385,7 +381,7 @@
                         <div class="stats">
                             <span><strong>{% trans "Total Co-owners" %}:</strong> {{ coproprietaires.count }}</span>
                             <a href="{% url 'gestion-coproprietaire' %}" class="view-details">
-                                <span><i class="material-icons">search</i> {% trans "View Details" %}</span>
+                                <span>{% trans "View Details" %}</span>
                             </a>
                         </div>
                     </div>
@@ -393,7 +389,7 @@
                         <div class="stats">
                             <span><strong>{% trans "Associated Co-Prestataires" %}:</strong> {{ prestataires.count }}</span>
                             <a href="{% url 'gestion-prestataire' %}" class="view-details">
-                                <span><i class="material-icons">search</i> {% trans "View Details" %}</span>
+                                <span>{% trans "View Details" %}</span>
                             </a>
                         </div>
                     </div>
@@ -420,7 +416,7 @@
                     <p>
                         {% for residence in residences %}
                         <div class="stats">
-                            <span>{% trans "Residence" %}<strong> {{ residence.nom }}</strong></span>
+                            <span>{% trans "Residence" %}<strong> {{ residence.nom }}:</strong></span>
                             <a href="{% url 'residence-detail' residence.id %}" class="view-details">
                                 <span>{% trans "View Details" %}</span>
                             </a>
