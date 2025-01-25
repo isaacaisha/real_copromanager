@@ -8,7 +8,7 @@
     }
 </style>
 
-{% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+{% if residences and user.role == 'Syndic' or user.role == 'SuperSyndic' %}
 <div class="container text-center">
     <a href="{% url 'associate-coproprietaire' %}" class="btn btn-success btn-sm">
         {% trans "add Co-Owner to Residence" %}

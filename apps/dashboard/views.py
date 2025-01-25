@@ -340,6 +340,7 @@ def dashboard_prestataire(request, prestataire_id):
 
     html_template = loader.get_template('dashboard-prestataire.html')
     return HttpResponse(html_template.render(context, request))
+    
 
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
@@ -771,7 +772,7 @@ def license_detail(request, license_id):
     license = get_object_or_404(License, id=license_id)
     syndic = license.syndic  # Access the syndic associated with this license
     supersyndic = license.supersyndic
-    coproprietaires = syndic.coproprietaire_set.all() if syndic else []
+    coproprietaires = syndic.syndic_coproprietaires.all() if syndic else []
     prestataires = syndic.prestataire_set.all() if syndic else []
     residences = None
     

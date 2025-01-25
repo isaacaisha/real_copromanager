@@ -412,8 +412,7 @@ def update_profile(request, user_id=None):
                             prestataire.save()
 
                         messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
-                        supersyndic = get_object_or_404(SuperSyndic, user=profile)
-                        return redirect('dashboard-supersyndic', supersyndic_id=supersyndic.id)
+                        return redirect('dashboard-supersyndic', supersyndic_id=user_id)
 
                 except Exception as e:
                     messages.error(request, f"An error occurred: {e}")
@@ -428,8 +427,7 @@ def update_profile(request, user_id=None):
                     with transaction.atomic():
                         syndic_form.save()
                         messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
-                        syndic = get_object_or_404(Syndic, user=profile)
-                        return redirect('dashboard-syndic', syndic_id=syndic.id)
+                        return redirect('dashboard-syndic', syndic_id=user_id)
                 except Exception as e:
                     messages.error(request, f"An error occurred: {e}")
             else:
@@ -482,21 +480,42 @@ def delete_residence(request, residence_id):
 # Delete Syndic View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def delete_syndic(request, syndic_id):
+    """
+    Deletes a Syndic and all related data (residences, coproprietaires, prestataires).
+    """
+    syndic = get_object_or_404(Syndic, user__id=syndic_id)
+    # Delete related residences
+    syndic.syndic_residences.all().delete()
+    # Delete related coproprietaires
+    syndic.syndic_coproprietaires.all().delete()
+    # Delete related prestataires
+    Prestataire.objects.filter(syndic=syndic).delete()
+    # Delete the syndic
     syndic = get_object_or_404(CustomUser, id=syndic_id, role='Syndic')
     syndic.delete()
-    messages.success(request, _('Syndic "%s" and their data have been deleted.') % syndic.nom)
+    messages.success(request, _('Syndic "%s" and all their related data have been deleted.') % syndic.nom)
     return redirect('gestion-syndic')
+
 
 # Delete SuperSyndic View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def delete_supersyndic(request, supersyndic_id):
     """
-    View to delete a SuperSyndic and their associated user.
+    Deletes a SuperSyndic and all related data (residences, coproprietaires, prestataires).
     """
+    supersyndic = get_object_or_404(SuperSyndic, user__id=supersyndic_id)
+    # Delete related residences
+    supersyndic.supersyndic_residences.all().delete()
+    # Delete related coproprietaires
+    supersyndic.supersyndic_coproprietaires.all().delete()
+    # Delete related prestataires
+    Prestataire.objects.filter(supersyndic=supersyndic).delete()
+    # Delete the supersyndic
     supersyndic = get_object_or_404(CustomUser, id=supersyndic_id, role='SuperSyndic')
     supersyndic.delete()
-    messages.success(request, _('SuperSyndic "%s" and their data have been deleted.') % supersyndic.nom)
+    messages.success(request, _('SuperSyndic "%s" and all their related data have been deleted.') % supersyndic.nom)
     return redirect('gestion-supersyndic')
+
 
 # Delete Coproprietaire View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
@@ -506,6 +525,7 @@ def delete_coproprietaire(request, coproprietaire_id):
     user.delete()  # Delete the CustomUser, which cascades the deletion to Coproprietaire
     messages.success(request, _('Coproprietaire "%s" has been deleted.') % user.nom)
     return redirect('gestion-coproprietaire')
+
 
 # Delete Prestataire View
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
