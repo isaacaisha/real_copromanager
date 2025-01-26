@@ -11,25 +11,13 @@
 
 {% block content %}
 <div class="mt-4">
-
-    <!-- Backoffice Co-owners & Providers -->
-    <div class="mb-5">
-        <ul>
-            <li>
-                <a class="a_link" href="{% url 'gestion-coproprietaire' %}">
-                    {% trans "Backoffice - Management of Co-owners" %}
-                </a>
-            </li>
-            <hr>
-            <li>
-                <a class="a_link" href="{% url 'gestion-prestataire' %}">
-                    {% trans "Backoffice - Manage Providers" %}
-
-                </a>
-            </li>
-            <hr>
-        </ul>
+    {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+    <div class="container text-center mb-3">
+        <a href="{% url 'create-residence' user.id %}" class="btn btn-success btn-sm">
+            {% trans "Create Residence" %}
+        </a>
     </div>
+    {% endif %}
 
     <div class="card">
         <div class="card-header card-header-icon">
@@ -74,19 +62,19 @@
                         {% for residence in residences %}
                         <tr>
                             <td>{{ residence.nom }}</td>
-                            <td>
-                                {% if residence.syndic and residence.syndic.user %}
-                                <a href="mailto:{{ residence.syndic.user.email }}" class="a_link">
-                                    {{ residence.syndic.user.email }}
-                                </a>
-                                {% elif residence.supersyndic and residence.supersyndic.user %}
-                                <a href="mailto:{{ residence.supersyndic.user.email }}" class="a_link">
-                                    {{ residence.supersyndic.user.email }}
-                                </a>
-                                {% else %}
-                                <p>{% trans "No email available" %}</p>
-                                {% endif %}
-                            </td>
+                                <td>
+                                    {% if residence.syndic.exists %}
+                                    {% for syndic in residence.syndic.all %}
+                                    <a href="mailto:{{ syndic.user.email }}" class="a_link">{{ syndic.user.email }}</a><br>
+                                    {% endfor %}
+                                    {% endif %}
+                                    
+                                    {% if residence.supersyndic.exists %}
+                                    {% for supersyndic in residence.supersyndic.all %}
+                                    <a href="mailto:{{ supersyndic.user.email }}" class="a_link">{{ supersyndic.user.email }}</a><br>
+                                    {% endfor %}
+                                    {% endif %}
+                                </td>
                             <td>
                                 <a href="{% url 'residence-detail' residence.id %}" class="btn btn-sm">
                                     <i class="material-icons">search</i> {% trans "View Details" %}

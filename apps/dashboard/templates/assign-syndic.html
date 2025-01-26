@@ -1,0 +1,63 @@
+<!-- apps/dashboard/templates/assign-syndic.html -->
+
+{% extends "layouts/base.html" %}
+
+{% load static i18n %}
+
+{% block title %} {% trans "Assign Super/Syndic with a Residence" %} {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="mt-5">
+    <div class="card">
+        <div class="card-header card-header-icon">
+            <div class="card-icon">
+                <i class="fa-solid fa-id-card fa-beat fa-2x"></i>
+            </div>
+            <h5 class="card-title">
+                {% trans "Assign a Syndicate to a Residence" %}
+            </h5>
+        </div>
+
+        <div class="card-body">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.syndic2.label_tag }}
+                    {{ form.syndic2 }}
+                    {% if form.syndic2.errors %}
+                    <span class="text-danger">{{ form.syndic2.errors }}</span>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.supersyndic.label_tag }}
+                    {{ form.supersyndic }}
+                    {% if form.supersyndic.errors %}
+                    <span class="text-danger">{{ form.supersyndic.errors }}</span>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.residence.label_tag }}
+                    {{ form.residence }}
+                    {% if form.residence.errors %}
+                    <span class="text-danger">{{ form.residence.errors }}</span>
+                    {% endif %}
+                </div>
+                <br>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success btn-sm pull-left">{% trans "Save" %}</button>
+                    <a href="javascript:history.back()" class="btn btn-sm pull-right">{% trans "Cancel" %}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

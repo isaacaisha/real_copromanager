@@ -239,9 +239,8 @@ def register_supersyndic(request, syndic_id):
                     # Transfer residences to the SuperSyndic
                     residences = Residence.objects.filter(syndic=syndic)
                     for residence in residences:
-                        residence.syndic = None
-                        residence.supersyndic = supersyndic
-                        residence.save()
+                        residence.syndic.remove(syndic)  # Remove the old syndic from ManyToMany
+                        residence.supersyndic.add(supersyndic)  # Add the supersyndic to ManyToMany
 
                     # Transfer associated Coproprietaires
                     coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
@@ -485,9 +484,9 @@ def delete_syndic(request, syndic_id):
     """
     syndic = get_object_or_404(Syndic, user__id=syndic_id)
     # Delete related residences
-    syndic.syndic_residences.all().delete()
+    syndic.syndic_residences.filter(created_by=syndic.user).delete()
     # Delete related coproprietaires
-    syndic.syndic_coproprietaires.all().delete()
+    syndic.syndic_coproprietaires.filter(syndic=syndic).delete()
     # Delete related prestataires
     Prestataire.objects.filter(syndic=syndic).delete()
     # Delete the syndic
@@ -505,9 +504,9 @@ def delete_supersyndic(request, supersyndic_id):
     """
     supersyndic = get_object_or_404(SuperSyndic, user__id=supersyndic_id)
     # Delete related residences
-    supersyndic.supersyndic_residences.all().delete()
+    supersyndic.supersyndic_residences.filter(created_by=supersyndic.user).delete()
     # Delete related coproprietaires
-    supersyndic.supersyndic_coproprietaires.all().delete()
+    supersyndic.supersyndic_coproprietaires.filter(supersyndic=supersyndic).delete()
     # Delete related prestataires
     Prestataire.objects.filter(supersyndic=supersyndic).delete()
     # Delete the supersyndic

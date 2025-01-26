@@ -17,10 +17,23 @@
 
 {% block content %}
 
+{% if user.role == 'Superadmin' %}
+<div class="container">
+    <a href="{% url 'register' %}?role=Syndic" class="btn btn-success btn-sm pull-left">
+        {% trans "Create a Syndic" %}
+    </a>
+    
+    <a href="{% url 'assign-syndic' %}" class="btn btn-success btn-sm pull-right">
+        {% trans "add to Residence" %}
+    </a>
+</div>
+<br>
+{% endif %}
+
 {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
 <div class="container">
     <a href="{% url 'register' %}?role=Coproprietaire" class="btn btn-success btn-sm pull-left">
-        {% trans "Create Co-Owner" %}
+        {% trans "Create a Co-Owner" %}
     </a>
     
     <a href="{% url 'associate-coproprietaire' %}" class="btn btn-success btn-sm pull-right">
@@ -130,9 +143,14 @@
                     </div>
                     {% if residence %}
                     <div class="card-body p-2">
-                        <div>
+                        <div class="col-12">
                             <strong>{% trans "Email" %}:</strong>{{ residence.nom }}<br>
                             <strong>{% trans "Address" %}:</strong> {{ residence.adresse }}<br>
+                            <strong>{{ _('Created By') }}:</strong> 
+                            <span class="h5">{{ residence.created_by.nom }}</span> 
+                            <a href="mailto:{{ coproprietaire.user.email }}" class="a_link">
+                                ({{ residence.created_by.email }})
+                            </a><br>
                             <strong>{% trans "nombre_appartements" %}:</strong> {{ residence.nombre_appartements }}<br>
                             <strong>{% trans "superficie_totale" %}:</strong> {{ residence.superficie_totale }}<br>
                             <strong>{% trans "date_construction" %}:</strong> {{ residence.date_construction }}<br>
@@ -140,27 +158,98 @@
                             <strong>{% trans "zones_communes" %}:</strong> {{ residence.zones_communes }}<br>
                             <strong>{% trans "date_dernier_controle" %}:</strong> {{ residence.date_dernier_controle }}<br>
                             {% if residence.syndic %}
-                            <strong>{% trans "syndic Name" %}:</strong> {{ residence.syndic.user.nom }}<br>
-                            {% else %}
-                            <strong>{% trans "supersyndic Name" %}:</strong> {{ residence.supersyndic.user.nom }}
+                                <strong>
+                                    {% trans "Associated Syndic" %}:
+                                    {% for syndic in syndics %}
+                                    {{ syndic.user.nom }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </strong>
+                                <br>
+                            {% endif %}
+                            {% if residence.supersyndic %}
+                                <strong>
+                                    {% trans "Associated Supersyndic" %}:
+                                    {% for supersyndic in supersyndics %}
+                                    {{ supersyndic.user.nom }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                </strong>
                             {% endif %}
                         </div>
-                        {% if coproprietaires %}
-                            <hr>
-                            <span class="d-flex justify-content-center"">
-                                {% trans " Co-Owners Associated" %}:
-                            </span>
-                            {% for coproprietaire in coproprietaires %}
-                                <hr>
-                                <span>{{ coproprietaire.user.nom }}</span>
-                            {% endfor %}
-                        {% endif %}
                     </div>
                     {% endif %}
                 </div>
             </div>
             {% endif %}
-    
+
+            {% if coproprietaires %}
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header card-header-icon">
+                        <div class="card-icon">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                        <h5 class="card-title">{% trans "Associated Co-Owners" %}</h5>
+                    </div>
+                    <div class="card-body p-2">
+                        {% for coproprietaire in coproprietaires %}
+                        <div>
+                            <span class="col-md-6 col-lg-6 pull-left">
+                                <strong>{% trans "Last Name" %}:</strong> {{ coproprietaire.user.nom }}<br>
+                                <strong>{% trans "First Name" %}:</strong> {{ coproprietaire.user.prenom }}<br>
+                                
+                                <strong>{% trans "Email" %}:</strong>
+                                <a href="mailto:{{ coproprietaire.user.email }}" class="a_link">
+                                    {{ coproprietaire.user.email }}
+                                </a><br>
+                                <strong>{% trans "Phone" %}:</strong>
+                                <a href="tel:{{ coproprietaire.user.phone }}" class="a_link mb-3">
+                                    {{ coproprietaire.user.phone }}
+                                </a><hr>
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p class="col-12 text-center">{% trans "No co-owners associated with this residence." %}</p>
+            {% endif %}
+
+            {% if prestataires %}
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header card-header-icon">
+                        <div class="card-icon">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                        <h5 class="card-title">{% trans "Associated Providers" %}</h5>
+                    </div>
+                    <div class="card-body p-2">
+                        {% for prestataire in prestataires %}
+                        <div>
+                            <span class="col-md-6 col-lg-6 pull-left">
+                                <strong>{% trans "Last Name" %}:</strong> {{ prestataire.user.nom }}<br>
+                                <strong>{% trans "First Name" %}:</strong> {{ prestataire.user.prenom }}<br>
+            
+                                <strong>{% trans "Email" %}:</strong>
+                                <a href="mailto:{{ prestataire.user.email }}" class="a_link">
+                                    {{ prestataire.user.email }}
+                                </a><br>
+                                <strong>{% trans "Phone" %}:</strong>
+                                <a href="tel:{{ prestataire.user.phone }}" class="a_link mb-3">
+                                    {{ prestataire.user.phone }}
+                                </a>
+                                <hr>
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p class="col-12 text-center">{% trans "No prestataires associated with this syndicate." %}</p>
+            {% endif %}
+
         </div>
 
         <div class="text-center">

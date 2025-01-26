@@ -8,6 +8,8 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext as _
 
+from apps.authentication.models import CustomUser
+
 # Superadmin Model
 class Superadmin(models.Model):
     user = models.OneToOneField(
@@ -112,7 +114,7 @@ class Syndic(models.Model):
     )
 
     def __str__(self):
-        return self.nom
+        return self.user.nom
 
 
 class SuperSyndic(models.Model):
@@ -136,7 +138,7 @@ class SuperSyndic(models.Model):
     )
 
     def __str__(self):
-        return self.nom
+        return self.user.nom
 
 
 # Building Information
@@ -150,12 +152,12 @@ class Residence(models.Model):
     zones_communes = models.TextField(verbose_name=_('Common Areas'))  # Example: "Hall, Garden, Parking"
     date_dernier_controle = models.DateField(null=True, blank=True, verbose_name=_('Last Inspection Date'))
     type_chauffage = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Heating Type'))
-    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True, related_name='syndic_residences')
-    supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True, related_name='supersyndic_residences')
+    syndic = models.ManyToManyField(Syndic, verbose_name=_('Syndic'), blank=True, related_name='syndic_residences')
+    supersyndic = models.ManyToManyField(SuperSyndic, verbose_name=_('SuperSyndic'), blank=True, related_name='supersyndic_residences')
+    created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="created_residences")
 
     def __str__(self):
         return _("Building {name} ({address})").format(name=self.nom, address=self.adresse)
-        #return _("Building: {name}").format(name=self.nom)
 
 
 # Co-owner Information

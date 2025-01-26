@@ -8,14 +8,6 @@
     }
 </style>
 
-{% if residences and user.role == 'Syndic' or user.role == 'SuperSyndic' %}
-<div class="container text-center">
-    <a href="{% url 'associate-coproprietaire' %}" class="btn btn-success btn-sm">
-        {% trans "add Co-Owner to Residence" %}
-    </a>
-</div>
-{% endif %}
-
 <!-- Card principale -->
 <div class="card card-body">
     <div class="row gx-3 mb-1 align-items-center">
@@ -363,7 +355,7 @@
         </div>
         {% endif %}
         
-        {% if user.role == 'Superadmin' and coproprietaires or prestataires %}
+        {% if user.role == 'Superadmin' and coproprietaires or user.role == 'Superadmin' and prestataires %}
         <!-- List of Co-owners (Coproprietaires) -->
         <div class="col-12 col-md-6 col-lg-6">
             <div class="card shadow-sm">

@@ -111,18 +111,37 @@ class ResidenceForm(forms.ModelForm):
     def save(self, user, target_user=None, commit=True):
         residence = super().save(commit=False)
 
+        # Automatically set the 'created_by' field to the logged-in user
+        residence.created_by = user
+
+        # Handle syndic or supersyndic associations
         try:
             if target_user:  # For residence creation with a target user
                 if target_user.role in ['Syndic', 'SuperSyndic']:
-                    residence.syndic = Syndic.objects.filter(user=target_user).first() or None
-                    residence.supersyndic = SuperSyndic.objects.filter(user=target_user).first() or None
+                    syndic_instance = Syndic.objects.filter(user=target_user).first()
+                    supersyndic_instance = SuperSyndic.objects.filter(user=target_user).first()
+
+                    if syndic_instance:
+                        residence.save()  # Save residence first before modifying ManyToMany fields
+                        residence.syndic.add(syndic_instance)  # Use `.add()` for ManyToManyField
+                    if supersyndic_instance:
+                        residence.save()
+                        residence.supersyndic.add(supersyndic_instance)
                 else:
                     raise ValueError(_("Target user must be a Syndic or SuperSyndic."))
             else:  # For updates or creation without a target user
                 if user.role in ['Syndic', 'SuperSyndic']:
-                    residence.syndic = Syndic.objects.filter(user=user).first() or None
-                    residence.supersyndic = SuperSyndic.objects.filter(user=user).first() or None
-                elif user.role == 'Superadmin':  # Allow Superadmin to update without specific syndic assignment
+                    syndic_instance = Syndic.objects.filter(user=user).first()
+                    supersyndic_instance = SuperSyndic.objects.filter(user=user).first()
+
+                    if syndic_instance:
+                        residence.save()
+                        residence.syndic.add(syndic_instance)
+                    if supersyndic_instance:
+                        residence.save()
+                        residence.supersyndic.add(supersyndic_instance)
+                elif user.role == 'Superadmin':
+                    # Allow Superadmin to update without specific syndic assignment
                     pass
                 else:
                     raise ValueError(_("Only Syndics or SuperSyndics can create or update residences."))
@@ -134,6 +153,37 @@ class ResidenceForm(forms.ModelForm):
         if commit:
             residence.save()
         return residence
+    
+
+class AssignSyndicForm(forms.Form):
+    residence = forms.ModelChoiceField(
+        queryset=Residence.objects.none(),
+        label=_("Residence"),
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+    syndic2 = forms.ModelChoiceField(
+        queryset=Syndic.objects.none(),  # Start with an empty queryset
+        label=_("Syndic to Assign"),
+        required=False,
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+    supersyndic = forms.ModelChoiceField(
+        queryset=SuperSyndic.objects.none(),  # Start with an empty queryset
+        label=_("SuperSyndic to Assign"),
+        required=False,
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+    def __init__(self, *args, **kwargs):
+        residence_queryset = kwargs.pop('residence_queryset', Residence.objects.none())
+        syndic_queryset = kwargs.pop('syndic_queryset', Syndic.objects.none())  # Dynamically pass syndic data
+        supersyndic_queryset = kwargs.pop('supersyndic_queryset', SuperSyndic.objects.none())  # Dynamically pass supersyndic data
+        super().__init__(*args, **kwargs)
+        
+        # Assign querysets dynamically
+        self.fields['residence'].queryset = residence_queryset
+        self.fields['syndic2'].queryset = syndic_queryset
+        self.fields['supersyndic'].queryset = supersyndic_queryset
 
 
 class AssociateCoproprietaireForm(forms.Form):

@@ -19,7 +19,7 @@ from django.utils import timezone
 
 from core.utils import get_user_context, otp_required_for_supersyndic  # Import the helper function
 
-from .forms import LicenseForm, ResidenceForm, AssociateCoproprietaireForm
+from .forms import LicenseForm, ResidenceForm, AssignSyndicForm, AssociateCoproprietaireForm
 from .models import (
     License, Superadmin, SuperSyndic,
     Syndic, Coproprietaire, Prestataire, Residence
@@ -36,9 +36,6 @@ def dashboard_superadmin(request, superadmin_id):
 
     # Fetch the current superadmin profile
     if request.user.role == 'Superadmin':
-        # Query by user__id when accessed by Superadmin
-        #superadmin = get_object_or_404(Superadmin, user__id=superadmin_id)
-        #profile = get_object_or_404(Superadmin, user__id=superadmin_id)
         superadmin = get_object_or_404(Superadmin, user=request.user)
         profile = get_object_or_404(Superadmin, user=request.user)
     else:
@@ -249,7 +246,7 @@ def dashboard_coproprietaire(request, coproprietaire_id):
     coproprietaires = None
     if request.user.role in ['Syndic', 'Superadmin']:
         coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
-    elif request.user.role == 'SuperSyndic':
+    elif request.user.role in ['Syndic', 'Superadmin']:
         coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
     else:
         coproprietaires = Coproprietaire.objects.filter(user=request.user)
@@ -347,7 +344,7 @@ def dashboard_prestataire(request, prestataire_id):
 def gestion_residence(request):
     """
     View for managing residences.
-    - Superadmins see only their Syndic and SuperSyndic related data.
+    - Superadmin can see all Syndic and SuperSyndic related data.
     - Syndics and SuperSyndics see only their own residences.
     """
     try:
@@ -375,13 +372,6 @@ def gestion_residence(request):
             coproprietaires = Coproprietaire.objects.all()
             prestataires = Prestataire.objects.all()
             
-            #syndic_ids = Syndic.objects.filter(superadmin=request.user).values_list('id', flat=True)
-            #supersyndic_ids = SuperSyndic.objects.filter(superadmin=request.user).values_list('id', flat=True)
-#
-            #residences = Residence.objects.filter(syndic__id__in=syndic_ids) | Residence.objects.filter(supersyndic__id__in=supersyndic_ids)
-            #coproprietaires = Coproprietaire.objects.filter(syndic__id__in=syndic_ids) | Coproprietaire.objects.filter(supersyndic__id__in=supersyndic_ids)
-            #prestataires = Prestataire.objects.filter(syndic__id__in=syndic_ids) | Prestataire.objects.filter(supersyndic__id__in=supersyndic_ids)
-
         else:
             messages.error(request, _("You are not authorized to view this page."))
             return HttpResponse(status=403)
@@ -609,7 +599,7 @@ def update_residence(request, residence_id):
     return HttpResponse(html_template.render(context, request))
 
 
-# View to display license details
+# View to display residence details
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def residence_detail(request, residence_id):
@@ -624,8 +614,7 @@ def residence_detail(request, residence_id):
     if request.user.role == 'Syndic':
         if hasattr(request.user, 'syndic_profile'):
             residences = Residence.objects.filter(syndic=request.user.syndic_profile)
-            coproprietaires = Coproprietaire.objects.filter(residence=residence, syndic=request.user.syndic_profile)
-            #prestataires = Prestataire.objects.filter(residence=residence, syndic=request.user.syndic_profile)
+            coproprietaires = Coproprietaire.objects.filter(residence__id=residence.id)
             prestataires = Prestataire.objects.filter(syndic=request.user.syndic_profile)
         else:
             messages.error(request, _("You are not authorized to view this page."))
@@ -634,8 +623,7 @@ def residence_detail(request, residence_id):
     elif request.user.role == 'SuperSyndic':
         if hasattr(request.user, 'supersyndic_profile'):
             residences = Residence.objects.filter(supersyndic=request.user.supersyndic_profile)
-            coproprietaires = Coproprietaire.objects.filter(residence=residence, supersyndic=request.user.supersyndic_profile)
-            #prestataires = Prestataire.objects.filter(residence=residence, supersyndic=request.user.supersyndic_profile)
+            coproprietaires = Coproprietaire.objects.filter(residence__id=residence.id)
             prestataires = Prestataire.objects.filter(supersyndic=request.user.supersyndic_profile)
         else:
             messages.error(request, _("You are not authorized to view this page."))
@@ -644,7 +632,6 @@ def residence_detail(request, residence_id):
     elif request.user.role == 'Superadmin':
         residences = Residence.objects.all()
         coproprietaires = Coproprietaire.objects.filter(residence=residence)
-        #prestataires = Prestataire.objects.filter(residence=residence)
         prestataires = Prestataire.objects.all()
 
     else:
@@ -663,12 +650,76 @@ def residence_detail(request, residence_id):
         'residences': residences,
         'total_count': total_count,
         'titlePage': _('Residence "%s" Details') % residence.nom,
+        'syndics': residence.syndic.all() if hasattr(residence, 'syndic') else None,
+        'supersyndics': residence.supersyndic.all() if hasattr(residence, 'supersyndic') else None,
         'nom': request.user.nom,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
 
     # Render the template
     html_template = loader.get_template('residence-detail.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin'])
+def assign_syndic_to_residence(request):
+    residences = Residence.objects.all()  # Allow Superadmin to manage all residences
+    syndic_queryset = Syndic.objects.filter(user__is_active=True)  # All active syndics
+    supersyndic_queryset = SuperSyndic.objects.filter(user__is_active=True)  # All active supersyndics
+
+    # Handle POST request
+    if request.method == "POST":
+        form = AssignSyndicForm(
+            request.POST,
+            residence_queryset=residences,
+            syndic_queryset=syndic_queryset,
+            supersyndic_queryset=supersyndic_queryset
+
+        )
+        if form.is_valid():
+            residence = form.cleaned_data['residence']
+            syndic2 = form.cleaned_data.get('syndic2')
+            supersyndic = form.cleaned_data.get('supersyndic')
+
+            # Add syndic and/or supersyndic to the residence without removing existing assignments
+            if syndic2:
+                residence.syndic.add(syndic2)
+            if supersyndic:
+                residence.supersyndic.add(supersyndic)
+
+            messages.success(
+                request,
+                _("{syndic2} {supersyndic} successfully assigned to Residence {res_name}.").format(
+                    res_name=residence.nom, syndic2=syndic2.nom, supersyndic=supersyndic.user.nom
+                )
+            )
+            return redirect('residence-detail', residence.id)
+        else:
+            messages.error(request, _("Form is not valid. Please correct the errors."))
+    else:
+        form = AssignSyndicForm(
+            residence_queryset=residences,
+            syndic_queryset=syndic_queryset,
+            supersyndic_queryset=supersyndic_queryset
+        )
+
+    # Add coproprietaires for the first residence (or selected residence) to the context
+    coproprietaires = None
+    if residences.exists():
+        coproprietaires = residences.first().coproprietaire_residences.all()
+
+    # Render the template
+    context = {
+        'segment': 'assign-syndic',
+        "titlePage": _("Assign Syndic to Residence"),
+        "form": form,
+        'residences': residences,
+        'coproprietaires': coproprietaires,
+        'date': timezone.now().strftime(_("%a %d %B %Y"))
+    }
+
+    html_template = loader.get_template('assign-syndic.html')
     return HttpResponse(html_template.render(context, request))
 
 
