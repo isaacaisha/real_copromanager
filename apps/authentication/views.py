@@ -245,22 +245,20 @@ def register_supersyndic(request, syndic_id):
                     # Transfer associated Coproprietaires
                     coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
                     for coproprietaire in coproprietaires:
-                        coproprietaire.syndic = None
-                        coproprietaire.supersyndic = supersyndic
-                        coproprietaire.save()
+                        coproprietaire.syndic.remove(syndic)
+                        coproprietaire.supersyndic.add(supersyndic) 
 
                     # Transfer associated Prestataires
                     prestataires = Prestataire.objects.filter(syndic=syndic)
                     for prestataire in prestataires:
-                        prestataire.syndic = None
-                        prestataire.supersyndic = supersyndic
-                        prestataire.save()
+                        prestataire.syndic.remove(syndic) 
+                        prestataire.supersyndic.add(supersyndic) 
 
                     # Handle the license transfer
                     license = License.objects.filter(syndic=syndic).order_by('-date_debut').first()
                     if license:
-                        license.supersyndic = supersyndic
-                        license.syndic = None
+                        license.syndic = None  # For ForeignKey
+                        license.supersyndic = supersyndic  # Assign new supersyndic
                         license.save()
 
                     # Delete the old Syndic record
@@ -482,17 +480,20 @@ def delete_syndic(request, syndic_id):
     """
     Deletes a Syndic and all related data (residences, coproprietaires, prestataires).
     """
-    syndic = get_object_or_404(Syndic, user__id=syndic_id)
-    # Delete related residences
-    syndic.syndic_residences.filter(created_by=syndic.user).delete()
-    # Delete related coproprietaires
-    syndic.syndic_coproprietaires.filter(syndic=syndic).delete()
-    # Delete related prestataires
-    Prestataire.objects.filter(syndic=syndic).delete()
-    # Delete the syndic
-    syndic = get_object_or_404(CustomUser, id=syndic_id, role='Syndic')
-    syndic.delete()
-    messages.success(request, _('Syndic "%s" and all their related data have been deleted.') % syndic.nom)
+    syndic = get_object_or_404(Syndic, id=syndic_id)
+    user = syndic.user  # Access the associated user account
+
+    # Unlink the supersyndic from related coproprietaires
+    syndic.syndic_coproprietaires.clear()  # Remove all coproprietaires from the many-to-many relationship
+
+    # Clear many-to-many relationships for prestataires
+    syndic.syndic_prestataires.clear()
+
+    # Residences are many-to-many; ensure no deletion occurs (no explicit action is needed here)
+    # Coproprietaires and Prestataires will still be linked to Residences.
+
+    user.delete()  # Delete the CustomUser syndic
+    messages.success(request, _('Syndic "%s" has been deleted successfully.') % syndic.nom)
     return redirect('gestion-syndic')
 
 
@@ -502,17 +503,20 @@ def delete_supersyndic(request, supersyndic_id):
     """
     Deletes a SuperSyndic and all related data (residences, coproprietaires, prestataires).
     """
-    supersyndic = get_object_or_404(SuperSyndic, user__id=supersyndic_id)
-    # Delete related residences
-    supersyndic.supersyndic_residences.filter(created_by=supersyndic.user).delete()
-    # Delete related coproprietaires
-    supersyndic.supersyndic_coproprietaires.filter(supersyndic=supersyndic).delete()
-    # Delete related prestataires
-    Prestataire.objects.filter(supersyndic=supersyndic).delete()
-    # Delete the supersyndic
-    supersyndic = get_object_or_404(CustomUser, id=supersyndic_id, role='SuperSyndic')
-    supersyndic.delete()
-    messages.success(request, _('SuperSyndic "%s" and all their related data have been deleted.') % supersyndic.nom)
+    supersyndic = get_object_or_404(SuperSyndic, id=supersyndic_id)
+    user = supersyndic.user  # Access the associated user account
+
+    # Unlink the supersyndic from related coproprietaires
+    supersyndic.supersyndic_coproprietaires.clear()  # Remove all coproprietaires from the many-to-many relationship
+
+    # Clear many-to-many relationships for prestataires
+    supersyndic.supersyndic_prestataires.clear()
+
+    # Residences are many-to-many; ensure no deletion occurs (no explicit action is needed here)
+    # Coproprietaires and Prestataires will still be linked to Residences.
+
+    user.delete()  # Delete the CustomUser SuperSyndic
+    messages.success(request, _('SuperSyndic "%s" has been deleted successfully.') % supersyndic.nom)
     return redirect('gestion-supersyndic')
 
 
@@ -522,7 +526,7 @@ def delete_coproprietaire(request, coproprietaire_id):
     coproprietaire = get_object_or_404(Coproprietaire, user__id=coproprietaire_id)
     user = coproprietaire.user  # Access the linked CustomUser
     user.delete()  # Delete the CustomUser, which cascades the deletion to Coproprietaire
-    messages.success(request, _('Coproprietaire "%s" has been deleted.') % user.nom)
+    messages.success(request, _('Coproprietaire "%s" has been deleted successfully.') % coproprietaire.nom)
     return redirect('gestion-coproprietaire')
 
 
@@ -532,5 +536,5 @@ def delete_prestataire(request, prestataire_id):
     prestataire = get_object_or_404(Prestataire, user__id=prestataire_id)
     user = prestataire.user  # Access the linked CustomUser
     user.delete()  # Delete the CustomUser, which cascades the deletion to Prestataire
-    messages.success(request, _('Prestataire "%s" has been deleted.') % user.nom)
+    messages.success(request, _('Prestataire "%s" has been deleted successfully.') % prestataire.nom)
     return redirect('gestion-prestataire')

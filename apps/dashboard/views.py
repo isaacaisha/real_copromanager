@@ -19,7 +19,7 @@ from django.utils import timezone
 
 from core.utils import get_user_context, otp_required_for_supersyndic  # Import the helper function
 
-from .forms import LicenseForm, ResidenceForm, AssignSyndicForm, AssociateCoproprietaireForm
+from .forms import LicenseForm, ResidenceForm, AssignSyndicForm, AssociateToResidenceForm, AssociateToSyndicateForm
 from .models import (
     License, Superadmin, SuperSyndic,
     Syndic, Coproprietaire, Prestataire, Residence
@@ -235,20 +235,26 @@ def dashboard_coproprietaire(request, coproprietaire_id):
     # Fetch all residences associated with the coproprietaire
     residences = coproprietaire.residence.all()
 
-    # Retrieve the syndic or supersyndic associated with this coproprietaire
-    syndic = coproprietaire.syndic if hasattr(coproprietaire, 'syndic') else None
-    supersyndic = coproprietaire.supersyndic if hasattr(coproprietaire, 'supersyndic') else None
+    # Retrieve syndic and supersyndic associated with this coproprietaire
+    syndics = coproprietaire.syndic.all()
+    supersyndics = coproprietaire.supersyndic.all()
 
-    # Retrieve the license associated with the syndic or supersyndic
-    license = syndic.licence if syndic and hasattr(syndic, 'licence') else None
+    ## Retrieve the licenses associated with the syndics and supersyndics
+    #syndic_licenses = [syndic.licence for syndic in syndics if hasattr(syndic, 'licence')]
+    #supersyndic_licenses = [supersyndic.licence for supersyndic in supersyndics if hasattr(supersyndic, 'licence')]
+#
+    ## Combine all licenses into a single list (if needed)
+    #licenses = syndic_licenses + supersyndic_licenses
     
     # Fetch the coproprietaires associated with the current syndic
     coproprietaires = None
     if request.user.role in ['Syndic', 'Superadmin']:
-        coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
-    elif request.user.role in ['Syndic', 'Superadmin']:
-        coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
-    else:
+        # If syndic_set has multiple entries, query for all associated coproprietaires
+        coproprietaires = Coproprietaire.objects.filter(syndic__in=syndics).distinct()
+    elif request.user.role == 'SuperSyndic':
+        # If supersyndic_set has multiple entries, query for all associated coproprietaires
+        coproprietaires = Coproprietaire.objects.filter(supersyndic__in=supersyndics).distinct()
+    elif request.user.role == 'Coproprietaire':
         coproprietaires = Coproprietaire.objects.filter(user=request.user)
 
     # Convert ManyRelatedManager fields to lists or querysets explicitly
@@ -263,9 +269,9 @@ def dashboard_coproprietaire(request, coproprietaire_id):
         'coproprietaire': coproprietaire,
         'residences': residences,
         'coproprietaires': coproprietaires,
-        'syndic': syndic,
-        'supersyndic': supersyndic,
-        'license': license,
+        'syndics': syndics,
+        'supersyndics': supersyndics,
+        #'licenses': licenses,
         'nom': coproprietaire.user.nom,
         'phone': coproprietaire.user.phone,
         'total_count': total_count,
@@ -296,22 +302,28 @@ def dashboard_prestataire(request, prestataire_id):
         profile = get_object_or_404(Prestataire, user=request.user)
     else:
         return HttpResponse(status=403)
+    
+    # Fetch all residences associated with the prestataire
+    residences = prestataire.residence.all()
 
     # Retrieve the syndic or supersyndic associated with this prestataire
-    syndic = prestataire.syndic if hasattr(prestataire, 'syndic') else None
-    supersyndic = prestataire.supersyndic if hasattr(prestataire, 'supersyndic') else None
+    syndics = prestataire.syndic.all()
+    supersyndics = prestataire.supersyndic.all()
 
-    # Retrieve the license associated with the syndic or supersyndic
-    license = syndic.licence if syndic and hasattr(syndic, 'license') else None
-    #license = supersyndic.licence if supersyndic and hasattr(supersyndic, 'license') else None
-    
+    ## Retrieve the licenses associated with the syndics and supersyndics
+    #syndic_licenses = [syndic.licence for syndic in syndics if hasattr(syndic, 'licence')]
+    #supersyndic_licenses = [supersyndic.licence for supersyndic in supersyndics if hasattr(supersyndic, 'licence')]
+#
+    ## Combine all licenses into a single list (if needed)
+    #licenses = syndic_licenses + supersyndic_licenses
+
     # Only fetch the prestataires associated with the current syndic
-    if request.user.role == ['Syndic'] or request.user.role == 'Superadmin':
-        prestataires = Prestataire.objects.filter(syndic=syndic)
-        coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
+    if request.user.role == ['Syndic']:
+        prestataires = Prestataire.objects.filter(syndic__in=syndics).distinct()
+        coproprietaires = Coproprietaire.objects.filter(syndic__in=syndics).distinct()
     elif request.user.role == ['SuperSyndic']:
-        prestataires = Prestataire.objects.filter(syndic=syndic)
-        coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
+        prestataires = Prestataire.objects.filter(supersyndic__in=supersyndics).distinct()
+        coproprietaires = Coproprietaire.objects.filter(supersyndic__in=supersyndics).distinct()
     else:
         prestataires = Prestataire.objects.all()
         coproprietaires = Coproprietaire.objects.all()
@@ -326,9 +338,10 @@ def dashboard_prestataire(request, prestataire_id):
         'prestataire': prestataire,
         'prestataires': prestataires,
         'coproprietaires': coproprietaires,
-        'syndic': syndic,
-        'supersyndic': supersyndic,
-        'license': license,
+        'residences': residences,
+        'syndics': syndics,
+        'supersyndics': supersyndics,
+        #'licenses': licenses,
         'nom': prestataire.user.nom,
         'phone': prestataire.user.phone,
         'total_count_presta': total_count_presta,
@@ -615,7 +628,7 @@ def residence_detail(request, residence_id):
         if hasattr(request.user, 'syndic_profile'):
             residences = Residence.objects.filter(syndic=request.user.syndic_profile)
             coproprietaires = Coproprietaire.objects.filter(residence__id=residence.id)
-            prestataires = Prestataire.objects.filter(syndic=request.user.syndic_profile)
+            prestataires = Prestataire.objects.filter(residence__id=residence.id)
         else:
             messages.error(request, _("You are not authorized to view this page."))
             return redirect('home')
@@ -624,7 +637,7 @@ def residence_detail(request, residence_id):
         if hasattr(request.user, 'supersyndic_profile'):
             residences = Residence.objects.filter(supersyndic=request.user.supersyndic_profile)
             coproprietaires = Coproprietaire.objects.filter(residence__id=residence.id)
-            prestataires = Prestataire.objects.filter(supersyndic=request.user.supersyndic_profile)
+            prestataires = Prestataire.objects.filter(residence__id=residence.id)
         else:
             messages.error(request, _("You are not authorized to view this page."))
             return redirect('home')
@@ -632,7 +645,7 @@ def residence_detail(request, residence_id):
     elif request.user.role == 'Superadmin':
         residences = Residence.objects.all()
         coproprietaires = Coproprietaire.objects.filter(residence=residence)
-        prestataires = Prestataire.objects.all()
+        prestataires = Prestataire.objects.filter(residence=residence)
 
     else:
         messages.error(request, _("You are not authorized to view this page."))
@@ -685,15 +698,21 @@ def assign_syndic_to_residence(request):
             # Add syndic and/or supersyndic to the residence without removing existing assignments
             if syndic2:
                 residence.syndic.add(syndic2)
-            if supersyndic:
-                residence.supersyndic.add(supersyndic)
-
-            messages.success(
+                messages.success(
                 request,
-                _("{syndic2} {supersyndic} successfully assigned to Residence {res_name}.").format(
-                    res_name=residence.nom, syndic2=syndic2.nom, supersyndic=supersyndic.user.nom
+                _("{syndic2} successfully assigned to Residence {res_name}.").format(
+                    syndic2=syndic2.nom, res_name=residence.nom
                 )
             )
+            if supersyndic:
+                residence.supersyndic.add(supersyndic)
+                messages.success(
+                request,
+                _("{supersyndic} successfully assigned to Residence {res_name}.").format(
+                    supersyndic=supersyndic.user.nom, res_name=residence.nom
+                )
+            )
+                
             return redirect('residence-detail', residence.id)
         else:
             messages.error(request, _("Form is not valid. Please correct the errors."))
@@ -725,63 +744,202 @@ def assign_syndic_to_residence(request):
 
 @login_required(login_url="/login/")
 @user_passes_test(lambda u: u.is_active and u.role in ['Syndic', 'SuperSyndic'])
-def associate_coproprietaire(request):
-    # Initialize querysets
+def associate_to_residence(request):
     residences = Residence.objects.none()
     coproprietaires = Coproprietaire.objects.none()
+    prestataires = Prestataire.objects.none()
+    syndics = Syndic.objects.none()
+    supersyndics = SuperSyndic.objects.none()
 
-    # Initialize querysets based on role
     if request.user.role == 'Syndic' and hasattr(request.user, 'syndic_profile'):
         syndic_profile = request.user.syndic_profile
         residences = Residence.objects.filter(syndic=syndic_profile)
         coproprietaires = Coproprietaire.objects.filter(syndic=syndic_profile)
+        prestataires = Prestataire.objects.filter(syndic=syndic_profile)
+        syndics = Syndic.objects.filter(
+            user__created_residences__isnull=False
+        ).exclude(pk=syndic_profile.pk).distinct()
+
     elif request.user.role == 'SuperSyndic' and hasattr(request.user, 'supersyndic_profile'):
         supersyndic_profile = request.user.supersyndic_profile
         residences = Residence.objects.filter(supersyndic=supersyndic_profile)
         coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic_profile)
+        prestataires = Prestataire.objects.filter(supersyndic=supersyndic_profile)
+        syndics = Syndic.objects.filter(
+            user__created_residences__supersyndic=supersyndic_profile
+        ).distinct()
+        supersyndics = SuperSyndic.objects.filter(
+            user__created_residences__isnull=False
+        ).exclude(pk=supersyndic_profile.pk).distinct()
+
     else:
         messages.error(request, _("You are not authorized to perform this action."))
         return redirect('home')
 
-    # Handle POST request
     if request.method == "POST":
-        form = AssociateCoproprietaireForm(
+        form = AssociateToResidenceForm(
             request.POST,
             coproprietaire_queryset=coproprietaires,
-            residence_queryset=residences
+            prestataire_queryset=prestataires,
+            residence_queryset=residences,
+            syndic_queryset=syndics,
+            supersyndic_queryset=supersyndics
         )
         if form.is_valid():
-            coproprietaire = form.cleaned_data['coproprietaire']
+            coproprietaire = form.cleaned_data.get('coproprietaire')
+            prestataire = form.cleaned_data.get('prestataire')
+            syndic = form.cleaned_data.get('syndic')
+            supersyndic = form.cleaned_data.get('supersyndic')
             residence = form.cleaned_data['residence']
 
-            # Update many-to-many relationship
-            coproprietaire.residence.add(residence)
-            coproprietaire.save()
-            
-            messages.success(
-                request,
-                _("Coproprietaire {copro_name} successfully associated with Residence {res_name}.").format(
-                    copro_name=coproprietaire.user.nom, res_name=residence.nom
-                )
-            )
+            if coproprietaire:
+                coproprietaire.residence.add(residence)
+                coproprietaire.save()
+                messages.success(request, _("Coproprietaire '%s' associated successfully.") % coproprietaire.user.nom)
+
+            if prestataire:
+                prestataire.residence.add(residence)
+                prestataire.save()
+                messages.success(request, _("Prestataire '%s' associated successfully.") % prestataire.user.nom)
+
+            if syndic:
+                residence.syndic.add(syndic)
+                residence.save()
+                messages.success(request, _("Syndic '%s' associated successfully.") % syndic.user.nom)
+
+            if supersyndic:
+                residence.supersyndic.add(supersyndic)
+                residence.save()
+                messages.success(request, _("SuperSyndic '%s' associated successfully.") % supersyndic.user.nom)
+
             return redirect('residence-detail', residence.id)
         else:
             messages.error(request, _("Form is not valid. Please correct the errors."))
     else:
-        form = AssociateCoproprietaireForm(
+        form = AssociateToResidenceForm(
             coproprietaire_queryset=coproprietaires,
-            residence_queryset=residences
+            prestataire_queryset=prestataires,
+            residence_queryset=residences,
+            syndic_queryset=syndics,
+            supersyndic_queryset=supersyndics
         )
 
-    # Prepare context for template rendering
     context = {
-        'segment': 'associate-coproprietaire',
-        "titlePage": _("Associate Co-Owner"),
+        'segment': 'associate-co-users-to-residence',
+        "titlePage": _("Associate Co-Users with a Residence"),
         "form": form,
         'date': timezone.now().strftime(_("%a %d %B %Y"))
     }
 
-    html_template = loader.get_template('associate-coproprietaire.html')
+    html_template = loader.get_template('associate-to-residence.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+@user_passes_test(lambda u: u.is_active and u.role in ['Syndic', 'SuperSyndic'])
+def associate_to_syndicate(request):
+    # Determine user role and associated residences
+    associated_residences = None
+    syndic_queryset = Syndic.objects.none()
+    supersyndic_queryset = SuperSyndic.objects.none()
+
+    if request.user.role == 'Syndic' and hasattr(request.user, 'syndic_profile'):
+        associated_residences = Residence.objects.filter(syndic=request.user.syndic_profile)
+        syndic_queryset = Syndic.objects.filter(id=request.user.syndic_profile.id)
+    elif request.user.role == 'SuperSyndic' and hasattr(request.user, 'supersyndic_profile'):
+        associated_residences = Residence.objects.filter(supersyndic=request.user.supersyndic_profile)
+        supersyndic_queryset = SuperSyndic.objects.filter(id=request.user.supersyndic_profile.id)
+    else:
+        messages.error(request, _("You are not authorized to perform this action."))
+        return redirect('home')
+
+    # Query users related to the residences and only fetch their names
+    residence_users = CustomUser.objects.filter(
+        Q(coproprietaire_profile__residence__in=associated_residences) |
+        Q(prestataire_profile__residence__in=associated_residences)
+    ).distinct()
+
+    # Handle form submission
+    if request.method == "POST":
+        form = AssociateToSyndicateForm(
+            request.POST,
+            user_queryset=residence_users,
+            syndic_queryset=syndic_queryset,
+            supersyndic_queryset=supersyndic_queryset,
+        )
+        if form.is_valid():
+            selected_user = form.save()  # Delegate saving logic to the form
+            syndic = form.cleaned_data.get('syndic')
+            supersyndic = form.cleaned_data.get('supersyndic')
+
+            if selected_user:
+                if syndic:
+                    # Associate the user with the syndic
+                    selected_user.syndic_profile = syndic
+                    selected_user.save()
+
+                    # If they are a 'Coproprietaire' (Co-owner), add them to the syndic's residences
+                    if hasattr(selected_user, 'coproprietaire_profile'):
+                        selected_user.coproprietaire_profile.syndic.add(syndic)
+                        selected_user.coproprietaire_profile.save()
+
+                    # If they are a 'Prestataire' (Provider), add them to the syndic's residences
+                    if hasattr(selected_user, 'prestataire_profile'):
+                        selected_user.prestataire_profile.syndic.add(syndic)
+                        selected_user.prestataire_profile.save()
+
+                    messages.success(
+                        request,
+                        _("'{user_name}' successfully associated with '{syndic_name}'.").format(
+                            user_name=selected_user.nom, syndic_name=request.user.syndic_profile.user.nom
+                        )
+                    )
+                    return redirect('dashboard-syndic', syndic.id)
+
+                if supersyndic:
+                    # Associate the user with the supersyndic
+                    selected_user.supersyndic_profile = supersyndic
+                    selected_user.save()
+
+                    # If they are a 'Coproprietaire' (Co-owner), add them to the supersyndic's residences
+                    if hasattr(selected_user, 'coproprietaire_profile'):
+                        selected_user.coproprietaire_profile.syndic.add(supersyndic)
+                        selected_user.coproprietaire_profile.save()
+
+                    # If they are a 'Prestataire' (Provider), add them to the supersyndic's residences
+                    if hasattr(selected_user, 'prestataire_profile'):
+                        selected_user.prestataire_profile.syndic.add(supersyndic)
+                        selected_user.prestataire_profile.save()
+
+                    messages.success(
+                        request,
+                        _("'{user_name}' successfully associated with '{supersyndic_name}'.").format(
+                            user_name=selected_user.nom, supersyndic_name=request.user.supersyndic_profile.user.nom
+                        )
+                    )
+                    return redirect('dashboard-supersyndic', supersyndic.id)
+
+            else:
+                messages.error(request, _("No valid user selected."))
+        else:
+            messages.error(request, _("Form is not valid. Please correct the errors."))
+    else:
+        # Initialize the form with dynamic querysets
+        form = AssociateToSyndicateForm(
+            user_queryset=residence_users,
+            syndic_queryset=syndic_queryset,
+            supersyndic_queryset=supersyndic_queryset
+        )
+
+    # Render the template
+    context = {
+        'segment': 'associate-co-users-to-syndicate',
+        "titlePage": _("Associate Co-Users with a Syndicate"),
+        "form": form,
+        'date': timezone.now().strftime(_("%a %d %B %Y"))
+    }
+
+    html_template = loader.get_template('associate-to-syndicate.html')
     return HttpResponse(html_template.render(context, request))
 
 
@@ -824,7 +982,7 @@ def license_detail(request, license_id):
     syndic = license.syndic  # Access the syndic associated with this license
     supersyndic = license.supersyndic
     coproprietaires = syndic.syndic_coproprietaires.all() if syndic else []
-    prestataires = syndic.prestataire_set.all() if syndic else []
+    prestataires = syndic.syndic_prestataires.all() if syndic else []
     residences = None
     
     context = {

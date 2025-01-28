@@ -6,7 +6,8 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django import forms
 
-from apps.dashboard.models import License, Residence, SuperSyndic, Syndic, Coproprietaire
+from apps.authentication.models import CustomUser
+from apps.dashboard.models import License, Residence, SuperSyndic, Syndic, Coproprietaire, Prestataire
 
 from django.utils.translation import gettext as _
 
@@ -156,11 +157,6 @@ class ResidenceForm(forms.ModelForm):
     
 
 class AssignSyndicForm(forms.Form):
-    residence = forms.ModelChoiceField(
-        queryset=Residence.objects.none(),
-        label=_("Residence"),
-        widget=forms.Select(attrs={"class": "form-control"})
-    )
     syndic2 = forms.ModelChoiceField(
         queryset=Syndic.objects.none(),  # Start with an empty queryset
         label=_("Syndic to Assign"),
@@ -171,6 +167,11 @@ class AssignSyndicForm(forms.Form):
         queryset=SuperSyndic.objects.none(),  # Start with an empty queryset
         label=_("SuperSyndic to Assign"),
         required=False,
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+    residence = forms.ModelChoiceField(
+        queryset=Residence.objects.none(),
+        label=_("Residence"),
         widget=forms.Select(attrs={"class": "form-control"})
     )
 
@@ -186,11 +187,30 @@ class AssignSyndicForm(forms.Form):
         self.fields['supersyndic'].queryset = supersyndic_queryset
 
 
-class AssociateCoproprietaireForm(forms.Form):
+class AssociateToResidenceForm(forms.Form):
+    syndic = forms.ModelChoiceField(
+        required=False,
+        queryset=Syndic.objects.none(),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        label="Syndic"
+    )
+    supersyndic = forms.ModelChoiceField(
+        required=False,
+        queryset=SuperSyndic.objects.none(),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        label="SuperSyndic"
+    )
     coproprietaire = forms.ModelChoiceField(
+        required=False,
         queryset=Coproprietaire.objects.none(),
         widget=forms.Select(attrs={"class": "form-control"}),
         label="Coproprietaire"
+    )
+    prestataire = forms.ModelChoiceField(
+        required=False,
+        queryset=Prestataire.objects.none(),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        label="Prestataire"
     )
     residence = forms.ModelChoiceField(
         queryset=Residence.objects.none(),
@@ -198,16 +218,71 @@ class AssociateCoproprietaireForm(forms.Form):
         label="Residence"
     )
 
-    def __init__(self, *args, coproprietaire_queryset=None, residence_queryset=None, **kwargs):
+    def __init__(self, *args, coproprietaire_queryset=None, prestataire_queryset=None, syndic_queryset=None, supersyndic_queryset=None, residence_queryset=None, **kwargs):
         super().__init__(*args, **kwargs)
         if coproprietaire_queryset is not None:
             self.fields['coproprietaire'].queryset = coproprietaire_queryset
-            self.fields['coproprietaire'].label_from_instance = lambda obj: str(obj)  # Custom label from instance
+            self.fields['coproprietaire'].label_from_instance = lambda obj: str(obj)
+        if prestataire_queryset is not None:
+            self.fields['prestataire'].queryset = prestataire_queryset
+            self.fields['prestataire'].label_from_instance = lambda obj: str(obj)
+        if syndic_queryset is not None:
+            self.fields['syndic'].queryset = syndic_queryset
+            self.fields['syndic'].label_from_instance = lambda obj: str(obj)
+        if supersyndic_queryset is not None:
+            self.fields['supersyndic'].queryset = supersyndic_queryset
+            self.fields['supersyndic'].label_from_instance = lambda obj: str(obj)
         if residence_queryset is not None:
             self.fields['residence'].queryset = residence_queryset
 
-    def save(self, commit=True):
-        coproprietaire = super().save(commit=False)
-        if commit:
-            coproprietaire.save()
-        return coproprietaire
+
+class AssociateToSyndicateForm(forms.Form):
+    user = forms.ModelChoiceField(
+        queryset=CustomUser.objects.none(),
+        label=_("Select User"),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=True
+    )
+    syndic = forms.ModelChoiceField(
+        queryset=Syndic.objects.none(),
+        label=_("Select Syndic"),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=False
+    )
+    supersyndic = forms.ModelChoiceField(
+        queryset=SuperSyndic.objects.none(),
+        label=_("Select Super Syndic"),
+        widget=forms.Select(attrs={"class": "form-control"}),
+        required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        user_queryset = kwargs.pop('user_queryset', CustomUser.objects.none())
+        syndic_queryset = kwargs.pop('syndic_queryset', Syndic.objects.none())
+        supersyndic_queryset = kwargs.pop('supersyndic_queryset', SuperSyndic.objects.none())
+
+        super().__init__(*args, **kwargs)
+
+        self.fields['user'].queryset = user_queryset
+        self.fields['syndic'].queryset = syndic_queryset
+        self.fields['supersyndic'].queryset = supersyndic_queryset
+
+        # Customize label to display only the user's `nom` attribute
+        self.fields['user'].label_from_instance = lambda obj: obj.nom
+
+    def save(self):
+        """
+        Save the associations between the selected user and syndic/supersyndic.
+        """
+        selected_user = self.cleaned_data.get('user')
+        syndic = self.cleaned_data.get('syndic')
+        supersyndic = self.cleaned_data.get('supersyndic')
+
+        if selected_user:
+            if syndic:
+                selected_user.syndic_profile = syndic
+            if supersyndic:
+                selected_user.supersyndic_profile = supersyndic
+            selected_user.save()
+
+        return selected_user

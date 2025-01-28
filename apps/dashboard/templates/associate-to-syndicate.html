@@ -1,10 +1,10 @@
-<!-- apps/dashboard/templates/associate-coproprietaire.html -->
+<!-- apps/dashboard/templates/associate-coproprietaire-prestataire.html -->
 
 {% extends "layouts/base.html" %}
 
 {% load static i18n %}
 
-{% block title %} {% trans "Associate Co-Owner with a Residence" %} {% endblock %}
+{% block title %} {% trans "Associate Co-Users with a Syndicate" %} {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -18,7 +18,7 @@
                 <i class="fa-solid fa-id-card fa-beat fa-2x"></i>
             </div>
             <h5 class="card-title">
-                {% trans "Associate Co-Owner with a Residence" %}
+                {% trans "Associate Co-Users with a Syndicate" %}
             </h5>
         </div>
 
@@ -26,17 +26,10 @@
             <form method="POST" action="">
                 {% csrf_token %}
                 <div class="mb-3">
-                    {{ form.coproprietaire.label_tag }}
-                    {{ form.coproprietaire }}
-                    {% if form.coproprietaire.errors %}
-                    <span class="text-danger">{{ form.coproprietaire.errors }}</span>
-                    {% endif %}
-                </div>
-                <div class="mb-3">
-                    {{ form.residence.label_tag }}
-                    {{ form.residence }}
-                    {% if form.residence.errors %}
-                    <span class="text-danger">{{ form.residence.errors }}</span>
+                    {{ form.label_tag }}
+                    {{ form.as_p }}
+                    {% if form..errors %}
+                    <span class="text-danger">{{ form.errors }}</span>
                     {% endif %}
                 </div>
                 <br>

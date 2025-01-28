@@ -15,7 +15,8 @@ from .views import (
 from apps.dashboard.views import (
     user_search, user_profile,
     dashboard_superadmin, customize_license, license_detail, create_residence, update_residence, residence_detail,
-    assign_syndic_to_residence, associate_coproprietaire, dashboard_supersyndic, dashboard_syndic, dashboard_coproprietaire, dashboard_prestataire,
+    assign_syndic_to_residence, associate_to_residence, associate_to_syndicate,
+      dashboard_supersyndic, dashboard_syndic, dashboard_coproprietaire, dashboard_prestataire,
     gestion_residence, gestion_supersyndic, gestion_syndic, gestion_coproprietaire, gestion_prestataire
     )
 
@@ -59,7 +60,8 @@ urlpatterns = [
     path('update-residence/<int:residence_id>/', update_residence, name='update-residence'), 
     path('residence-detail/<int:residence_id>/', residence_detail, name='residence-detail'),
     path('assign-syndic/', assign_syndic_to_residence, name='assign-syndic'),
-    path('associate-coproprietaire/', associate_coproprietaire, name='associate-coproprietaire'),
+    path('associate-to-residence/', associate_to_residence, name='associate-to-residence'),
+    path('associate-to-syndicate/', associate_to_syndicate, name='associate-to-syndicate'),
 
     path('gestion-residence/', gestion_residence, name='gestion-residence'),
     path('gestion-syndic/', gestion_syndic, name='gestion-syndic'),

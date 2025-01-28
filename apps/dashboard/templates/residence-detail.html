@@ -36,7 +36,7 @@
         {% trans "Create a Co-Owner" %}
     </a>
     
-    <a href="{% url 'associate-coproprietaire' %}" class="btn btn-success btn-sm pull-right">
+    <a href="{% url 'associate-to-residence' %}" class="btn btn-success btn-sm pull-right">
         {% trans "add to Residence" %}
     </a>
 </div>
@@ -251,6 +251,14 @@
             {% endif %}
 
         </div>
+        
+        {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+        <div class="container text-center mb-3">
+            <a href="{% url 'associate-to-syndicate' %}" class="btn btn-success btn-sm">
+                {% trans "Associate to a Syndicate" %}
+            </a>
+        </div>
+        {% endif %}
 
         <div class="text-center">
             {% if residence %}

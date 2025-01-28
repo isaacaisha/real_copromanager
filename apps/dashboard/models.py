@@ -104,17 +104,9 @@ class Syndic(models.Model):
         verbose_name=_('User'),
     )
     email = models.EmailField(verbose_name=_('Email'))
-    superadmin = models.ForeignKey(
-        'SuperAdmin',
-        on_delete=models.CASCADE,
-        related_name='superadmin_syndics',
-        null=True,
-        blank=True,
-        verbose_name=_('SuperAdmin'),
-    )
 
     def __str__(self):
-        return self.user.nom
+        return self.user.nom if self.user else self.nom
 
 
 class SuperSyndic(models.Model):
@@ -128,17 +120,9 @@ class SuperSyndic(models.Model):
         verbose_name=_('User'),
     )
     email = models.EmailField(verbose_name=_('Email'))
-    superadmin = models.ForeignKey(
-        'SuperAdmin',
-        on_delete=models.CASCADE,
-        related_name='superadmin_supersyndics',
-        null=True,
-        blank=True,
-        verbose_name=_('SuperAdmin'),
-    )
 
     def __str__(self):
-        return self.user.nom
+        return self.user.nom if self.user else self.nom
 
 
 # Building Information
@@ -172,12 +156,12 @@ class Coproprietaire(models.Model):
         verbose_name=_('User'),
     )
     email = models.EmailField(verbose_name=_('Email'))
-    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True, related_name='syndic_coproprietaires')
-    supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True, related_name='supersyndic_coproprietaires')
+    syndic = models.ManyToManyField(Syndic, verbose_name=_('Syndic'), blank=True, related_name='syndic_coproprietaires')
+    supersyndic = models.ManyToManyField(SuperSyndic, verbose_name=_('SuperSyndic'), blank=True, related_name='supersyndic_coproprietaires')
     residence = models.ManyToManyField(Residence, verbose_name=_('Residences'), blank=True, related_name='coproprietaire_residences')
 
     def __str__(self):
-        return self.user.nom
+        return self.user.nom if self.user else self.nom
 
 
 # Provider Information
@@ -192,11 +176,12 @@ class Prestataire(models.Model):
         verbose_name=_('User'),
     )
     email = models.EmailField(verbose_name=_('Email'))
-    syndic = models.ForeignKey(Syndic, on_delete=models.CASCADE, verbose_name=_('Syndic'), null=True, blank=True)
-    supersyndic = models.ForeignKey(SuperSyndic, on_delete=models.CASCADE, verbose_name=_('SuperSyndic'), null=True, blank=True)
+    syndic = models.ManyToManyField(Syndic, verbose_name=_('Syndic'), blank=True, related_name='syndic_prestataires')
+    supersyndic = models.ManyToManyField(SuperSyndic, verbose_name=_('SuperSyndic'), blank=True, related_name='supersyndic_prestataires')
+    residence = models.ManyToManyField(Residence, verbose_name=_('Residences'), blank=True, related_name='prestataire_residences')
 
     def __str__(self):
-        return self.nom
+        return self.user.nom if self.user else self.nom
 
 
 # Apartment Information
