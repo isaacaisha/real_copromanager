@@ -67,7 +67,7 @@ def register_user(request):
     role = request.GET.get('role')  # Extract the role from the URL query parameter
     logged_in_user = request.user
 
-    exclude_residence = (role == 'Prestataire')  # Prestataire doesn't require a residence
+    #exclude_residence = (role == 'Prestataire')  # Prestataire doesn't require a residence
 
     if request.method == "POST":
         form = SignUpForm(request.POST, logged_in_user=logged_in_user)
@@ -90,17 +90,11 @@ def register_user(request):
 
             elif role == 'Prestataire':
                 # Handle Prestataire registration
-                return create_prestataire(request, user, creator)
+                return create_prestataire(request, user, form.cleaned_data.get('residence'), creator)
 
             elif role == 'Syndic' and license_form and license_form.is_valid():
                 # Handle Syndic registration with a license
                 return create_syndic(request, user, license_form)
-
-            elif role == 'Superadmin':
-                # Handle Superadmin registration
-                Superadmin.objects.create(user=user)
-                messages.success(request, _('Superadmin created successfully.'))
-                return redirect('dashboard-superadmin', superadmin_id=user.id)
 
             else:
                 messages.error(request, _('Invalid role specified.'))
@@ -108,7 +102,7 @@ def register_user(request):
             messages.error(request, _('Form is not valid.'))
 
     else:
-        form = SignUpForm(initial={'role': role}, logged_in_user=logged_in_user, exclude_residence=exclude_residence)
+        form = SignUpForm(initial={'role': role}, logged_in_user=logged_in_user) # , exclude_residence=exclude_residence)
         license_form = LicenseForm() if role == 'Syndic' else None
 
     context = {
@@ -132,7 +126,9 @@ def create_coproprietaire(request, user, residence, creator):
             messages.error(request, _('No associated Syndic found for the current user.'))
             return redirect('register')
 
-        coproprietaire = Coproprietaire.objects.create(user=user, syndic=syndic)
+        coproprietaire = Coproprietaire.objects.create(user=user)
+        # Use add() instead of direct assignment
+        coproprietaire.syndic.add(syndic)  
         coproprietaire.residence.add(residence)
         messages.success(request, _('Coproprietaire "%s" created successfully.') % coproprietaire.user.nom)
         return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
@@ -143,13 +139,14 @@ def create_coproprietaire(request, user, residence, creator):
             messages.error(request, _('No associated SuperSyndic found for the current user.'))
             return redirect('register')
 
-        coproprietaire = Coproprietaire.objects.create(user=user, supersyndic=supersyndic)
+        coproprietaire = Coproprietaire.objects.create(user=user)
+        coproprietaire.supersyndic.add(supersyndic)  
         coproprietaire.residence.add(residence)
         messages.success(request, _('Coproprietaire "%s" created successfully.') % coproprietaire.user.nom)
         return redirect('dashboard-coproprietaire', coproprietaire_id=user.id)
 
 
-def create_prestataire(request, user, creator):
+def create_prestataire(request, user, residence, creator):
     """Helper function to create a Prestataire."""
     if creator.role == 'Syndic':
         syndic = Syndic.objects.filter(user=creator).first()
@@ -157,7 +154,10 @@ def create_prestataire(request, user, creator):
             messages.error(request, _('No associated Syndic found for the current user.'))
             return redirect('register')
 
-        prestataire = Prestataire.objects.create(user=user, syndic=syndic)
+        prestataire = Prestataire.objects.create(user=user)
+        # Use add() instead of direct assignment
+        prestataire.syndic.add(syndic)  
+        prestataire.residence.add(residence)
         messages.success(request, _('Prestataire "%s" created successfully.') % prestataire.user.nom)
         return redirect('dashboard-prestataire', prestataire_id=user.id)
 
@@ -167,7 +167,9 @@ def create_prestataire(request, user, creator):
             messages.error(request, _('No associated SuperSyndic found for the current user.'))
             return redirect('register')
 
-        prestataire = Prestataire.objects.create(user=user, supersyndic=supersyndic)
+        prestataire = Prestataire.objects.create(user=user)
+        prestataire.supersyndic.add(supersyndic)  
+        prestataire.residence.add(residence)
         messages.success(request, _('Prestataire "%s" created successfully.') % prestataire.user.nom)
         return redirect('dashboard-prestataire', prestataire_id=user.id)
 
