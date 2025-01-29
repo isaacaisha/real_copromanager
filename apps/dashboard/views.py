@@ -794,36 +794,126 @@ def remove_syndic_from_residence(request):
 
 
 @login_required(login_url="/login/")
-@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
-def remove_syndic_from_residence_by_id(request, residence_id, user_id, role):
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
+def remove_user_from_residence(request, residence_id, user_id, role):
+    """
+    Allows:
+      - Superadmins to remove anyone.
+      - Syndics to remove SuperSyndics, other Syndics, Copropriétaires, and Prestataires (but not themselves).
+      - SuperSyndics to remove other SuperSyndics, Syndics, Copropriétaires, and Prestataires (but not themselves).
+    """
     try:
-        residence = Residence.objects.get(id=residence_id)
+        residence = get_object_or_404(Residence, id=residence_id)
+        current_user = request.user
 
-        if role == "syndic":
-            syndic = Syndic.objects.get(user_id=user_id)
-            residence.syndic.remove(syndic)
-            messages.success(
-                request,
-                _("{syndic} successfully removed from Residence {res_name}.").format(
-                    syndic=syndic.user.nom, res_name=residence.nom
-                )
-            )
-        
-        elif role == "supersyndic":
-            supersyndic = SuperSyndic.objects.get(user_id=user_id)
-            residence.supersyndic.remove(supersyndic)
-            messages.success(
-                request,
-                _("{supersyndic} successfully removed from Residence {res_name}.").format(
-                    supersyndic=supersyndic.user.nom, res_name=residence.nom
-                )
-            )
+        # Superadmin can remove anyone
+        if current_user.role == "Superadmin":
+            if role == "syndic":
+                syndic = get_object_or_404(Syndic, user_id=user_id)
+                residence.syndic.remove(syndic)
+                messages.success(request, _("'{syndic}' successfully removed from Residence {res_name}.").format(
+                    res_name=residence.nom, syndic=syndic.nom
+                ))
+            elif role == "supersyndic":
+                supersyndic = get_object_or_404(SuperSyndic, user_id=user_id)
+                residence.supersyndic.remove(supersyndic)
+                messages.success(request, _("'{supersyndic}' successfully removed from Residence {res_name}.").format(
+                    res_name=residence.nom, supersyndic=supersyndic.nom
+                ))
+            elif role == "coproprietaire":
+                coproprietaire = get_object_or_404(Coproprietaire, user_id=user_id)
+                residence.coproprietaire_residences.remove(coproprietaire)
+                messages.success(request, _("'{coproprietaire}' successfully removed from Residence {res_name}.").format(
+                    res_name=residence.nom, coproprietaire=coproprietaire.user.nom
+                ))
+            elif role == "prestataire":
+                prestataire = get_object_or_404(Prestataire, user_id=user_id)
+                residence.prestataire_residences.remove(prestataire)
+                messages.success(request, _("'{prestataire}' successfully removed from Residence {res_name}.").format(
+                    res_name=residence.nom, prestataire=prestataire.user.nom
+                ))
+
+        # Syndics can remove SuperSyndics, other Syndics, Copropriétaires, and Prestataires (but not themselves)
+        elif current_user.role == "Syndic" and hasattr(current_user, "syndic_profile"):
+            syndic_profile = current_user.syndic_profile
+
+            if syndic_profile in residence.syndic.all():
+                if role == "syndic":
+                    syndic_to_remove = get_object_or_404(Syndic, user_id=user_id)
+                    if syndic_to_remove != syndic_profile:
+                        residence.syndic.remove(syndic_to_remove)
+                        messages.success(request, _("'{syndic_to_remove}' successfully removed from Residence {res_name}.").format(
+                        res_name=residence.nom, syndic_to_remove=syndic_to_remove.nom
+                    ))
+                    else:
+                        messages.warning(request, _("'%s' You cannot remove yourself.") % syndic_to_remove.nom)
+                elif role == "supersyndic":
+                    supersyndic_to_remove = get_object_or_404(SuperSyndic, user_id=user_id)
+                    residence.supersyndic.remove(supersyndic_to_remove)
+                    messages.success(request, _("'{supersyndic_to_remove}' successfully removed from Residence {res_name}.").format(
+                        res_name=residence.nom, supersyndic_to_remove=supersyndic_to_remove.nom
+                    ))
+                elif role == "coproprietaire":
+                    coproprietaire = get_object_or_404(Coproprietaire, user_id=user_id)
+                    residence.coproprietaire_residences.remove(coproprietaire)
+                    messages.success(request, _("'{coproprietaire}' successfully removed from Residence {res_name}.").format(
+                        res_name=residence.nom, coproprietaire=coproprietaire.user.nom
+                    ))
+                elif role == "prestataire":
+                    prestataire = get_object_or_404(Prestataire, user_id=user_id)
+                    residence.prestataire_residences.remove(prestataire)
+                    messages.success(request, _("'{prestataire}' successfully removed from Residence {res_name}.").format(
+                        res_name=residence.nom, prestataire=prestataire.user.nom
+                    ))
+                else:
+                    messages.error(request, _("Invalid role specified."))
+
+            else:
+                messages.error(request, _("You are not authorized to modify this residence."))
+
+        # SuperSyndics can remove Syndics, other SuperSyndics, Copropriétaires, and Prestataires (but not themselves)
+        elif current_user.role == "SuperSyndic" and hasattr(current_user, "supersyndic_profile"):
+            supersyndic_profile = current_user.supersyndic_profile
+
+            if supersyndic_profile in residence.supersyndic.all():
+                if role == "supersyndic":
+                    supersyndic_to_remove = get_object_or_404(SuperSyndic, user_id=user_id)
+                    if supersyndic_to_remove != supersyndic_profile:
+                        residence.supersyndic.remove(supersyndic_to_remove)
+                        messages.success(request, _("'{supersyndic_to_remove}' successfully removed from Residence {res_name}.").format(
+                            res_name=residence.nom, supersyndic_to_remove=supersyndic_to_remove.nom
+                        ))
+                    else:
+                        messages.warning(request, _("'%s' You cannot remove yourself.") % supersyndic_to_remove.nom)
+                elif role == "syndic":
+                    syndic_to_remove = get_object_or_404(Syndic, user_id=user_id)
+                    residence.syndic.remove(syndic_to_remove)
+                    messages.success(request, _("'{syndic_to_remove}' successfully removed from Residence {res_name}.").format(
+                        res_name=residence.nom, syndic_to_remove=syndic_to_remove.nom
+                    ))
+                elif role == "coproprietaire":
+                    coproprietaire = get_object_or_404(Coproprietaire, user_id=user_id)
+                    residence.coproprietaire_residences.remove(coproprietaire)
+                    messages.success(request, _("'{coproprietaire}' successfully removed from Residence {res_name}.").format(
+                        res_name=residence.nom, coproprietaire=coproprietaire.user.nom
+                    ))
+                elif role == "prestataire":
+                    prestataire = get_object_or_404(Prestataire, user_id=user_id)
+                    residence.prestataire_residences.remove(prestataire)
+                    messages.success(request, _("'{prestataire}' successfully removed from Residence {res_name}.").format(
+                        res_name=residence.nom, prestataire=prestataire.user.nom
+                    ))
+                else:
+                    messages.error(request, _("Invalid role specified."))
+
+            else:
+                messages.error(request, _("You are not authorized to modify this residence."))
 
         else:
-            messages.error(request, _("Invalid role specified."))
+            messages.error(request, _("You are not authorized to perform this action."))
 
-    except (Residence.DoesNotExist, Syndic.DoesNotExist, SuperSyndic.DoesNotExist):
-        messages.error(request, _("Residence, Syndic, or SuperSyndic not found."))
+    except (Residence.DoesNotExist, Syndic.DoesNotExist, SuperSyndic.DoesNotExist, Coproprietaire.DoesNotExist, Prestataire.DoesNotExist):
+        messages.error(request, _("Residence or user not found."))
 
     return redirect('residence-detail', residence.id)  # Redirect to residence details
 
@@ -929,20 +1019,14 @@ def associate_to_residence(request):
 
 
 @login_required(login_url="/login/")
-@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
+@user_passes_test(lambda u: u.is_active and u.role in ['Syndic', 'SuperSyndic'])
 def associate_to_syndicate(request):
     # Determine user role and associated residences
     associated_residences = None
     syndic_queryset = Syndic.objects.none()
     supersyndic_queryset = SuperSyndic.objects.none()
 
-    if request.user.role == 'Superadmin':
-        # Superadmin can access all Syndics, SuperSyndics, and residences
-        associated_residences = Residence.objects.all()
-        syndic_queryset = Syndic.objects.all()
-        supersyndic_queryset = SuperSyndic.objects.all()
-
-    elif request.user.role == 'Syndic' and hasattr(request.user, 'syndic_profile'):
+    if request.user.role == 'Syndic' and hasattr(request.user, 'syndic_profile'):
         associated_residences = Residence.objects.filter(syndic=request.user.syndic_profile)
         syndic_queryset = Syndic.objects.filter(syndic_residences__in=associated_residences).distinct()
         supersyndic_queryset = SuperSyndic.objects.filter(supersyndic_residences__in=associated_residences).distinct()
@@ -969,19 +1053,22 @@ def associate_to_syndicate(request):
             supersyndic_queryset=supersyndic_queryset,
         )
         if form.is_valid():
-            selected_user = form.save()
+            selected_user = form.save()  # Delegate saving logic to the form
             syndic = form.cleaned_data.get('syndic')
             supersyndic = form.cleaned_data.get('supersyndic')
 
             if selected_user:
                 if syndic:
+                    # Associate the user with the syndic
                     selected_user.syndic_profile = syndic
                     selected_user.save()
 
+                    # If they are a 'Coproprietaire' (Co-owner), add them to the syndic's residences
                     if hasattr(selected_user, 'coproprietaire_profile'):
                         selected_user.coproprietaire_profile.syndic.add(syndic)
                         selected_user.coproprietaire_profile.save()
 
+                    # If they are a 'Prestataire' (Provider), add them to the syndic's residences
                     if hasattr(selected_user, 'prestataire_profile'):
                         selected_user.prestataire_profile.syndic.add(syndic)
                         selected_user.prestataire_profile.save()
@@ -989,19 +1076,22 @@ def associate_to_syndicate(request):
                     messages.success(
                         request,
                         _("'{user_name}' successfully associated with '{syndic_name}'.").format(
-                            user_name=selected_user.nom, syndic_name=syndic.user.nom
+                            user_name=selected_user.nom, syndic_name=syndic.nom
                         )
                     )
                     return redirect('dashboard-syndic', syndic.id)
 
                 if supersyndic:
+                    # Associate the user with the supersyndic
                     selected_user.supersyndic_profile = supersyndic
                     selected_user.save()
 
+                    # If they are a 'Coproprietaire' (Co-owner), add them to the supersyndic's residences
                     if hasattr(selected_user, 'coproprietaire_profile'):
                         selected_user.coproprietaire_profile.syndic.add(supersyndic)
                         selected_user.coproprietaire_profile.save()
 
+                    # If they are a 'Prestataire' (Provider), add them to the supersyndic's residences
                     if hasattr(selected_user, 'prestataire_profile'):
                         selected_user.prestataire_profile.syndic.add(supersyndic)
                         selected_user.prestataire_profile.save()
@@ -1009,7 +1099,7 @@ def associate_to_syndicate(request):
                     messages.success(
                         request,
                         _("'{user_name}' successfully associated with '{supersyndic_name}'.").format(
-                            user_name=selected_user.nom, supersyndic_name=supersyndic.user.nom
+                            user_name=selected_user.nom, supersyndic_name=supersyndic.nom
                         )
                     )
                     return redirect('dashboard-supersyndic', supersyndic.id)

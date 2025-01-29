@@ -168,12 +168,14 @@
                                     {% for syndic in syndics %}
                                     <span class="d-flex align-items-center gap-2">
                                         {{ syndic.user.nom }}
-                                        <a type="submit" href="{% url 'remove-user-by-id' residence.id 'syndic' syndic.user.id %}" 
+                                        {% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+                                        <a type="submit" href="{% url 'remove-user-from-residence' residence.id 'syndic' syndic.user.id %}" 
                                             rel="tooltip" title="Remove" 
                                             class="btn btn-danger btn-link btn-sm"
                                             data-confirm="{% trans 'Are you sure you want to remove the association?' %}">
                                             <i class="material-icons">close</i>
                                         </a>
+                                        {% endif %}
                                     </span>
                                     {% endfor %}
                                 </strong>
@@ -185,13 +187,15 @@
                                     {% for supersyndic in supersyndics %}
                                     <span class="d-flex align-items-center gap-2">
                                         {{ supersyndic.user.nom }}
-                                        <a type="submit" href="{% url 'remove-user-by-id' residence.id 'supersyndic' supersyndic.user.id %}"
+                                        {% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+                                        <a type="submit" href="{% url 'remove-user-from-residence' residence.id 'supersyndic' supersyndic.user.id %}"
                                             rel="tooltip"
                                             title="Remove" 
                                             class="btn btn-danger btn-link btn-sm"
                                             data-confirm="{% trans 'Are you sure you want to remove the association?' %}">
                                             <i class="material-icons">close</i>
                                         </a>
+                                        {% endif %}
                                     </span>
                                     {% endfor %}
                                 </strong>
@@ -226,7 +230,18 @@
                                 <strong>{% trans "Phone" %}:</strong>
                                 <a href="tel:{{ coproprietaire.user.phone }}" class="a_link mb-3">
                                     {{ coproprietaire.user.phone }}
-                                </a><hr>
+                                </a>
+                                {% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+                                <a type="submit" href="{% url 'remove-user-from-residence' residence.id 'coproprietaire' coproprietaire.user.id %}"
+                                    rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm"
+                                    data-confirm="{% trans 'Are you sure you want to remove the association?' %}">
+                                    <i class="material-icons">close</i>
+                                </a>
+                                {% endif %}
+                                <hr>
+                            </span>
+                            <span class="d-flex align-items-center gap-2">
+                                
                             </span>
                         </div>
                         {% endfor %}
@@ -261,6 +276,13 @@
                                 <a href="tel:{{ prestataire.user.phone }}" class="a_link mb-3">
                                     {{ prestataire.user.phone }}
                                 </a>
+                                {% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+                                <a type="submit" href="{% url 'remove-user-from-residence' residence.id 'prestataire' prestataire.user.id %}"
+                                    rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm"
+                                    data-confirm="{% trans 'Are you sure you want to remove the association?' %}">
+                                    <i class="material-icons">close</i>
+                                </a>
+                                {% endif %}
                                 <hr>
                             </span>
                         </div>
@@ -274,7 +296,7 @@
 
         </div>
         
-        {% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+        {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
         <div class="container text-center mb-3">
             <a href="{% url 'associate-to-syndicate' %}" class="btn btn-success btn-sm">
                 {% trans "Associate to a Syndicate" %}

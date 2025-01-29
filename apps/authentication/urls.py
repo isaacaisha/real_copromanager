@@ -15,7 +15,7 @@ from .views import (
 from apps.dashboard.views import (
     user_search, user_profile,
     dashboard_superadmin, customize_license, license_detail, create_residence, update_residence, residence_detail,
-    assign_syndic_to_residence, remove_syndic_from_residence, remove_syndic_from_residence_by_id,
+    assign_syndic_to_residence, remove_syndic_from_residence, remove_user_from_residence,
     associate_to_residence, associate_to_syndicate,
     dashboard_supersyndic, dashboard_syndic, dashboard_coproprietaire, dashboard_prestataire,
     gestion_residence, gestion_supersyndic, gestion_syndic, gestion_coproprietaire, gestion_prestataire
@@ -70,7 +70,7 @@ urlpatterns = [
 
     # URLs for Remove User Assignement
     path('remove-syndic/', remove_syndic_from_residence, name='remove-syndic'),
-    path('residence/<int:residence_id>/remove-user/<str:role>/<int:user_id>/', remove_syndic_from_residence_by_id, name='remove-user-by-id'),
+    path('residence/<int:residence_id>/remove-user/<str:role>/<int:user_id>/', remove_user_from_residence, name='remove-user-from-residence'),
 
     # URLs for Gestion User
     path('gestion-residence/', gestion_residence, name='gestion-residence'),
