@@ -761,6 +761,9 @@ def associate_to_residence(request):
 
         # Only show syndics linked to these residences
         syndics = Syndic.objects.filter(syndic_residences__in=residences).exclude(pk=syndic_profile.pk).distinct()
+        
+        # Retrieve the associated SuperSyndic(s) for the residences
+        supersyndics = SuperSyndic.objects.filter(supersyndic_residences__in=residences).distinct()
 
     elif request.user.role == 'SuperSyndic' and hasattr(request.user, 'supersyndic_profile'):
         supersyndic_profile = request.user.supersyndic_profile
@@ -856,9 +859,11 @@ def associate_to_syndicate(request):
     elif request.user.role == 'Syndic' and hasattr(request.user, 'syndic_profile'):
         associated_residences = Residence.objects.filter(syndic=request.user.syndic_profile)
         syndic_queryset = Syndic.objects.filter(syndic_residences__in=associated_residences).distinct()
+        supersyndic_queryset = SuperSyndic.objects.filter(supersyndic_residences__in=associated_residences).distinct()
     elif request.user.role == 'SuperSyndic' and hasattr(request.user, 'supersyndic_profile'):
         associated_residences = Residence.objects.filter(supersyndic=request.user.supersyndic_profile)
         supersyndic_queryset = SuperSyndic.objects.filter(supersyndic_residences__in=associated_residences).distinct()
+        syndic_queryset = Syndic.objects.filter(syndic_residences__in=associated_residences).distinct()
     else:
         messages.error(request, _("You are not authorized to perform this action."))
         return redirect('home')
@@ -1028,9 +1033,9 @@ def user_search(request):
         elif user.role == 'SuperSyndic' and hasattr(user, 'supersyndic_profile'):
             residences = Residence.objects.filter(supersyndic=user.supersyndic_profile)
         elif user.role == 'Coproprietaire' and hasattr(user, 'coproprietaire_profile'):
-            residences = Residence.objects.filter(coproprietaires=user.coproprietaire_profile)
+            residences = Residence.objects.filter(coproprietaire_residences=user.coproprietaire_profile)
         elif user.role == 'Prestataire' and hasattr(user, 'prestataire_profile'):
-            residences = Residence.objects.filter(prestataires=user.prestataire_profile)
+            residences = Residence.objects.filter(prestataires_residences=user.prestataire_profile)
 
         # Filter users who are part of the same residences
         users = CustomUser.objects.filter(
@@ -1069,6 +1074,8 @@ def user_profile(request, user_id):
     coproprietaire = None
     prestataire = None
     # Initialize as empty querysets
+    syndics = Syndic.objects.none()
+    supersyndics = SuperSyndic.objects.none()
     coproprietaires = Coproprietaire.objects.none()
     prestataires = Prestataire.objects.none()
 
@@ -1090,6 +1097,10 @@ def user_profile(request, user_id):
         coproprietaires = Coproprietaire.objects.filter(syndic=syndic)
         prestataires = Prestataire.objects.filter(syndic=syndic)
 
+        # Retrieve syndic and supersyndic associated with this coproprietaire
+        syndics = Syndic.objects.filter(user=user)
+        supersyndics = SuperSyndic.objects.filter(user=user)
+
     elif user.role == 'SuperSyndic':
         supersyndic = get_object_or_404(SuperSyndic, user=user)
         profile = supersyndic
@@ -1100,27 +1111,35 @@ def user_profile(request, user_id):
         coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic)
         prestataires = Prestataire.objects.filter(supersyndic=supersyndic)
 
+        # Retrieve syndic and supersyndic associated with this coproprietaire
+        syndics = Syndic.objects.filter(user=user)
+        supersyndics = SuperSyndic.objects.filter(user=user)
+
     elif user.role == 'Coproprietaire':
         coproprietaire = get_object_or_404(Coproprietaire, user=user)
         profile = coproprietaire
-        syndic = getattr(coproprietaire, 'syndic', None)
-        supersyndic = getattr(coproprietaire, 'supersyndic', None)
+        
+        # Fetch all residences associated with the coproprietaire
+        residences = Residence.objects.filter(coproprietaire_residences=coproprietaire)
+
+        # Retrieve syndic and supersyndic associated with this coproprietaire
+        syndics = Syndic.objects.filter(syndic_coproprietaires=coproprietaire)
+        supersyndics = SuperSyndic.objects.filter(supersyndic_coproprietaires=coproprietaire)
 
     elif user.role == 'Prestataire':
         prestataire = get_object_or_404(Prestataire, user=user)
         profile = prestataire
-        syndic = getattr(prestataire, 'syndic', None)
-        supersyndic = getattr(prestataire, 'supersyndic', None)
+        
+        # Fetch all residences associated with the prestataire
+        residences = Residence.objects.filter(prestataire_residences=prestataire)
+
+        # Retrieve syndic and supersyndic associated with this prestataire
+        syndics = Syndic.objects.filter(syndic_prestataires=prestataire)
+        supersyndics = SuperSyndic.objects.filter(supersyndic_prestataires=prestataire)
 
     # Calculate the total count
     total_count = coproprietaires.count() + prestataires.count()
 
-    # Fetch all residences associated with the coproprietaire
-    residences = coproprietaire.residence.all()
-
-    # Retrieve syndic and supersyndic associated with this coproprietaire
-    syndics = coproprietaire.syndic.all()
-    supersyndics = coproprietaire.supersyndic.all()
 
     context = {
         'profile': profile,
