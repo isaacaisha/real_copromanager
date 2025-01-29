@@ -1,10 +1,10 @@
-<!-- apps/dashboard/templates/assign-syndic.html -->
+<!-- apps/dashboard/templates/remove-syndic.html -->
 
 {% extends "layouts/base.html" %}
 
 {% load static i18n %}
 
-{% block title %} {% trans "Assign Syndicate with a Residence" %} {% endblock %}
+{% block title %} {% trans "Remove Syndicate Association with a Residence" %} {% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}{% endblock stylesheets %}
@@ -18,7 +18,7 @@
                 <i class="fa-solid fa-id-card fa-beat fa-2x"></i>
             </div>
             <h5 class="card-title">
-                {% trans "Assign a Syndicate with a Residence" %}
+                {% trans "Remove Syndicate Association with a Residence" %}
             </h5>
         </div>
 
@@ -34,8 +34,16 @@
                 </div>
             
                 <div class="text-center">
-                    <button type="submit" class="btn btn-success btn-sm pull-left">{% trans "Save" %}</button>
+                    <button type="submit" class="btn btn-danger btn-sm pull-left">{% trans "Remove" %}</button>
                     <a href="javascript:history.back()" class="btn btn-sm pull-right">{% trans "Cancel" %}</a>
+                </div>
+                <div class="text-center mt-5">
+                    <button type="submit" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm"
+                        data-confirm="{% trans 'Are you sure you want to remove the association?' %}">
+                        <i class="material-icons">close</i>
+                    <br>
+                    <span style="font-size: x-small;">remove</span>
+                    </button>
                 </div>
             </form>
         </div>

@@ -24,10 +24,15 @@
     </a>
     
     <a href="{% url 'assign-syndic' %}" class="btn btn-success btn-sm pull-right">
-        {% trans "add to Residence" %}
+        {% trans "Add to Residence" %}
     </a>
+    
+    <div class="text-center">
+        <a href="{% url 'remove-syndic' %}" class="btn btn-danger btn-sm text-center">
+            {% trans "Remove from Residence" %}
+        </a>
+    </div>
 </div>
-<br>
 {% endif %}
 
 {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
@@ -37,7 +42,7 @@
     </a>
     
     <a href="{% url 'associate-to-residence' %}" class="btn btn-success btn-sm pull-right">
-        {% trans "add to Residence" %}
+        {% trans "Add to Residence" %}
     </a>
 </div>
 <br>
@@ -161,7 +166,15 @@
                                 <strong>
                                     {% trans "Associated Syndic" %}:
                                     {% for syndic in syndics %}
-                                    {{ syndic.user.nom }}{% if not forloop.last %}, {% endif %}
+                                    <span class="d-flex align-items-center gap-2">
+                                        {{ syndic.user.nom }}
+                                        <a type="submit" href="{% url 'remove-user-by-id' residence.id 'syndic' syndic.user.id %}" 
+                                            rel="tooltip" title="Remove" 
+                                            class="btn btn-danger btn-link btn-sm"
+                                            data-confirm="{% trans 'Are you sure you want to remove the association?' %}">
+                                            <i class="material-icons">close</i>
+                                        </a>
+                                    </span>
                                     {% endfor %}
                                 </strong>
                                 <br>
@@ -170,7 +183,16 @@
                                 <strong>
                                     {% trans "Associated Supersyndic" %}:
                                     {% for supersyndic in supersyndics %}
-                                    {{ supersyndic.user.nom }}{% if not forloop.last %}, {% endif %}
+                                    <span class="d-flex align-items-center gap-2">
+                                        {{ supersyndic.user.nom }}
+                                        <a type="submit" href="{% url 'remove-user-by-id' residence.id 'supersyndic' supersyndic.user.id %}"
+                                            rel="tooltip"
+                                            title="Remove" 
+                                            class="btn btn-danger btn-link btn-sm"
+                                            data-confirm="{% trans 'Are you sure you want to remove the association?' %}">
+                                            <i class="material-icons">close</i>
+                                        </a>
+                                    </span>
                                     {% endfor %}
                                 </strong>
                             {% endif %}
@@ -292,4 +314,17 @@
 {% endblock %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('a[data-confirm]').forEach(link => {
+            link.addEventListener('click', function (event) {
+                const confirmMessage = this.getAttribute('data-confirm');
+                if (!confirm(confirmMessage)) {
+                    event.preventDefault(); // Stop the link from navigating if canceled
+                }
+            });
+        });
+    });
+</script>
+{% endblock javascripts %}

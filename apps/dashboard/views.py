@@ -19,7 +19,10 @@ from django.utils import timezone
 
 from core.utils import get_user_context, otp_required_for_supersyndic  # Import the helper function
 
-from .forms import LicenseForm, ResidenceForm, AssignSyndicForm, AssociateToResidenceForm, AssociateToSyndicateForm
+from .forms import (
+    LicenseForm, ResidenceForm, AssignSyndicForm, RemoveSyndicForm,
+    AssociateToResidenceForm, AssociateToSyndicateForm
+    )
 from .models import (
     License, Superadmin, SuperSyndic,
     Syndic, Coproprietaire, Prestataire, Residence
@@ -731,7 +734,7 @@ def assign_syndic_to_residence(request):
     # Render the template
     context = {
         'segment': 'assign-syndic',
-        "titlePage": _("Assign Syndic to Residence"),
+        "titlePage": _("Assign Syndicate with a Residence"),
         "form": form,
         'residences': residences,
         'coproprietaires': coproprietaires,
@@ -740,6 +743,89 @@ def assign_syndic_to_residence(request):
 
     html_template = loader.get_template('assign-syndic.html')
     return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+def remove_syndic_from_residence(request):
+    residences = Residence.objects.all()
+    
+    if request.method == "POST":
+        form = RemoveSyndicForm(request.POST, residence_queryset=residences)
+        if form.is_valid():
+            residence = form.cleaned_data['residence']
+            syndic = form.cleaned_data.get('syndic')
+            supersyndic = form.cleaned_data.get('supersyndic')
+
+            if syndic:
+                residence.syndic.remove(syndic)
+                messages.success(
+                    request,
+                    _("{syndic} successfully removed from Residence {res_name}.").format(
+                        syndic=syndic.nom, res_name=residence.nom
+                    )
+                )
+
+            if supersyndic:
+                residence.supersyndic.remove(supersyndic)
+                messages.success(
+                    request,
+                    _("{supersyndic} successfully removed from Residence {res_name}.").format(
+                        supersyndic=supersyndic.user.nom, res_name=residence.nom
+                    )
+                )
+
+            return redirect('residence-detail', residence.id)
+        else:
+            messages.error(request, _("Form is not valid. Please correct the errors."))
+    else:
+        form = RemoveSyndicForm(residence_queryset=residences)
+
+    context = {
+        'segment': 'remove-syndic',
+        "titlePage": _("Remove Syndic from Residence"),
+        "form": form,
+        'residences': residences,
+        'date': timezone.now().strftime(_("%a %d %B %Y"))
+    }
+
+    html_template = loader.get_template('remove-syndic.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
+def remove_syndic_from_residence_by_id(request, residence_id, user_id, role):
+    try:
+        residence = Residence.objects.get(id=residence_id)
+
+        if role == "syndic":
+            syndic = Syndic.objects.get(user_id=user_id)
+            residence.syndic.remove(syndic)
+            messages.success(
+                request,
+                _("{syndic} successfully removed from Residence {res_name}.").format(
+                    syndic=syndic.user.nom, res_name=residence.nom
+                )
+            )
+        
+        elif role == "supersyndic":
+            supersyndic = SuperSyndic.objects.get(user_id=user_id)
+            residence.supersyndic.remove(supersyndic)
+            messages.success(
+                request,
+                _("{supersyndic} successfully removed from Residence {res_name}.").format(
+                    supersyndic=supersyndic.user.nom, res_name=residence.nom
+                )
+            )
+
+        else:
+            messages.error(request, _("Invalid role specified."))
+
+    except (Residence.DoesNotExist, Syndic.DoesNotExist, SuperSyndic.DoesNotExist):
+        messages.error(request, _("Residence, Syndic, or SuperSyndic not found."))
+
+    return redirect('residence-detail', residence.id)  # Redirect to residence details
 
 
 @login_required(login_url="/login/")

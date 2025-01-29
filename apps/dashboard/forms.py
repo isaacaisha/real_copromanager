@@ -187,6 +187,36 @@ class AssignSyndicForm(forms.Form):
         self.fields['supersyndic'].queryset = supersyndic_queryset
 
 
+class RemoveSyndicForm(forms.Form):
+    syndic = forms.ModelChoiceField(
+        queryset=Syndic.objects.none(),
+        label=_("Syndic to Remove"),
+        required=False,
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+    supersyndic = forms.ModelChoiceField(
+        queryset=SuperSyndic.objects.none(),
+        label=_("SuperSyndic to Remove"),
+        required=False,
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+    residence = forms.ModelChoiceField(
+        queryset=Residence.objects.none(),
+        label=_("Residence"),
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+    def __init__(self, *args, **kwargs):
+        residence_queryset = kwargs.pop('residence_queryset', Residence.objects.none())
+        super().__init__(*args, **kwargs)
+
+        self.fields['residence'].queryset = residence_queryset
+
+        # Dynamically update syndic and supersyndic based on selected residence (handled via AJAX in the frontend)
+        self.fields['syndic'].queryset = Syndic.objects.filter(syndic_residences__isnull=False).distinct()
+        self.fields['supersyndic'].queryset = SuperSyndic.objects.filter(supersyndic_residences__isnull=False).distinct()
+
+
 class AssociateToResidenceForm(forms.Form):
     syndic = forms.ModelChoiceField(
         required=False,
