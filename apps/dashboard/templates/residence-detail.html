@@ -252,7 +252,7 @@
 
         </div>
         
-        {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+        {% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
         <div class="container text-center mb-3">
             <a href="{% url 'associate-to-syndicate' %}" class="btn btn-success btn-sm">
                 {% trans "Associate to a Syndicate" %}

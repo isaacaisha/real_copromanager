@@ -754,23 +754,27 @@ def associate_to_residence(request):
     if request.user.role == 'Syndic' and hasattr(request.user, 'syndic_profile'):
         syndic_profile = request.user.syndic_profile
         residences = Residence.objects.filter(syndic=syndic_profile)
-        coproprietaires = Coproprietaire.objects.filter(syndic=syndic_profile)
-        prestataires = Prestataire.objects.filter(syndic=syndic_profile)
-        syndics = Syndic.objects.filter(
-            user__created_residences__isnull=False
-        ).exclude(pk=syndic_profile.pk).distinct()
+        
+        # Only include coproprietaires and prestataires linked to these residences
+        coproprietaires = Coproprietaire.objects.filter(residence__in=residences).distinct()
+        prestataires = Prestataire.objects.filter(residence__in=residences).distinct()
+
+        # Only show syndics linked to these residences
+        syndics = Syndic.objects.filter(syndic_residences__in=residences).exclude(pk=syndic_profile.pk).distinct()
 
     elif request.user.role == 'SuperSyndic' and hasattr(request.user, 'supersyndic_profile'):
         supersyndic_profile = request.user.supersyndic_profile
         residences = Residence.objects.filter(supersyndic=supersyndic_profile)
-        coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic_profile)
-        prestataires = Prestataire.objects.filter(supersyndic=supersyndic_profile)
-        syndics = Syndic.objects.filter(
-            user__created_residences__supersyndic=supersyndic_profile
-        ).distinct()
-        supersyndics = SuperSyndic.objects.filter(
-            user__created_residences__isnull=False
-        ).exclude(pk=supersyndic_profile.pk).distinct()
+        
+        # Only include coproprietaires and prestataires linked to these residences
+        coproprietaires = Coproprietaire.objects.filter(residence__in=residences).distinct()
+        prestataires = Prestataire.objects.filter(residence__in=residences).distinct()
+
+        # Syndics assigned to residences under this SuperSyndic
+        syndics = Syndic.objects.filter(residence__in=residences).distinct()
+
+        # SuperSyndics associated with residences under the same management
+        supersyndics = SuperSyndic.objects.filter(supersyndic_residences__in=residences).exclude(pk=supersyndic_profile.pk).distinct()
 
     else:
         messages.error(request, _("You are not authorized to perform this action."))
@@ -836,19 +840,25 @@ def associate_to_residence(request):
 
 
 @login_required(login_url="/login/")
-@user_passes_test(lambda u: u.is_active and u.role in ['Syndic', 'SuperSyndic'])
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def associate_to_syndicate(request):
     # Determine user role and associated residences
     associated_residences = None
     syndic_queryset = Syndic.objects.none()
     supersyndic_queryset = SuperSyndic.objects.none()
 
-    if request.user.role == 'Syndic' and hasattr(request.user, 'syndic_profile'):
+    if request.user.role == 'Superadmin':
+        # Superadmin can access all Syndics, SuperSyndics, and residences
+        associated_residences = Residence.objects.all()
+        syndic_queryset = Syndic.objects.all()
+        supersyndic_queryset = SuperSyndic.objects.all()
+
+    elif request.user.role == 'Syndic' and hasattr(request.user, 'syndic_profile'):
         associated_residences = Residence.objects.filter(syndic=request.user.syndic_profile)
-        syndic_queryset = Syndic.objects.filter(id=request.user.syndic_profile.id)
+        syndic_queryset = Syndic.objects.filter(syndic_residences__in=associated_residences).distinct()
     elif request.user.role == 'SuperSyndic' and hasattr(request.user, 'supersyndic_profile'):
         associated_residences = Residence.objects.filter(supersyndic=request.user.supersyndic_profile)
-        supersyndic_queryset = SuperSyndic.objects.filter(id=request.user.supersyndic_profile.id)
+        supersyndic_queryset = SuperSyndic.objects.filter(supersyndic_residences__in=associated_residences).distinct()
     else:
         messages.error(request, _("You are not authorized to perform this action."))
         return redirect('home')
@@ -868,22 +878,19 @@ def associate_to_syndicate(request):
             supersyndic_queryset=supersyndic_queryset,
         )
         if form.is_valid():
-            selected_user = form.save()  # Delegate saving logic to the form
+            selected_user = form.save()
             syndic = form.cleaned_data.get('syndic')
             supersyndic = form.cleaned_data.get('supersyndic')
 
             if selected_user:
                 if syndic:
-                    # Associate the user with the syndic
                     selected_user.syndic_profile = syndic
                     selected_user.save()
 
-                    # If they are a 'Coproprietaire' (Co-owner), add them to the syndic's residences
                     if hasattr(selected_user, 'coproprietaire_profile'):
                         selected_user.coproprietaire_profile.syndic.add(syndic)
                         selected_user.coproprietaire_profile.save()
 
-                    # If they are a 'Prestataire' (Provider), add them to the syndic's residences
                     if hasattr(selected_user, 'prestataire_profile'):
                         selected_user.prestataire_profile.syndic.add(syndic)
                         selected_user.prestataire_profile.save()
@@ -891,22 +898,19 @@ def associate_to_syndicate(request):
                     messages.success(
                         request,
                         _("'{user_name}' successfully associated with '{syndic_name}'.").format(
-                            user_name=selected_user.nom, syndic_name=request.user.syndic_profile.user.nom
+                            user_name=selected_user.nom, syndic_name=syndic.user.nom
                         )
                     )
                     return redirect('dashboard-syndic', syndic.id)
 
                 if supersyndic:
-                    # Associate the user with the supersyndic
                     selected_user.supersyndic_profile = supersyndic
                     selected_user.save()
 
-                    # If they are a 'Coproprietaire' (Co-owner), add them to the supersyndic's residences
                     if hasattr(selected_user, 'coproprietaire_profile'):
                         selected_user.coproprietaire_profile.syndic.add(supersyndic)
                         selected_user.coproprietaire_profile.save()
 
-                    # If they are a 'Prestataire' (Provider), add them to the supersyndic's residences
                     if hasattr(selected_user, 'prestataire_profile'):
                         selected_user.prestataire_profile.syndic.add(supersyndic)
                         selected_user.prestataire_profile.save()
@@ -914,7 +918,7 @@ def associate_to_syndicate(request):
                     messages.success(
                         request,
                         _("'{user_name}' successfully associated with '{supersyndic_name}'.").format(
-                            user_name=selected_user.nom, supersyndic_name=request.user.supersyndic_profile.user.nom
+                            user_name=selected_user.nom, supersyndic_name=supersyndic.user.nom
                         )
                     )
                     return redirect('dashboard-supersyndic', supersyndic.id)
@@ -1008,54 +1012,39 @@ def user_search(request):
     query = request.GET.get('q', '').strip()  # Get the search query
     user = request.user
 
-    # Initialize variables
-    users = CustomUser.objects.none()  # Empty queryset by default
-    residences = Residence.objects.none()  # Empty queryset for residences
+    # Default empty querysets
+    users = CustomUser.objects.none()
+    residences = Residence.objects.none()
 
     if user.role == 'Superadmin':
-        # Superadmin sees all users and all residences
+        # Superadmin sees everything
         users = CustomUser.objects.all()
         residences = Residence.objects.all()
-    elif user.role == 'Syndic':
-        syndic = getattr(user, 'syndic_profile', None)
-        if syndic:
-            # Syndic-specific users and residences
-            users = CustomUser.objects.filter(
-                Q(syndic_profile=syndic) |
-                Q(coproprietaire_profile__syndic=syndic) |
-                Q(prestataire_profile__syndic=syndic)
-            ).distinct()
-            residences = Residence.objects.filter(syndic=syndic)
-    elif user.role == 'SuperSyndic':
-        supersyndic = getattr(user, 'supersyndic_profile', None)
-        if supersyndic:
-            # SuperSyndic-specific users and residences
-            users = CustomUser.objects.filter(
-                Q(supersyndic_profile=supersyndic) |
-                Q(coproprietaire_profile__supersyndic=supersyndic) |
-                Q(prestataire_profile__supersyndic=supersyndic)
-            ).distinct()
-            residences = Residence.objects.filter(supersyndic=supersyndic)
-    elif user.role == 'Coproprietaire':
-        coproprietaire = getattr(user, 'coproprietaire_profile', None)
-        if coproprietaire:
-            # Coproprietaire sees only their own profile and residence
-            users = CustomUser.objects.filter(coproprietaire_profile=coproprietaire)
-            #residences = Residence.objects.filter(coproprietaires=coproprietaire)
-    elif user.role == 'Prestataire':
-        prestataire = getattr(user, 'prestataire_profile', None)
-        if prestataire:
-            # Prestataire sees only their own profile
-            users = CustomUser.objects.filter(prestataire_profile=prestataire)
-            #residences = Residence.objects.filter(prestataires=prestataire)
 
-    # Filter users by search query
+    else:
+        # Fetch associated residences first
+        if user.role == 'Syndic' and hasattr(user, 'syndic_profile'):
+            residences = Residence.objects.filter(syndic=user.syndic_profile)
+        elif user.role == 'SuperSyndic' and hasattr(user, 'supersyndic_profile'):
+            residences = Residence.objects.filter(supersyndic=user.supersyndic_profile)
+        elif user.role == 'Coproprietaire' and hasattr(user, 'coproprietaire_profile'):
+            residences = Residence.objects.filter(coproprietaires=user.coproprietaire_profile)
+        elif user.role == 'Prestataire' and hasattr(user, 'prestataire_profile'):
+            residences = Residence.objects.filter(prestataires=user.prestataire_profile)
+
+        # Filter users who are part of the same residences
+        users = CustomUser.objects.filter(
+            Q(coproprietaire_profile__residence__in=residences) |
+            Q(prestataire_profile__residence__in=residences) |
+            Q(syndic_profile__syndic_residences__in=residences) |
+            Q(supersyndic_profile__supersyndic_residences__in=residences)
+        ).distinct()
+
+    # Apply search query if provided
     if query:
-        users = users.filter(
-            Q(nom__icontains=query) | Q(email__icontains=query)
-        )
+        users = users.filter(Q(nom__icontains=query) | Q(email__icontains=query))
 
-    # Context for rendering
+    # Render the response
     context = {
         'users': users,
         'residences': residences,
@@ -1076,7 +1065,6 @@ def user_profile(request, user_id):
     syndic = None
     supersyndic = None
     license = None
-    residences = None
     residences = None
     coproprietaire = None
     prestataire = None
@@ -1127,10 +1115,19 @@ def user_profile(request, user_id):
     # Calculate the total count
     total_count = coproprietaires.count() + prestataires.count()
 
+    # Fetch all residences associated with the coproprietaire
+    residences = coproprietaire.residence.all()
+
+    # Retrieve syndic and supersyndic associated with this coproprietaire
+    syndics = coproprietaire.syndic.all()
+    supersyndics = coproprietaire.supersyndic.all()
+
     context = {
         'profile': profile,
         'nom': user.nom,
         'residences': residences,
+        'syndics': syndics,
+        'supersyndics': supersyndics,
         'superadmin': superadmin,
         'syndic': syndic,
         'supersyndic': supersyndic,
