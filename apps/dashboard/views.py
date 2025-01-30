@@ -931,9 +931,9 @@ def associate_to_residence(request):
         syndic_profile = request.user.syndic_profile
         residences = Residence.objects.filter(syndic=syndic_profile)
         
-        # Only include coproprietaires and prestataires linked to these residences
-        coproprietaires = Coproprietaire.objects.filter(residence__in=residences).distinct()
-        prestataires = Prestataire.objects.filter(residence__in=residences).distinct()
+        # Only include coproprietaires and prestataires linked to these syndic_profile
+        coproprietaires = Coproprietaire.objects.filter(syndic=syndic_profile)
+        prestataires = Prestataire.objects.filter(syndic=syndic_profile)
 
         # Only show syndics linked to these residences
         syndics = Syndic.objects.filter(syndic_residences__in=residences).exclude(pk=syndic_profile.pk).distinct()
@@ -945,9 +945,9 @@ def associate_to_residence(request):
         supersyndic_profile = request.user.supersyndic_profile
         residences = Residence.objects.filter(supersyndic=supersyndic_profile)
         
-        # Only include coproprietaires and prestataires linked to these residences
-        coproprietaires = Coproprietaire.objects.filter(residence__in=residences).distinct()
-        prestataires = Prestataire.objects.filter(residence__in=residences).distinct()
+        # Only include coproprietaires and prestataires linked to these supersyndic_profile
+        coproprietaires = Coproprietaire.objects.filter(supersyndic=supersyndic_profile)
+        prestataires = Prestataire.objects.filter(supersyndic=supersyndic_profile)
 
         # Syndics assigned to residences under this SuperSyndic
         syndics = Syndic.objects.filter(residence__in=residences).distinct()
@@ -1039,11 +1039,25 @@ def associate_to_syndicate(request):
         return redirect('home')
 
     # Query users related to the residences and only fetch their names
-    residence_users = CustomUser.objects.filter(
-        Q(coproprietaire_profile__residence__in=associated_residences) |
-        Q(prestataire_profile__residence__in=associated_residences)
-    ).distinct()
+    if not syndic_queryset:
+        copro_residence_users = CustomUser.objects.none()
+    else:
+        copro_residence_users = CustomUser.objects.filter(
+            Q(coproprietaire_profile__syndic=request.user.syndic_profile) |
+            Q(prestataire_profile__syndic=request.user.syndic_profile)
+        ).distinct()
 
+    if not supersyndic_queryset:
+        presta_residence_users = CustomUser.objects.none()
+    else:
+        presta_residence_users = CustomUser.objects.filter(
+            Q(coproprietaire_profile__supersyndic=request.user.supersyndic_profile) |
+            Q(prestataire_profile__supersyndic=request.user.supersyndic_profile)
+        ).distinct()
+
+    # Combine the results
+    residence_users = copro_residence_users | presta_residence_users
+    
     # Handle form submission
     if request.method == "POST":
         form = AssociateToSyndicateForm(
