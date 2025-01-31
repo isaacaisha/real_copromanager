@@ -33,6 +33,9 @@
                         <strong>{% trans "Last Name" %}:</strong> {{ user.nom }}<br>
                         <strong>{% trans "First Name" %}:</strong> {{ user.prenom }}<br>
                         <strong>{% trans "Role" %}:</strong> {{ user.role }}<br>
+                        <strong>{% trans "Active" %}: {{ user.get_is_active_display }}</strong><br>
+                        <strong>{% trans "Super User" %}: {{ user.get_is_superuser_display }}</strong><br>
+                        <strong>{% trans "Status" %}: {{ user.get_status_display }}</strong><br>
                         <strong>{% trans "Phone" %}:</strong> 
                         <a href="tel:{{ user.phone }}" class="a_link">
                             {{ user.phone }}

@@ -100,10 +100,13 @@
           <img class="img-container" src="/static/assets/img/shark.png" />
         {% endif %}
         {% if user.is_authenticated %}
-          <h5 class="prenom mb-3">{% trans '-¡!¡- Welcome,' %} {{ user.prenom }} {% trans '-¡!¡-' %}</h5>
+          <h5 class="prenom">{% trans '-¡!¡- Welcome,' %} {{ user.prenom }} {% trans '-¡!¡-' %}</h5>
         {% endif %}
         {% if user.is_superuser == True %}
-          <h6 class="prenom">👌🏿😎💪🏿<br>Super User</h6>
+          <h6 class="prenom mb-0">👌🏿😎💪🏿<br>Super User</h6>
+        {% endif %}
+        {% if user.status == True %}
+          <h6 class="prenom mb-3">Super Active</h6>
         {% endif %}
           
         {% if messages %}

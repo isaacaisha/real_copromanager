@@ -17,6 +17,19 @@ from django_recaptcha.widgets import ReCaptchaV2Checkbox, ReCaptchaV3
 from django.contrib.auth.forms import SetPasswordForm
 
 
+IS_ACTIVE_CHOICES = [
+    (True, _("Active")),
+    (False, _("Inactive")),
+]
+IS_SUPERUSER_CHOICES = [
+    (True, _("Super User")),
+    (False, _("Regular User")),
+]
+STATUS_CHOICES = [
+    (True, _("Super Active")),
+    (False, _("Active")),
+]
+
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(
         widget=forms.EmailInput(
@@ -49,17 +62,17 @@ class SignUpForm(UserCreationForm):
                 "style": "background-color: transparent;" 
             }
         ))
-    is_active = forms.BooleanField(
-        required=False,  # Make it optional in the form
-        initial=True,  # Default to True
-        label=_("Active"),  # Set the label
-        widget=forms.CheckboxInput()
-    )
-    is_superuser = forms.BooleanField(
-        required=False, 
-        label="Super User",
-        widget=forms.CheckboxInput()
-    )
+    is_active = forms.ChoiceField(
+        choices=IS_ACTIVE_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={"class": "form-control"}
+    ))
+    is_superuser = forms.ChoiceField(
+        choices=IS_SUPERUSER_CHOICES,
+        required=False,
+        initial=False,  # Default to False
+        widget=forms.Select(attrs={"class": "form-control"}
+    ))
     residence = forms.ModelChoiceField(
         queryset=Residence.objects.none(),  # Default to an empty queryset
         required=False,  # Default to not required
@@ -77,13 +90,11 @@ class SignUpForm(UserCreationForm):
                 "class": "form-control"
             }
         ))
-    status = forms.CharField(
+    status = forms.ChoiceField(
+        choices=STATUS_CHOICES,
         required=False,
-        widget=forms.TextInput(
-            attrs={
-                "placeholder": _("Status (e.g., Active/Inactive)"),
-                "class": "form-control"
-            }
+        initial=False,  # Default to False
+        widget=forms.Select(attrs={"class": "form-control"}
         ))
     commercial = forms.CharField(
         required=False,
@@ -171,6 +182,7 @@ class SignUpForm(UserCreationForm):
         if logged_in_user and logged_in_user.role != 'Superadmin':
             self.fields.pop('is_active', None)
             self.fields.pop('is_superuser', None)
+            self.fields.pop('status', None)
 
         # Optionally exclude the residence field
         if exclude_residence:
@@ -258,6 +270,7 @@ class SyndicForm(SignUpForm):
         if logged_in_user and logged_in_user.role != 'Superadmin':
             self.fields.pop('is_active', None)
             self.fields.pop('is_superuser', None)
+            self.fields.pop('status', None)
 
         # Remove the 'residence' field if it exists
         if 'residence' in self.fields:
@@ -290,8 +303,10 @@ class SuperSyndicForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={"placeholder": _("Email"), "class": "form-control"}),
             'nom': forms.TextInput(attrs={"placeholder": _("Last Name"), "class": "form-control"}),
             'prenom': forms.TextInput(attrs={"placeholder": _("First Name"), "class": "form-control"}),
+            'is_active': forms.Select(attrs={"class": "form-control", "style": "border: none; background-color: transparent;"}),
+            'is_superuser': forms.Select(attrs={"class": "form-control", "style": "border: none; background-color: transparent;"}),
             'phone': forms.TextInput(attrs={"placeholder": _("Phone"), "class": "form-control"}),
-            'status': forms.TextInput(attrs={"placeholder": _("Status (Active/Inactive)"), "class": "form-control"}),
+            'status': forms.Select(attrs={"class": "form-control", "style": "border: none; background-color: transparent;"}),
             'commercial': forms.TextInput(attrs={"placeholder": _("Commercial Info"), "class": "form-control"}),
             'address': forms.Textarea(attrs={"placeholder": _("Address"), "class": "form-control", "rows": 2}),
             'city': forms.TextInput(attrs={"placeholder": _("City"), "class": "form-control"}),
@@ -324,6 +339,7 @@ class SuperSyndicForm(forms.ModelForm):
         if logged_in_user and logged_in_user.role != 'Superadmin':
             self.fields.pop('is_active', None)
             self.fields.pop('is_superuser', None)
+            self.fields.pop('status', None)
 
         for field_name, field in self.fields.items():
             field.label = ""  # Remove labels

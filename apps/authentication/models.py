@@ -46,6 +46,18 @@ class CustomUser(AbstractUser):
         ('Prestataire', _('Prestataire')),
         ('SuperSyndic', _('SuperSyndic')),
     )
+    IS_ACTIVE_CHOICES = [
+        (True, 'Active'),
+        (False, 'Inactive'),
+    ]
+    IS_SUPERUSER_CHOICES = [
+        (False, _("Regular User")),
+        (True, _("Super User")),
+    ]
+    STATUS_CHOICES = [
+        (False, 'Active'),
+        (True, 'Super Active'),
+    ]
 
     # Remove username field
     username = None
@@ -55,11 +67,12 @@ class CustomUser(AbstractUser):
     prenom = models.CharField(_('first name'), max_length=255)
     role = models.CharField(_('role'), max_length=50, choices=ROLES, default='Syndic')
     # Set is_active to True by default
-    is_active = models.BooleanField(_('Active'), default=True)
+    is_active =  models.BooleanField(_('is active'), choices=IS_ACTIVE_CHOICES, default=True) 
+    is_superuser =  models.BooleanField(_('is superuser'), choices=IS_SUPERUSER_CHOICES, default=False) 
 
     # Additional fields
     phone = models.CharField(_('phone'), max_length=20, null=True, blank=True)
-    status = models.CharField(_('status'), max_length=100, null=True, blank=True)
+    status = models.BooleanField(_('status'), choices=STATUS_CHOICES, default=False)
     commercial = models.CharField(_('commercial'), max_length=100, null=True, blank=True)
     address = models.TextField(_('address'), null=True, blank=True)
     city = models.CharField(_('city'), max_length=100, null=True, blank=True)

@@ -157,11 +157,15 @@
                         </p>
                         <p>
                             <strong>Is Active:</strong>
-                            <span class="fs-5">{{ syndic.user.is_active }}</span>
+                            <span class="fs-5">{{ syndic.user.get_is_active_display }}</span>
+                        </p>
+                        <p>
+                            <strong>Is Super user:</strong>
+                            <span class="fs-5">{{ syndic.user.get_is_superuser_display }}</span>
                         </p>
                         <p>
                             <strong>Statut:</strong>
-                            <span class="fs-5">{{ syndic.user.status }}</span>
+                            <span class="fs-5">{{ syndic.user.get_status_display}}</span>
                         </p>
                         <p>
                             <strong>Commercial:</strong>
@@ -229,16 +233,20 @@
                             <span class="fs-5">{{ supersyndic.user.id }}</span>
                         </p>
                         <p>
-                            <strong>Is Active:</strong>
-                            <span class="fs-5">{{ supersyndic.user.is_active }}</span>
+                            <strong>Role:</strong>
+                            <span class="fs-5">{{ supersyndic.user.role }}</span>
                         </p>
                         <p>
-                            <strong>Role:</strong>
-                            <span class="fs-5">{{ syndic.user.role }}</span>
+                            <strong>Is Active:</strong>
+                            <span class="fs-5">{{ supersyndic.user.get_is_active_display }}</span>
+                        </p>
+                        <p>
+                            <strong>Is Super User:</strong>
+                            <span class="fs-5">{{ supersyndic.user.get_is_superuser_display }}</span>
                         </p>
                         <p>
                             <strong>Statut:</strong>
-                            <span class="fs-5">{{ supersyndic.user.status }}</span>
+                            <span class="fs-5">{{ supersyndic.user.get_status_display }}</span>
                         </p>
                         <p>
                             <strong>Commercial:</strong>
