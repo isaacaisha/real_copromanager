@@ -18,6 +18,7 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError(_('The Email field must be set'))
         email = self.normalize_email(email)
+        extra_fields.setdefault('is_active', True)  # Set is_active to True by default
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
@@ -27,6 +28,7 @@ class UserManager(BaseUserManager):
         """Create and return a superuser with an email and password."""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)  # Ensure superuser is active
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError(_('Superuser must have is_staff=True.'))
@@ -52,6 +54,8 @@ class CustomUser(AbstractUser):
     nom = models.CharField(_('last name'), max_length=255)
     prenom = models.CharField(_('first name'), max_length=255)
     role = models.CharField(_('role'), max_length=50, choices=ROLES, default='Syndic')
+    # Set is_active to True by default
+    is_active = models.BooleanField(_('Active'), default=True)
 
     # Additional fields
     phone = models.CharField(_('phone'), max_length=20, null=True, blank=True)

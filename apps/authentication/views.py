@@ -75,11 +75,12 @@ def register_user(request):
 
         if form.is_valid():
             user = form.save(commit=False)
+
             user.set_password(form.cleaned_data.get("password1"))
 
             creator = request.user
             if creator.role not in ['Superadmin', 'Syndic', 'SuperSyndic']:
-                messages.error(request, _("You do not have permission to register new users."))
+                messages.warning(request, _("You do not have permission to register new users."))
                 return redirect('register')
 
             user.save()
@@ -97,9 +98,9 @@ def register_user(request):
                 return create_syndic(request, user, license_form)
 
             else:
-                messages.error(request, _('Invalid role specified.'))
+                messages.warning(request, _('Invalid role specified.'))
         else:
-            messages.error(request, _('Form is not valid.'))
+            messages.warning(request, _('Form is not valid.'))
 
     else:
         form = SignUpForm(initial={'role': role}, logged_in_user=logged_in_user) # , exclude_residence=exclude_residence)
@@ -117,13 +118,13 @@ def register_user(request):
 def create_coproprietaire(request, user, residence, creator):
     """Helper function to create a Coproprietaire."""
     if not residence:
-        messages.error(request, _('Residence is required for Coproprietaire.'))
+        messages.warning(request, _('Residence is required for Coproprietaire.'))
         return redirect('register')
 
     if creator.role == 'Syndic':
         syndic = Syndic.objects.filter(user=creator).first()
         if not syndic:
-            messages.error(request, _('No associated Syndic found for the current user.'))
+            messages.warning(request, _('No associated Syndic found for the current user.'))
             return redirect('register')
 
         coproprietaire = Coproprietaire.objects.create(user=user)
@@ -136,7 +137,7 @@ def create_coproprietaire(request, user, residence, creator):
     elif creator.role == 'SuperSyndic':
         supersyndic = SuperSyndic.objects.filter(user=creator).first()
         if not supersyndic:
-            messages.error(request, _('No associated SuperSyndic found for the current user.'))
+            messages.warning(request, _('No associated SuperSyndic found for the current user.'))
             return redirect('register')
 
         coproprietaire = Coproprietaire.objects.create(user=user)
@@ -151,7 +152,7 @@ def create_prestataire(request, user, residence, creator):
     if creator.role == 'Syndic':
         syndic = Syndic.objects.filter(user=creator).first()
         if not syndic:
-            messages.error(request, _('No associated Syndic found for the current user.'))
+            messages.warning(request, _('No associated Syndic found for the current user.'))
             return redirect('register')
 
         prestataire = Prestataire.objects.create(user=user)
@@ -164,7 +165,7 @@ def create_prestataire(request, user, residence, creator):
     elif creator.role == 'SuperSyndic':
         supersyndic = SuperSyndic.objects.filter(user=creator).first()
         if not supersyndic:
-            messages.error(request, _('No associated SuperSyndic found for the current user.'))
+            messages.warning(request, _('No associated SuperSyndic found for the current user.'))
             return redirect('register')
 
         prestataire = Prestataire.objects.create(user=user)
@@ -203,7 +204,7 @@ def login_view(request):
                 #return redirect("/")
                 return redirect_based_on_role(request, user)
             else:
-                messages.error(request, _('Invalid credentials.'))
+                messages.warning(request, _('Invalid credentials.'))
         else:
             messages.error(request, _('Form is not valid. Please check the details.'))
         
@@ -226,7 +227,7 @@ def register_supersyndic(request, syndic_id):
     syndic = get_object_or_404(Syndic, id=syndic_id)
 
     if request.method == "POST":
-        supersyndic_form = SuperSyndicForm(request.POST, instance=syndic.user)  # Load the existing user instance
+        supersyndic_form = SuperSyndicForm(request.POST, instance=syndic.user, logged_in_user=request.user)  # Load the existing user instance
         if supersyndic_form.is_valid():
             try:
                 with transaction.atomic():
@@ -270,12 +271,12 @@ def register_supersyndic(request, syndic_id):
                     return redirect('two_factor:setup')
 
             except Exception as e:
-                messages.error(request, f"An error occurred: {e}")
+                messages.warning(request, f"An error occurred: {e}")
         else:
-            messages.error(request, _('Form is not valid.'))
+            messages.warning(request, _('Form is not valid.'))
 
     else:
-        supersyndic_form = SuperSyndicForm(instance=syndic.user)
+        supersyndic_form = SuperSyndicForm(instance=syndic.user, logged_in_user=request.user)
 
     context = {
         'titlePage': titlePage,
@@ -395,32 +396,29 @@ def update_profile(request, user_id=None):
                         # Transfer residences to the SuperSyndic
                         residences = Residence.objects.filter(syndic=None, supersyndic=None)
                         for residence in residences:
-                            residence.supersyndic = supersyndic
-                            residence.save()
+                            residence.supersyndic.add(supersyndic)
 
                         # Transfer associated Coproprietaires and Prestataires
                         coproprietaires = Coproprietaire.objects.filter(syndic=None, supersyndic=None)
                         prestataires = Prestataire.objects.filter(syndic=None, supersyndic=None)
 
                         for coproprietaire in coproprietaires:
-                            coproprietaire.syndic = supersyndic
-                            coproprietaire.save()
+                            coproprietaire.supersyndic.add(supersyndic)
 
                         for prestataire in prestataires:
-                            prestataire.syndic = supersyndic
-                            prestataire.save()
+                            prestataire.supersyndic.add(supersyndic)
 
                         messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
                         return redirect('dashboard-supersyndic', supersyndic_id=user_id)
 
                 except Exception as e:
-                    messages.error(request, f"An error occurred: {e}")
+                    messages.warning(request, f"An error occurred: {e}")
             else:
-                messages.error(request, _("Form is not valid."))
+                messages.warning(request, _("Form is not valid."))
 
         elif profile.role == "Syndic":
             # Use SyndicForm for Syndic role
-            syndic_form = SyndicForm(request.POST, instance=profile)
+            syndic_form = SyndicForm(request.POST, instance=profile, logged_in_user=request.user)
             if syndic_form.is_valid():
                 try:
                     with transaction.atomic():
@@ -428,27 +426,27 @@ def update_profile(request, user_id=None):
                         messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
                         return redirect('dashboard-syndic', syndic_id=user_id)
                 except Exception as e:
-                    messages.error(request, f"An error occurred: {e}")
+                    messages.warning(request, f"An error occurred: {e}")
             else:
-                messages.error(request, _("Please correct the errors in the form."))
+                messages.warning(request, _("Please correct the errors in the form."))
 
         else:
-            form = SignUpForm(request.POST, instance=profile, exclude_residence=True)
+            form = SignUpForm(request.POST, instance=profile, exclude_residence=True, logged_in_user=request.user)
             if form.is_valid():
                 form.save()
                 messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
                 return redirect('home')
             else:
-                messages.error(request, _("There were errors in the form. Please correct them."))
+                messages.warning(request, _("There were errors in the form. Please correct them."))
 
     else:
         # Prepopulate forms for GET requests
         if profile.role == "SuperSyndic":
-            supersyndic_form = SuperSyndicForm(instance=profile)
+            supersyndic_form = SuperSyndicForm(instance=profile, logged_in_user=request.user)
         elif profile.role == "Syndic":
-            syndic_form = SyndicForm(instance=profile)
+            syndic_form = SyndicForm(instance=profile, logged_in_user=request.user)
         else:
-            form = SignUpForm(instance=profile, exclude_residence=True)
+            form = SignUpForm(instance=profile, exclude_residence=True, logged_in_user=request.user)
 
     context = {
         'form': form,

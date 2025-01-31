@@ -39,20 +39,6 @@ class SignUpForm(UserCreationForm):
                 "class": "form-control"
             }
         ))
-    #role = forms.CharField(
-    #    choices=[
-    #            ('Syndic', _('Syndic')),
-    #            ('Coproprietaire', _('Coproprietaire')),
-    #            ('Prestataire', _('Prestataire')),
-    #        ],
-    #    #widget=forms.HiddenInput()  # Make it hidden
-    #    widget=forms.Select(
-    #        attrs={
-    #            "readonly": True,  # Make the field read-only
-    #            "placeholder": _("Role:"),
-    #            "class": "form-control"
-    #        }
-    #    ))
     role = forms.CharField(
         required=False,
         widget=forms.TextInput(
@@ -63,6 +49,17 @@ class SignUpForm(UserCreationForm):
                 "style": "background-color: transparent;" 
             }
         ))
+    is_active = forms.BooleanField(
+        required=False,  # Make it optional in the form
+        initial=True,  # Default to True
+        label=_("Active"),  # Set the label
+        widget=forms.CheckboxInput()
+    )
+    is_superuser = forms.BooleanField(
+        required=False, 
+        label="Super User",
+        widget=forms.CheckboxInput()
+    )
     residence = forms.ModelChoiceField(
         queryset=Residence.objects.none(),  # Default to an empty queryset
         required=False,  # Default to not required
@@ -159,16 +156,21 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = [
-            'email', 'nom', 'prenom', 'role', 'residence', 
-            'phone', 'status', 'commercial', 'address', 
-            'city', 'country', 'postal_code', 'about_me', 
-            'password1', 'password2'
+            'email', 'nom', 'prenom', 'role', 'is_active', 'is_superuser', 
+            'password1', 'password2',
+            'residence', 'phone', 'status', 'commercial', 'address', 
+            'city', 'country', 'postal_code', 'about_me'
         ]
     
     def __init__(self, *args, **kwargs):
         exclude_residence = kwargs.pop('exclude_residence', False)
         logged_in_user = kwargs.pop('logged_in_user', None)
         super().__init__(*args, **kwargs)
+
+        # Only Superadmin can see the `is_active` field
+        if logged_in_user and logged_in_user.role != 'Superadmin':
+            self.fields.pop('is_active', None)
+            self.fields.pop('is_superuser', None)
 
         # Optionally exclude the residence field
         if exclude_residence:
@@ -189,17 +191,37 @@ class SignUpForm(UserCreationForm):
         for field_name, field in self.fields.items():
             field.label = ""  # Removing labels as per requirement
 
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        is_superuser = self.cleaned_data.get('is_superuser', False)
+
+        # Ensure superuser permission is only set by a Superadmin
+        logged_in_user = self.initial.get('logged_in_user')  # Ensure this is passed when initializing the form
+        if logged_in_user and logged_in_user.role == 'Superadmin':
+            user.is_superuser = is_superuser
+            user.is_staff = is_superuser  # Superusers should also be staff
+        else:
+            # Do not force it to False if it's an update
+            if not user.pk:  # Only reset for new users
+                user.is_superuser = False
+                user.is_staff = False
+
+        if commit:
+            user.save()
+        return user
+
     def clean(self):
         cleaned_data = super().clean()
         role = cleaned_data.get('role')
-    
+
         # Only validate residence if the field is present in the form
         if 'residence' in self.fields:
             residence = cleaned_data.get('residence')
 
-            # Check if residence is required for the Coproprietaire role
-            if role == 'Coproprietaire' and not residence:
-                self.add_error('residence', _("Residence is required for Coproprietaire registration."))
+            # Check if residence is required for the Coproprietaire & Prestataire role 
+            if role in ['Coproprietaire', 'Prestataire'] and not residence:
+            #if role == 'Coproprietaire' or 'Prestataire' and not residence:
+                self.add_error('residence', _("Residence is required for User registration."))
 
 
 class LoginForm(forms.Form):
@@ -229,15 +251,20 @@ class SyndicForm(SignUpForm):
 
     def __init__(self, *args, **kwargs):
         # Extract the logged-in user's role from kwargs
-        logged_in_user_role = kwargs.pop('logged_in_user_role', None)
+        logged_in_user = kwargs.pop('logged_in_user', None)
         super().__init__(*args, **kwargs)
+
+        # Only Superadmin can see the `is_active` field
+        if logged_in_user and logged_in_user.role != 'Superadmin':
+            self.fields.pop('is_active', None)
+            self.fields.pop('is_superuser', None)
 
         # Remove the 'residence' field if it exists
         if 'residence' in self.fields:
             self.fields.pop('residence')
 
         # Only allow 'Superadmin' to select 'Syndic'
-        if logged_in_user_role == 'Superadmin':
+        if logged_in_user == 'Superadmin':
             self.fields['role'].choices = [
                 ('Syndic', _('Syndic')),
             ]
@@ -246,15 +273,16 @@ class SyndicForm(SignUpForm):
                 ('Syndic', _('Syndic')),
             ]
 
-        for field_name, field in self.fields.items():
-            field.label = ""  # Remove labels
+        #for field_name, field in self.fields.items():
+        #    field.label = ""  # Remove labels
 
 
 class SuperSyndicForm(forms.ModelForm):
     class Meta:
         model = CustomUser
+        
         fields = [
-            'email', 'nom', 'prenom', 'phone', 'status', 
+            'email', 'nom', 'prenom', 'is_active', 'is_superuser', 'phone', 'status', 
             'commercial', 'address', 'city', 'country', 
             'postal_code', 'about_me', 'password'
         ]
@@ -284,7 +312,19 @@ class SuperSyndicForm(forms.ModelForm):
         return user
 
     def __init__(self, *args, **kwargs):
+        # Extract the logged-in user's role from kwargs
+        logged_in_user = kwargs.pop('logged_in_user', None)
         super().__init__(*args, **kwargs)
+
+        # Remove help_text for is_superuser
+        if 'is_superuser' in self.fields:
+            self.fields['is_superuser'].help_text = ""
+
+        # Only Superadmin can see the `is_active` field
+        if logged_in_user and logged_in_user.role != 'Superadmin':
+            self.fields.pop('is_active', None)
+            self.fields.pop('is_superuser', None)
+
         for field_name, field in self.fields.items():
             field.label = ""  # Remove labels
 

@@ -57,9 +57,9 @@ class LicenseForm(forms.ModelForm):
                 }
             ),
             'est_personnalise': forms.CheckboxInput(
-                attrs={
-                    "class": "form-check-input"
-                }
+            #    attrs={
+            #        "class": "form-check-input"
+            #    }
             ),
         }
 

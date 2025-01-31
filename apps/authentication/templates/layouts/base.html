@@ -102,19 +102,22 @@
         {% if user.is_authenticated %}
           <h5 class="prenom mb-3">{% trans '-¡!¡- Welcome,' %} {{ user.prenom }} {% trans '-¡!¡-' %}</h5>
         {% endif %}
+        {% if user.is_superuser == True %}
+          <h6 class="prenom">👌🏿😎💪🏿<br>Super User</h6>
+        {% endif %}
           
-          {% if messages %}
-          <div>
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <i class="material-icons">close</i>
-              </button>
-              {{ message }}
-            </div>
-            {% endfor %}
+        {% if messages %}
+        <div>
+          {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <i class="material-icons">close</i>
+            </button>
+            {{ message }}
           </div>
-          {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
 
         </div>
         <div class="container-fluid">

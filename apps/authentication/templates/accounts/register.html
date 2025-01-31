@@ -84,6 +84,30 @@
 
             <br />
 
+            {% if user.role == 'Superadmin' %}
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating">{% trans "Is Acitve:" %}</label>
+                  {{ form.is_active }}
+                </div>
+              </div>
+            </div>
+            <span class="text-danger">{{ form.is_active.errors }}</span>
+
+            <br />
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating">{% trans "Super User:" %}</label>
+                  {{ form.is_superuser }}
+                </div>
+              </div>
+            </div>
+            <span class="text-danger">{{ form.is_superuser.errors }}</span>
+            {% endif %}
+
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
@@ -111,6 +135,8 @@
               </div>
             </div>
             <span class="text-danger">{{ form.password2.errors }}</span>
+
+            <br />
 
             <div class="row">
               <div class="col-md-12">
