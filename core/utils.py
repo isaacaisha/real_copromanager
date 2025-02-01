@@ -10,7 +10,15 @@ from django.utils.translation import activate, gettext as _, get_language, get_l
 
 from core.middleware import get_current_request
 
-from apps.dashboard.models import Superadmin, SuperSyndic, Syndic, Coproprietaire, Prestataire
+from apps.superadmin.models import Superadmin
+
+from apps.syndic.models import Syndic
+
+from apps.supersyndic.models import SuperSyndic
+
+from apps.coproprietaire.models import Coproprietaire
+
+from apps.prestataire.models import Prestataire
 
 
 def debug_language_cookie(request):

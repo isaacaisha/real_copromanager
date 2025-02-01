@@ -129,8 +129,15 @@ INSTALLED_APPS = [
     
     'apps.authentication',
     'apps.home',  # Enable the inner home (home)
-    'apps.dashboard',
-    #'apps.dashboard.apps.DashboardConfig',
+
+    'apps.superadmin',
+    'apps.syndic',
+    'apps.supersyndic',
+    'apps.coproprietaire',
+    'apps.prestataire',
+    'apps.user',
+    'apps.residence',
+    'apps.association',
 
     #'rest_framework',
     #'corsheaders',

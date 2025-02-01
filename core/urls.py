@@ -20,7 +20,13 @@ urlpatterns = [
     path('set_language/', set_language, name='set_language'),
     path("", include("apps.authentication.urls")), # Auth routes - login / register
     path("", include("apps.home.urls")), # UI Kits Html files
-    path("", include("apps.dashboard.urls")), # UI Kits Html files
+    path("", include("apps.superadmin.urls")),
+    path("", include("apps.syndic.urls")),
+    path("", include("apps.supersyndic.urls")),
+    path("", include("apps.coproprietaire.urls")),
+    path("", include("apps.prestataire.urls")),
+    path("", include("apps.residence.urls")),
+    path("", include("apps.association.urls")),
 ]
 
 # urlpatterns += i18n_patterns(

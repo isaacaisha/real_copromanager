@@ -8,7 +8,6 @@ from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.core.exceptions import PermissionDenied
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordResetView, PasswordResetConfirmView, PasswordResetCompleteView
@@ -17,11 +16,22 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.utils import timezone
 
-from apps.authentication.models import CustomUser
-from .forms import LoginForm, SignUpForm, CustomPasswordResetConfirmForm, SuperSyndicForm, SyndicForm
+from apps.superadmin.models import Superadmin, License
 
-from apps.dashboard.models import License, Residence, Superadmin, Syndic, SuperSyndic, Coproprietaire, Prestataire
-from apps.dashboard.forms import LicenseForm
+from apps.residence.models import Residence
+
+from apps.syndic.models import Syndic
+
+from apps.supersyndic.models import SuperSyndic
+from apps.supersyndic.forms import SuperSyndicForm
+
+from apps.coproprietaire.models import Coproprietaire
+
+from apps.prestataire.models import Prestataire
+
+from .forms import SignUpForm, LoginForm, CustomPasswordResetConfirmForm
+
+from apps.superadmin.forms import LicenseForm
 
 # Create your views here.# auth_views.py
 
@@ -348,193 +358,3 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
         context['titlePage'] = _('Password Reset Complete')
         context['date'] = timezone.now().strftime(_("%a %d %B %Y"))
         return context
-
-
-@login_required
-def update_profile(request, user_id=None):
-    """
-    View to update a user's profile.
-    - Superadmin can update any profile if `user_id` is provided.
-    - SuperSyndic updates use `supersyndic_form`.
-    - Syndic updates use `syndic_form`.
-    - Superadmin updates or creates profiles using `form`.
-    """
-
-    form = None
-    syndic_form = None
-    supersyndic_form = None
-    
-    # Determine the user to update based on the role
-    if request.user.role == "Superadmin" and user_id:
-        # Superadmin is updating another user's profile
-        profile = get_object_or_404(CustomUser, id=user_id)
-    else:
-        # Default to updating the current user's profile
-        profile = request.user
-
-    # Handle form submission
-    if request.method == "POST":
-        if request.user.role == "Superadmin" and profile.role == "SuperSyndic" or request.user.role == "SuperSyndic" and profile.role == 'SuperSyndic':
-            # Use the SuperSyndic form for SuperSyndic profiles
-            supersyndic_form = SuperSyndicForm(request.POST, instance=profile)
-            if supersyndic_form.is_valid():
-                try:
-                    with transaction.atomic():
-                        user = supersyndic_form.save(commit=False)
-                        # Preserve current role and upgrade to 'SuperSyndic'
-                        user.role = 'SuperSyndic'
-                        user.save()
-
-                        # Handle the license transfer
-                        supersyndic = get_object_or_404(SuperSyndic, user=profile)
-                        license = License.objects.filter(supersyndic=supersyndic).order_by('-date_debut').first()
-                        if license:
-                            license.supersyndic = supersyndic  # Link license to the updated SuperSyndic
-                            license.syndic = None  # Remove the license from the old syndic (if applicable)
-                            license.save()
-
-                        # Transfer residences to the SuperSyndic
-                        residences = Residence.objects.filter(syndic=None, supersyndic=None)
-                        for residence in residences:
-                            residence.supersyndic.add(supersyndic)
-
-                        # Transfer associated Coproprietaires and Prestataires
-                        coproprietaires = Coproprietaire.objects.filter(syndic=None, supersyndic=None)
-                        prestataires = Prestataire.objects.filter(syndic=None, supersyndic=None)
-
-                        for coproprietaire in coproprietaires:
-                            coproprietaire.supersyndic.add(supersyndic)
-
-                        for prestataire in prestataires:
-                            prestataire.supersyndic.add(supersyndic)
-
-                        messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
-                        return redirect('dashboard-supersyndic', supersyndic_id=user_id)
-
-                except Exception as e:
-                    messages.warning(request, f"An error occurred: {e}")
-            else:
-                messages.warning(request, _("Form is not valid."))
-
-        elif profile.role == "Syndic":
-            # Use SyndicForm for Syndic role
-            syndic_form = SyndicForm(request.POST, instance=profile, logged_in_user=request.user)
-            if syndic_form.is_valid():
-                try:
-                    with transaction.atomic():
-                        syndic_form.save()
-                        messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
-                        return redirect('dashboard-syndic', syndic_id=user_id)
-                except Exception as e:
-                    messages.warning(request, f"An error occurred: {e}")
-            else:
-                messages.warning(request, _("Please correct the errors in the form."))
-
-        else:
-            form = SignUpForm(request.POST, instance=profile, exclude_residence=True, logged_in_user=request.user)
-            if form.is_valid():
-                form.save()
-                messages.success(request, _("Profile '%s' updated successfully") % profile.nom)
-                return redirect('home')
-            else:
-                messages.warning(request, _("There were errors in the form. Please correct them."))
-
-    else:
-        # Prepopulate forms for GET requests
-        if profile.role == "SuperSyndic":
-            supersyndic_form = SuperSyndicForm(instance=profile, logged_in_user=request.user)
-        elif profile.role == "Syndic":
-            syndic_form = SyndicForm(instance=profile, logged_in_user=request.user)
-        else:
-            form = SignUpForm(instance=profile, exclude_residence=True, logged_in_user=request.user)
-
-    context = {
-        'form': form,
-        'syndic_form': syndic_form,
-        'supersyndic_form': supersyndic_form,
-        'profile': profile,
-        'id': profile.id if profile else None,
-        'titlePage': _("Update '%s' Profile ") % profile.nom,
-        'nom': request.user.nom,
-        'date': timezone.now().strftime(_("%a %d %B %Y")),
-    }
-    return render(request, "accounts/update_profile.html", context)
-
-
-# Delete Syndic View
-@user_passes_test(lambda u: u.is_active and (u.role == 'Superadmin' or u.role in ['Syndic', 'SuperSyndic']))
-def delete_residence(request, residence_id):
-    # Fetch the residence or return a 404 if not found
-    residence = get_object_or_404(Residence, id=residence_id)
-    # Delete the residence
-    residence_name = residence.nom  # Save the name for the success message
-    residence.delete()
-    # Notify the user and redirect to the residence management page
-    messages.success(request, _('Residence "%(nom)s" has been deleted.') % {'nom': residence_name})
-    return redirect('gestion-residence')
-
-
-# Delete Syndic View
-@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
-def delete_syndic(request, syndic_id):
-    """
-    Deletes a Syndic and all related data (residences, coproprietaires, prestataires).
-    """
-    syndic = get_object_or_404(Syndic, id=syndic_id)
-    user = syndic.user  # Access the associated user account
-
-    # Unlink the supersyndic from related coproprietaires
-    syndic.syndic_coproprietaires.clear()  # Remove all coproprietaires from the many-to-many relationship
-
-    # Clear many-to-many relationships for prestataires
-    syndic.syndic_prestataires.clear()
-
-    # Residences are many-to-many; ensure no deletion occurs (no explicit action is needed here)
-    # Coproprietaires and Prestataires will still be linked to Residences.
-
-    user.delete()  # Delete the CustomUser syndic
-    messages.success(request, _('Syndic "%s" has been deleted successfully.') % syndic.nom)
-    return redirect('gestion-syndic')
-
-
-# Delete SuperSyndic View
-@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
-def delete_supersyndic(request, supersyndic_id):
-    """
-    Deletes a SuperSyndic and all related data (residences, coproprietaires, prestataires).
-    """
-    supersyndic = get_object_or_404(SuperSyndic, id=supersyndic_id)
-    user = supersyndic.user  # Access the associated user account
-
-    # Unlink the supersyndic from related coproprietaires
-    supersyndic.supersyndic_coproprietaires.clear()  # Remove all coproprietaires from the many-to-many relationship
-
-    # Clear many-to-many relationships for prestataires
-    supersyndic.supersyndic_prestataires.clear()
-
-    # Residences are many-to-many; ensure no deletion occurs (no explicit action is needed here)
-    # Coproprietaires and Prestataires will still be linked to Residences.
-
-    user.delete()  # Delete the CustomUser SuperSyndic
-    messages.success(request, _('SuperSyndic "%s" has been deleted successfully.') % supersyndic.nom)
-    return redirect('gestion-supersyndic')
-
-
-# Delete Coproprietaire View
-@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
-def delete_coproprietaire(request, coproprietaire_id):
-    coproprietaire = get_object_or_404(Coproprietaire, user__id=coproprietaire_id)
-    user = coproprietaire.user  # Access the linked CustomUser
-    user.delete()  # Delete the CustomUser, which cascades the deletion to Coproprietaire
-    messages.success(request, _('Coproprietaire "%s" has been deleted successfully.') % coproprietaire.nom)
-    return redirect('gestion-coproprietaire')
-
-
-# Delete Prestataire View
-@user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
-def delete_prestataire(request, prestataire_id):
-    prestataire = get_object_or_404(Prestataire, user__id=prestataire_id)
-    user = prestataire.user  # Access the linked CustomUser
-    user.delete()  # Delete the CustomUser, which cascades the deletion to Prestataire
-    messages.success(request, _('Prestataire "%s" has been deleted successfully.') % prestataire.nom)
-    return redirect('gestion-prestataire')
