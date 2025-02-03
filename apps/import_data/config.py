@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*- apps/residence/config.py
+# -*- encoding: utf-8 -*- apps/dashboard/config.py
 
 """
 Copyright (c) 2019 - present AppSeed.us
@@ -7,13 +7,13 @@ Copyright (c) 2019 - present AppSeed.us
 from django.apps import AppConfig
 
 class MyConfig(AppConfig):
-    name = 'apps.residence'
-    label = 'apps_residence'
-
+    name = 'apps.import_data'
+    label = 'apps_import_data'
+    
 #from django.apps import AppConfig
 #
 #
-#class ResidenceConfig(AppConfig):
+#class ImportDataConfig(AppConfig):
 #    default_auto_field = 'django.db.models.BigAutoField'
-#    name = 'residence'
+#    name = 'import_data'
 #

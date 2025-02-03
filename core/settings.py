@@ -105,6 +105,8 @@ if not DEBUG:
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -138,6 +140,7 @@ INSTALLED_APPS = [
     'apps.user',
     'apps.residence',
     'apps.association',
+    'apps.import_data', 
 
     #'rest_framework',
     #'corsheaders',
@@ -174,7 +177,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'apps/authentication/templates'),
-            os.path.join(BASE_DIR, 'apps/dashboard/templates'),
+            #os.path.join(BASE_DIR, 'apps/dashboard/templates'),
             ],
         #'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,

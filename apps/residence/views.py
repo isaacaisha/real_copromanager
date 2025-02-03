@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*- apps/dashboard/views.py
+# -*- encoding: utf-8 -*- apps/residence/views.py
 
 """
 Copyright (c) 2019 - present AppSeed.us
@@ -57,6 +57,7 @@ def create_residence(request, user_id):
             'titlePage': _('Residence Creation'),
             'profile': profile,
             'residence_form': residence_form,
+            'date': timezone.now().strftime(_("%a %d %B %Y")),
         }
 
         html_template = loader.get_template('create-residence.html')
@@ -91,6 +92,7 @@ def update_residence(request, residence_id):
         'residence_form': residence_form,
         'residence': residence,
         'titlePage': _('Update Residence "%s"') % residence.nom,
+        'date': timezone.now().strftime(_("%a %d %B %Y")),
     }
 
     html_template = loader.get_template('update-residence.html')

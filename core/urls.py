@@ -27,6 +27,7 @@ urlpatterns = [
     path("", include("apps.prestataire.urls")),
     path("", include("apps.residence.urls")),
     path("", include("apps.association.urls")),
+    path("", include("apps.import_data.urls")),
 ]
 
 # urlpatterns += i18n_patterns(

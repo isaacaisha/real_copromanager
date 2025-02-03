@@ -24,6 +24,8 @@ from apps.residence.views import (
     gestion_residence, delete_residence
     )
 
+from apps.import_data.views import import_residences
+
 from apps.association.views import (
     assign_syndic_to_residence, remove_syndic_from_residence,
     remove_user_from_residence, associate_to_residence, associate_to_syndicate,
@@ -76,6 +78,7 @@ urlpatterns = [
     path('create-residence/<int:user_id>/', create_residence, name='create-residence'),
     path('update-residence/<int:residence_id>/', update_residence, name='update-residence'), 
     path('residence-detail/<int:residence_id>/', residence_detail, name='residence-detail'),
+    path('import-residences/<int:user_id>/', import_residences, name='import-residences'),
 
     # URLs for Assign User
     path('assign-syndic/', assign_syndic_to_residence, name='assign-syndic'),

@@ -92,10 +92,10 @@ def user_profile(request, user_id):
     superadmin = None
     syndic = None
     supersyndic = None
-    license = None
-    residences = None
     coproprietaire = None
     prestataire = None
+    license = None
+    residences = None
     # Initialize as empty querysets
     syndics = Syndic.objects.none()
     supersyndics = SuperSyndic.objects.none()

@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*- apps/dashboard/forms.py
+# -*- encoding: utf-8 -*- apps/residence/forms.py
 
 """
 Copyright (c) 2019 - present AppSeed.us
@@ -35,6 +35,30 @@ class Residence(models.Model):
     def __str__(self):
         return _("Building {name} ({address})").format(name=self.nom, address=self.adresse)
 
+    def sync_to_odoo(self):
+        """Sync this residence to Odoo"""
+        import xmlrpc.client
+        from django.conf import settings
+        
+        try:
+            common = xmlrpc.client.ServerProxy(f"{settings.ODOO_URL}/xmlrpc/2/common")
+            uid = common.authenticate(settings.ODOO_DB, settings.ODOO_USER, settings.ODOO_PASSWORD, {})
+            
+            models = xmlrpc.client.ServerProxy(f"{settings.ODOO_URL}/xmlrpc/2/object")
+            models.execute_kw(
+                settings.ODOO_DB, uid, settings.ODOO_PASSWORD,
+                'residence.model', 'create', [{
+                    'name': self.nom,
+                    'address': self.adresse,
+                    'syndic_ids': [s.id for s in self.syndic.all()],
+                    'supersyndic_ids': [ss.id for ss in self.supersyndic.all()],
+                    'created_by_id': self.created_by.id
+                }]
+            )
+            return True
+        except Exception as e:
+            print(f"Odoo sync error: {e}")
+            return False
 
 # Apartment Information
 class Appartement(models.Model):
