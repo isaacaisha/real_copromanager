@@ -4,6 +4,7 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+from datetime import datetime
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext as _
@@ -31,6 +32,23 @@ class Residence(models.Model):
     syndic = models.ManyToManyField(Syndic, verbose_name=_('Syndic'), blank=True, related_name='syndic_residences')
     supersyndic = models.ManyToManyField(SuperSyndic, verbose_name=_('SuperSyndic'), blank=True, related_name='supersyndic_residences')
     created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="created_residences")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Created At'))
+
+    extra_data = models.JSONField(null=True, blank=True, verbose_name=_('Extra Data'))
+
+    
+    def save(self, *args, **kwargs):
+        # Ensure extra_data is a dictionary before modifying it
+        if not isinstance(self.extra_data, dict) or self.extra_data is None:
+            self.extra_data = {}
+
+        # Ensure `created_at` is set and convert it to a proper string
+        if self.created_at and isinstance(self.created_at, (datetime, str)):  
+            self.extra_data["created_at"] = str(self.created_at)  # ✅ Explicitly convert to string
+
+        # Call the original save method
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return _("Building {name} ({address})").format(name=self.nom, address=self.adresse)

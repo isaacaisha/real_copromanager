@@ -138,7 +138,6 @@
         <div class="row gx-4 gy-4 justify-content-end" style="max-height: 400px; overflow-y: auto;">
     
             {% if residences %}
-            <!-- List of Managed Buildings (Immeubles) -->
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-header card-header-icon">
@@ -147,139 +146,91 @@
                         </div>
                         <h5 class="card-title">{% trans "Managed Buildings" %}</h5>
                     </div>
-                    {% if residence %}
+            
                     <div class="card-body p-2">
-                        <div class="col-12">
-                            <strong>{% trans "Email" %}:</strong>{{ residence.nom }}<br>
-                            <strong>{% trans "Address" %}:</strong> {{ residence.adresse }}<br>
-                            <strong>{{ _('Created By') }}:</strong> 
-                            <span class="h5">{{ residence.created_by.nom }}</span> 
-                            <a href="mailto:{{ residence.created_by.email }}" class="a_link">
-                                ({{ residence.created_by.email }})
-                            </a><br>
-                            <strong>{% trans "nombre_appartements" %}:</strong> {{ residence.nombre_appartements }}<br>
-                            <strong>{% trans "superficie_totale" %}:</strong> {{ residence.superficie_totale }}<br>
-                            <strong>{% trans "date_construction" %}:</strong> {{ residence.date_construction }}<br>
-                            <strong>{% trans "nombre_etages" %}:</strong> {{ residence.nombre_etages }}<br>
-                            <strong>{% trans "zones_communes" %}:</strong> {{ residence.zones_communes }}<br>
-                            <strong>{% trans "date_dernier_controle" %}:</strong> {{ residence.date_dernier_controle }}<br>
-                            {% if residence.syndic %}
-                                <strong>
-                                    {% trans "Associated Syndic" %}:
-                                    {% for syndic in syndics %}
-                                    <span class="d-flex align-items-center gap-2">
-                                        {{ syndic.user.nom }}
-                                        {% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
-                                        <a type="submit" href="{% url 'remove-user-from-residence' residence.id 'syndic' syndic.user.id %}" 
-                                            rel="tooltip" title="Remove" 
-                                            class="btn btn-danger btn-link btn-sm p-1"
-                                            data-confirm="{% trans 'Are you sure you want to remove the association?' %}">
-                                            <i class="fa-regular fa-rectangle-xmark fa"></i>
-                                        </a>
-                                        {% endif %}
-                                    </span>
-                                    {% endfor %}
-                                </strong>
-                                <br>
-                            {% endif %}
-                            {% if residence.supersyndic %}
-                                <strong>
-                                    {% trans "Associated Supersyndic" %}:
-                                    {% for supersyndic in supersyndics %}
-                                    <span class="d-flex align-items-center gap-2">
-                                        {{ supersyndic.user.nom }}
-                                        {% if user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
-                                        <a type="submit" href="{% url 'remove-user-from-residence' residence.id 'supersyndic' supersyndic.user.id %}"
-                                            rel="tooltip"
-                                            title="Remove" 
-                                            class="btn btn-danger btn-link btn-sm p-1"
-                                            data-confirm="{% trans 'Are you sure you want to remove the association?' %}">
-                                            <i class="fa-solid fa-rectangle-xmark fa"></i>
-                                        </a>
-                                        {% endif %}
-                                    </span>
-                                    {% endfor %}
-                                </strong>
-                            {% endif %}
-                        </div>
-                        
-                        <!-- Add Import Metadata Section -->
-                        <div class="mt-4 border-top pt-3">
-                            <h6 class="text-muted">{% trans "Import Metadata" %}</h6>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <strong>{% trans "Imported By" %}:</strong>
-                                    <a href="mailto:{{ residence.created_by.email }}" class="a_link">
-                                        {{ residence.created_by.get_full_name|default:residence.created_by.email }}
-                                    </a>
-                                </div>
-                                <div class="col-md-6">
-                                    <strong>{% trans "Import Date" %}:</strong>
-                                    {{ residence.created_at|date:"DATETIME_FORMAT" }}
-                                </div>
-                            </div>
-                        </div>
-                     
-                        <!-- Add Full Data Display Section -->
-                        <div class="mt-4 border-top pt-3">
-                            <h6 class="text-muted">{% trans "Complete Import Data" %}</h6>
+                        <div class="mb-4 border-bottom pb-3">
                             <dl class="row">
+                                <dt class="col-sm-3">{% trans "Building Name" %}</dt>
+                                <dd class="col-sm-9">{{ residence.nom }}</dd>
+            
+                                <dt class="col-sm-3">{% trans "Address" %}</dt>
+                                <dd class="col-sm-9">{{ residence.adresse }}</dd>
+            
+                                <dt class="col-sm-3">{% trans "Created By" %}</dt>
+                                <dd class="col-sm-9">
+                                    {{ residence.created_by.nom }}
+                                    <a href="mailto:{{ residence.created_by.email }}" class="a_link">
+                                        ({{ residence.created_by.email }})
+                                    </a>
+                                </dd>
+            
+                                <dt class="col-sm-3">{% trans "Created At" %}</dt>
+                                <dd class="col-sm-9">{{ residence.created_at|date:"DATE_FORMAT" }}</dd>
+            
+                                <dt class="col-sm-3">{% trans "Number of Apartments" %}</dt>
+                                <dd class="col-sm-9">{{ residence.nombre_appartements }}</dd>
+            
+                                <dt class="col-sm-3">{% trans "Total Area" %}</dt>
+                                <dd class="col-sm-9">{{ residence.superficie_totale }}</dd>
+            
                                 <dt class="col-sm-3">{% trans "Construction Date" %}</dt>
                                 <dd class="col-sm-9">{{ residence.date_construction|date:"DATE_FORMAT" }}</dd>
-                            
-                                <dt class="col-sm-3">{% trans "Last Inspection" %}</dt>
-                                <dd class="col-sm-9">{{ residence.date_dernier_controle|date:"DATE_FORMAT"|default:"-" }}</dd>
-                            
-                                <dt class="col-sm-3">{% trans "Heating Type" %}</dt>
-                                <dd class="col-sm-9">{{ residence.type_chauffage|default:"-" }}</dd>
-                            
+            
                                 <dt class="col-sm-3">{% trans "Total Floors" %}</dt>
                                 <dd class="col-sm-9">{{ residence.nombre_etages }}</dd>
-                            
+            
                                 <dt class="col-sm-3">{% trans "Common Areas" %}</dt>
                                 <dd class="col-sm-9">{{ residence.zones_communes|linebreaksbr }}</dd>
+            
+                                <dt class="col-sm-3">{% trans "Last Inspection Date" %}</dt>
+                                <dd class="col-sm-9">{{ residence.date_dernier_controle|date:"DATE_FORMAT"|default:"-" }}</dd>
+            
+                                {% if residence.syndic.exists %}
+                                <dt class="col-sm-3">{% trans "Associated Syndic" %}</dt>
+                                <dd class="col-sm-9">
+                                    {% for syndic in residence.syndic.all %}
+                                    <span class="d-flex align-items-center gap-2">
+                                        {{ syndic.user.nom }}
+                                        {% if user.role in "Superadmin,Syndic,SuperSyndic" %}
+                                        <a href="{% url 'remove-user-from-residence' residence.id 'syndic' syndic.user.id %}"
+                                            class="btn btn-danger btn-link btn-sm p-1"
+                                            data-confirm="{% trans 'Are you sure you want to remove the association?' %}">
+                                            <i class="fa-regular fa-rectangle-xmark"></i>
+                                        </a>
+                                        {% endif %}
+                                    </span>
+                                    {% endfor %}
+                                </dd>
+                                {% endif %}
+            
+                                {% if residence.supersyndic.exists %}
+                                <dt class="col-sm-3">{% trans "Associated Supersyndic" %}</dt>
+                                <dd class="col-sm-9">
+                                    {% for supersyndic in residence.supersyndic.all %}
+                                    <span class="d-flex align-items-center gap-2">
+                                        {{ supersyndic.user.nom }}
+                                        {% if user.role in "Superadmin,Syndic,SuperSyndic" %}
+                                        <a href="{% url 'remove-user-from-residence' residence.id 'supersyndic' supersyndic.user.id %}"
+                                            class="btn btn-danger btn-link btn-sm p-1"
+                                            data-confirm="{% trans 'Are you sure you want to remove the association?' %}">
+                                            <i class="fa-solid fa-rectangle-xmark"></i>
+                                        </a>
+                                        {% endif %}
+                                    </span>
+                                    {% endfor %}
+                                </dd>
+                                {% endif %}
+            
+                                {% if residence.extra_data %}
+                                <dt class="col-12 mt-3"><strong>{% trans "Extra Data" %}</strong></dt>
+                                {% for key, value in residence.extra_data.items %}
+                                <dt class="col-sm-3">{{ key|capfirst }}</dt>
+                                <dd class="col-sm-9">{{ value }}</dd>
+                                {% endfor %}
+                                {% endif %}
                             </dl>
                         </div>
-                     
-                        <!-- Add Relationship Visualization -->
-                        <div class="mt-4 border-top pt-3">
-                            <h6 class="text-muted">{% trans "Relationships" %}</h6>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="card card-body bg-light">
-                                        <h6>{% trans "Syndic Connections" %}</h6>
-                                        {% for syndic in residence.syndic.all %}
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span>{{ syndic.nom }}</span>
-                                            <a href="mailto:{{ residence.created_by.email }}" class="a_link">
-                                                <small class="text-muted">{{ syndic.user.email }}</small>
-                                            </a>
-                                        </div>
-                                        {% empty %}
-                                        <small class="text-muted">{% trans "No syndic associations" %}</small>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            
-                                <div class="col-md-6">
-                                    <div class="card card-body bg-light">
-                                        <h6>{% trans "SuperSyndic Connections" %}</h6>
-                                        {% for supersyndic in residence.supersyndic.all %}
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span>{{ supersyndic.nom }}</span>
-                                            <a href="mailto:{{ residence.created_by.email }}" class="a_link">
-                                                <small class="text-muted">{{ supersyndic.user.email }}</small>
-                                            </a>
-                                        </div>
-                                        {% empty %}
-                                        <small class="text-muted">{% trans "No supersyndic associations" %}</small>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    {% endif %}
                 </div>
             </div>
             {% endif %}

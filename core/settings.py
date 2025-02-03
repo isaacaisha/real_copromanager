@@ -106,6 +106,13 @@ else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
+# ------------------------------------------------------------
+# Odoo Synchronization Setup 
+# ------------------------------------------------------------
+ODOO_URL = config('ODOO_URL')
+ODOO_DB = config('ODOO_DB')
+ODOO_USER =config('ODOO_USER')
+ODOO_PASSWORD = config('ODOO_PASSWORD')
 
 # Application definition
 
