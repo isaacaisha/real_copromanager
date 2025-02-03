@@ -187,7 +187,7 @@
             
                                 {% if residence.syndic.exists %}
                                 <dt class="col-sm-3">{% trans "Associated Syndic" %}</dt>
-                                <dd class="col-sm-9">
+                                <dd class="col-sm-12">
                                     {% for syndic in residence.syndic.all %}
                                     <span class="d-flex align-items-center gap-2">
                                         {{ syndic.user.nom }}
@@ -205,7 +205,7 @@
             
                                 {% if residence.supersyndic.exists %}
                                 <dt class="col-sm-3">{% trans "Associated Supersyndic" %}</dt>
-                                <dd class="col-sm-9">
+                                <dd class="col-sm-12">
                                     {% for supersyndic in residence.supersyndic.all %}
                                     <span class="d-flex align-items-center gap-2">
                                         {{ supersyndic.user.nom }}

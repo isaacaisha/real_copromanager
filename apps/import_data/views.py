@@ -1,9 +1,6 @@
 # -*- encoding: utf-8 -*- apps/import_data/views.py
 
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
+# -*- encoding: utf-8 -*- 
 import datetime
 import pandas as pd
 
@@ -16,10 +13,15 @@ from django.contrib import messages
 from django.utils import timezone
 
 from apps.authentication.models import CustomUser
+
 from apps.residence.models import Residence
+
 from apps.syndic.models import Syndic
+
 from apps.supersyndic.models import SuperSyndic
+
 from .forms import ImportExcelForm
+
 
 def parse_excel_date(value):
     """Handle both string dates and Excel serial dates.
@@ -36,6 +38,7 @@ def parse_excel_date(value):
     except Exception as e:
         print(f"Date parsing error for value {value}: {e}")
         return None
+    
 
 @login_required
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
@@ -91,9 +94,6 @@ def import_residences(request, user_id=None):
                         extra_data = {}
                         for col in df.columns:
                             if col not in known_columns:
-                                # Save the value (if any) for extra columns.
-                                #extra_data[col] = row.get(col)
-                                
                                 value = row.get(col)
                                 # Convert pandas.Timestamp to string
                                 if isinstance(value, pd.Timestamp):
@@ -101,18 +101,20 @@ def import_residences(request, user_id=None):
                                 extra_data[col] = value
 
                         # Create the Residence record, now including extra_data.
-                        residence = Residence.objects.create(
+                        residence, created = Residence.objects.update_or_create(
                             nom=nom_residence,
                             adresse=adresse,
-                            nombre_appartements=int(row.get('Nombre Appartements', 0)),
-                            superficie_totale=float(row.get('Superficie Totale', 0)),
-                            date_construction=date_construction,
-                            nombre_etages=int(row.get('Nombre Etages', 0)),
-                            zones_communes=row.get('Zones Communes', ''),
-                            date_dernier_controle=parse_excel_date(row.get('Date Dernier Contrôle')),
-                            type_chauffage=row.get('Type Chauffage', ''),
-                            extra_data=extra_data,  # Store all extra columns here.
-                            created_by=request.user
+                            defaults={
+                                "nombre_appartements": int(row.get('Nombre Appartements', 0)),
+                                "superficie_totale": float(row.get('Superficie Totale', 0)),
+                                "date_construction": date_construction,
+                                "nombre_etages": int(row.get('Nombre Etages', 0)),
+                                "zones_communes": row.get('Zones Communes', ''),
+                                "date_dernier_controle": parse_excel_date(row.get('Date Dernier Contrôle')),
+                                "type_chauffage": row.get('Type Chauffage', ''),
+                                "extra_data": extra_data,  # Store all extra columns here.
+                                "created_by": request.user
+                            }
                         )
 
                         # Auto-assign relationships based on the target profile's role.
@@ -160,7 +162,7 @@ def import_residences(request, user_id=None):
                 if report['errors']:
                     messages.error(request, f"Errors: {', '.join(report['errors'][:3])}...")
 
-                return redirect('gestion-residence')
+                return redirect('residence-detail', residence_id=residence.id)
 
             except Exception as e:
                 messages.error(request, f"File error: {str(e)}")
@@ -169,8 +171,10 @@ def import_residences(request, user_id=None):
 
     context = {
         'segment': 'import-data',
+        'titlePage': ('Residence Import Data'),
         'import_data_form': form,
         'profile': profile,
+        'date': timezone.now().strftime("%a %d %B %Y")
     }
 
     return HttpResponse(loader.get_template('import-data.html').render(context, request))

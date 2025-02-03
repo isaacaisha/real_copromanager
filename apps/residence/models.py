@@ -44,7 +44,8 @@ class Residence(models.Model):
 
         # Ensure `created_at` is set and convert it to a proper string
         if self.created_at and isinstance(self.created_at, (datetime, str)):  
-            self.extra_data["created_at"] = str(self.created_at)  # ✅ Explicitly convert to string
+            formatted_created_at = self.created_at.strftime("%d-%m-%Y %H:%M:%S")
+            self.extra_data["created_at"] = formatted_created_at  # ✅ Explicitly convert to string
 
         # Call the original save method
         super().save(*args, **kwargs)
