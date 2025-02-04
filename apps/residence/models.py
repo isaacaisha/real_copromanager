@@ -22,13 +22,16 @@ from apps.supersyndic.models import SuperSyndic
 class Residence(models.Model):
     nom = models.CharField(max_length=255, verbose_name=_('Name'))
     adresse = models.TextField(verbose_name=_('Address'))
-    nombre_appartements = models.IntegerField(verbose_name=_('Number of Apartments'))
-    superficie_totale = models.FloatField(verbose_name=_('Total Area'))
-    date_construction = models.DateField(verbose_name=_('Construction Date'))
-    nombre_etages = models.IntegerField(verbose_name=_('Number of Floors'))
-    zones_communes = models.TextField(verbose_name=_('Common Areas'))  # Example: "Hall, Garden, Parking"
+
+    # Optional fields: add blank=True and null=True
+    nombre_appartements = models.IntegerField(verbose_name=_('Number of Apartments'), blank=True, null=True)
+    superficie_totale = models.FloatField(verbose_name=_('Total Area'), blank=True, null=True)
+    date_construction = models.DateField(verbose_name=_('Construction Date'), blank=True, null=True)
+    nombre_etages = models.IntegerField(verbose_name=_('Number of Floors'), blank=True, null=True)
+    zones_communes = models.TextField(verbose_name=_('Common Areas'), blank=True, null=True)
     date_dernier_controle = models.DateField(null=True, blank=True, verbose_name=_('Last Inspection Date'))
     type_chauffage = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Heating Type'))
+    
     syndic = models.ManyToManyField(Syndic, verbose_name=_('Syndic'), blank=True, related_name='syndic_residences')
     supersyndic = models.ManyToManyField(SuperSyndic, verbose_name=_('SuperSyndic'), blank=True, related_name='supersyndic_residences')
     created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name="created_residences")
@@ -44,7 +47,7 @@ class Residence(models.Model):
 
         # Ensure `created_at` is set and convert it to a proper string
         if self.created_at and isinstance(self.created_at, (datetime, str)):  
-            formatted_created_at = self.created_at.strftime("%d-%m-%Y %H:%M:%S")
+            formatted_created_at = self.created_at.strftime("%d %B %Y")
             self.extra_data["created_at"] = formatted_created_at  # ✅ Explicitly convert to string
 
         # Call the original save method

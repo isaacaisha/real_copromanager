@@ -9,6 +9,7 @@ from django.urls import path
 
 
 urlpatterns = [
-    #path('import/', import_residences, name='import-residences'),
+    
+    #path('import-residences/<int:user_id>/', import_residences, name='import-residences'),
 
 ]

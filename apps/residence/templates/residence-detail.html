@@ -66,13 +66,21 @@
                     <ul class="nav nav-pills nav-fill p-0" role="tablist">
                         <li class="nav-item">
                             <div>
-                                <a href="{% url 'import-residences' user.id %}"
-                                   rel="tooltip" title="{% trans 'Settings' %}" 
-                                   class="btn btn-warning btn-sm">
-                                    <!--<i class="material-icons text-lg position-relative">settings</i>-->
-                                    <i class="fas fa-file-import fa-2x"></i> 
+                                {% if user.role == 'Superadmin' and residence.created_by %}
+                                <!-- For Superadmin, use the created_by user id (assumed to be a Syndic/SuperSyndic) -->
+                                <a href="{% url 'import-residences' residence.created_by.id %}" rel="tooltip" title="{% trans 'Settings' %}"
+                                    class="btn btn-warning btn-sm">
+                                    <i class="fas fa-file-import fa-2x"></i>
                                     <span class="ms-0">{% trans "Settings" %}</span>
                                 </a>
+                                {% else %}
+                                <!-- For other users, use the logged-in user id -->
+                                <a href="{% url 'import-residences' user.id %}" rel="tooltip" title="{% trans 'Settings' %}"
+                                    class="btn btn-warning btn-sm">
+                                    <i class="fas fa-file-import fa-2x"></i>
+                                    <span class="ms-0">{% trans "Settings" %}</span>
+                                </a>
+                                {% endif %}
                             </div>
                         </li>
                     </ul>
@@ -165,7 +173,7 @@
                                 </dd>
             
                                 <dt class="col-sm-3">{% trans "Created At" %}</dt>
-                                <dd class="col-sm-9">{{ residence.created_at|date:"DATE_FORMAT" }}</dd>
+                                <dd class="col-sm-9">{{ residence.created_at|date:"j F Y"|capfirst }}</dd>
             
                                 <dt class="col-sm-3">{% trans "Number of Apartments" %}</dt>
                                 <dd class="col-sm-9">{{ residence.nombre_appartements }}</dd>
@@ -174,7 +182,7 @@
                                 <dd class="col-sm-9">{{ residence.superficie_totale }}</dd>
             
                                 <dt class="col-sm-3">{% trans "Construction Date" %}</dt>
-                                <dd class="col-sm-9">{{ residence.date_construction|date:"DATE_FORMAT" }}</dd>
+                                <dd class="col-sm-9">{{ residence.date_construction|date:"j F Y"|capfirst }}</dd>
             
                                 <dt class="col-sm-3">{% trans "Total Floors" %}</dt>
                                 <dd class="col-sm-9">{{ residence.nombre_etages }}</dd>
@@ -183,7 +191,7 @@
                                 <dd class="col-sm-9">{{ residence.zones_communes|linebreaksbr }}</dd>
             
                                 <dt class="col-sm-3">{% trans "Last Inspection Date" %}</dt>
-                                <dd class="col-sm-9">{{ residence.date_dernier_controle|date:"DATE_FORMAT"|default:"-" }}</dd>
+                                <dd class="col-sm-9">{{ residence.date_dernier_controle|date:"j F Y"|capfirst }}</dd>
             
                                 {% if residence.syndic.exists %}
                                 <dt class="col-sm-3">{% trans "Associated Syndic" %}</dt>

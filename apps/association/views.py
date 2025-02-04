@@ -277,7 +277,7 @@ def remove_user_from_residence(request, residence_id, user_id, role):
                 supersyndic = get_object_or_404(SuperSyndic, user_id=user_id)
                 residence.supersyndic.remove(supersyndic)
                 messages.success(request, _("'{supersyndic}' successfully removed from Residence {res_name}.").format(
-                    res_name=residence.nom, supersyndic=supersyndic.nom
+                    res_name=residence.nom, supersyndic=supersyndic.user.nom
                 ))
             elif role == "coproprietaire":
                 coproprietaire = get_object_or_404(Coproprietaire, user_id=user_id)

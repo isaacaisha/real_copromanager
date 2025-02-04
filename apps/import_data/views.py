@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*- apps/import_data/views.py
 
-# -*- encoding: utf-8 -*- 
+# -*- encoding: utf-8 -*-
 import datetime
 import pandas as pd
 
@@ -30,40 +30,58 @@ def parse_excel_date(value):
     try:
         if pd.isnull(value) or str(value).strip() == "":
             return None
-        # Handle Excel serial dates (numbers)
-        if isinstance(value, (int, float)):
+        if isinstance(value, (int, float)):  # Excel serial dates
             return (datetime.datetime(1899, 12, 30) + datetime.timedelta(days=value)).date()
-        # Handle string dates and datetime objects
         return pd.to_datetime(value).date()
     except Exception as e:
         print(f"Date parsing error for value {value}: {e}")
         return None
-    
+
+def to_int(value, default=0):
+    try:
+        if pd.isnull(value) or str(value).strip() == "":
+            return default
+        return int(value)
+    except Exception:
+        return default
+
+def to_float(value, default=0.0):
+    try:
+        if pd.isnull(value) or str(value).strip() == "":
+            return default
+        return float(value)
+    except Exception:
+        return default
+
 
 @login_required
 @user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
 def import_residences(request, user_id=None):
-    # Determine the target profile (if Superadmin passes a user_id, import for that user)
-    if request.user.role == "Superadmin" and user_id:
-        profile = get_object_or_404(CustomUser, id=user_id)
+    """
+    If the logged-in user is Superadmin and a user_id is provided in the URL,
+    then use that user as the target for import (i.e. perform the import as if they were that Syndic or SuperSyndic).
+    Otherwise, use the current user.
+    """
+    # Use the URL parameter user_id when the logged-in user is Superadmin.
+    if request.user.role == "Superadmin":
+        if not user_id:
+            messages.error(request, _("A target user id must be provided for Superadmin imports."))
+            return redirect('gestion-residence')
+        target_profile = get_object_or_404(CustomUser, id=user_id)
     else:
-        profile = request.user
+        target_profile = request.user
 
     if request.method == "POST":
         form = ImportExcelForm(request.POST, request.FILES)
         if form.is_valid():
             try:
                 df = pd.read_excel(request.FILES['file'])
-                
-                # DEBUG: Print out the Excel column names.
-                print("Excel columns:", df.columns.tolist())
-                
-                report = {'success': 0, 'errors': [], 'total': len(df)}
+                print("Excel columns:", df.columns.tolist())  # Debug print
 
-                # Define the set of columns that you already handle explicitly:
+                report = {'success': 0, 'errors': [], 'total': len(df)}
                 known_columns = {
-                    'Nom de la Résidence',
-                    'Adresse',
+                    'Nom',            # Required field for residence name
+                    'Adresse',        # Required field for residence address
                     'Nombre Appartements',
                     'Superficie Totale',
                     'Date Construction',
@@ -75,63 +93,73 @@ def import_residences(request, user_id=None):
                     'SuperSyndics'
                 }
 
+                # Only require "Nom" and "Adresse"
+                def validate_required(field_name, value):
+                    if pd.isnull(value) or str(value).strip() == "":
+                        raise ValueError(f"Missing required field: {field_name}")
+                    return str(value).strip()
+                
+
+                def get_column_value(row, column_name):
+                    for key, value in row.items():
+                        if key.lower() == column_name.lower():
+                            return value
+                    return None
+
+                last_residence = None  # To store the last processed Residence
+
                 for index, row in df.iterrows():
                     try:
-                        # Helper function to validate required fields.
-                        def validate_field(field_name, value):
-                            if value is None or pd.isnull(value) or str(value).strip() == "":
-                                raise ValueError(f"Missing required field: {field_name}")
-                            return str(value).strip()
-
-                        # Validate and get the explicitly-handled fields:
-                        nom_residence = validate_field('Nom de la Résidence', row.get('Nom de la Résidence'))
-                        adresse = validate_field('Adresse', row.get('Adresse'))
+                        # Read and standardize the required fields:
+                        nom = validate_required('Nom', get_column_value(row, 'Nom')).title() # Convert to title case
+                        adresse = validate_required('Adresse', get_column_value(row, 'Adresse')).title() # Convert to title case
+                        # Date fields are optional
                         date_construction = parse_excel_date(row.get('Date Construction'))
-                        if date_construction is None:
-                            raise ValueError("Missing required field: Date Construction")
+                        date_dernier = parse_excel_date(row.get('Date Dernier Contrôle'))
 
                         # Collect extra data: any column not in known_columns.
                         extra_data = {}
                         for col in df.columns:
                             if col not in known_columns:
                                 value = row.get(col)
-                                # Convert pandas.Timestamp to string
                                 if isinstance(value, pd.Timestamp):
-                                    value = value.strftime("%Y-%m-%d")  # Format as 'YYYY-MM-DD'
+                                    value = value.strftime("%d-%m-%Y")  # Format as 'DD-MM-YYYY'
                                 extra_data[col] = value
 
-                        # Create the Residence record, now including extra_data.
+                        # Update or create Residence using 'nom' and 'adresse' as unique keys.
                         residence, created = Residence.objects.update_or_create(
-                            nom=nom_residence,
+                            nom=nom,
                             adresse=adresse,
                             defaults={
-                                "nombre_appartements": int(row.get('Nombre Appartements', 0)),
-                                "superficie_totale": float(row.get('Superficie Totale', 0)),
+                                "nombre_appartements": to_int(row.get('Nombre Appartements'), 0),
+                                "superficie_totale": to_float(row.get('Superficie Totale'), 0.0),
                                 "date_construction": date_construction,
-                                "nombre_etages": int(row.get('Nombre Etages', 0)),
-                                "zones_communes": row.get('Zones Communes', ''),
-                                "date_dernier_controle": parse_excel_date(row.get('Date Dernier Contrôle')),
-                                "type_chauffage": row.get('Type Chauffage', ''),
-                                "extra_data": extra_data,  # Store all extra columns here.
-                                "created_by": request.user
+                                "nombre_etages": to_int(row.get('Nombre Etages'), 0),
+                                "zones_communes": row.get('Zones Communes') or "",
+                                "date_dernier_controle": date_dernier,
+                                "type_chauffage": row.get('Type Chauffage') or "",
+                                "extra_data": extra_data,
+                                "created_by": target_profile
                             }
                         )
 
-                        # Auto-assign relationships based on the target profile's role.
-                        if profile.role == 'Syndic':
+                        last_residence = residence
+
+                        # Auto-assign relationships based on target_profile's role.
+                        if target_profile.role == 'Syndic':
                             try:
-                                syndic = Syndic.objects.get(user=profile)
+                                syndic = Syndic.objects.get(user=target_profile)
                                 residence.syndic.add(syndic)
                             except Syndic.DoesNotExist:
-                                messages.warning(request, f"No Syndic record found for {profile.nom}")
-                        elif profile.role == 'SuperSyndic':
+                                messages.warning(request, f"No Syndic record found for {target_profile.nom}")
+                        elif target_profile.role == 'SuperSyndic':
                             try:
-                                supersyndic = SuperSyndic.objects.get(user=profile)
+                                supersyndic = SuperSyndic.objects.get(user=target_profile)
                                 residence.supersyndic.add(supersyndic)
                             except SuperSyndic.DoesNotExist:
-                                messages.warning(request, f"No SuperSyndic record found for {profile.nom}")
+                                messages.warning(request, f"No SuperSyndic record found for {target_profile.nom}")
 
-                        # Process additional relationships (if provided in Excel).
+                        # Process additional relationships (if provided in Excel)
                         syndic_field = row.get('Syndics', '')
                         if syndic_field and not pd.isnull(syndic_field):
                             for name in syndic_field.split(','):
@@ -148,7 +176,7 @@ def import_residences(request, user_id=None):
                                     supersyndic, _ = SuperSyndic.objects.get_or_create(nom=name)
                                     residence.supersyndic.add(supersyndic)
 
-                        # Sync with Odoo (assuming Residence.sync_to_odoo() is implemented).
+                        # Sync with Odoo (if implemented)
                         if residence.sync_to_odoo():
                             report['success'] += 1
                         else:
@@ -157,23 +185,24 @@ def import_residences(request, user_id=None):
                     except Exception as e:
                         report['errors'].append(f"Row {index+1}: {str(e)}")
 
-                # Generate report messages.
                 messages.success(request, f"Imported {report['success']}/{report['total']} residences")
                 if report['errors']:
-                    messages.error(request, f"Errors: {', '.join(report['errors'][:3])}...")
-
-                return redirect('residence-detail', residence_id=residence.id)
+                    messages.warning(request, f"Errors: {', '.join(report['errors'][:3])}...")
+                if last_residence:
+                    return redirect('residence-detail', residence_id=last_residence.id)
+                else:
+                    return redirect('gestion-residence')
 
             except Exception as e:
-                messages.error(request, f"File error: {str(e)}")
+                messages.warning(request, f"File error: {str(e)}")
     else:
         form = ImportExcelForm()
 
     context = {
         'segment': 'import-data',
-        'titlePage': ('Residence Import Data'),
+        'titlePage': 'Residence Import Data',
         'import_data_form': form,
-        'profile': profile,
+        'profile': target_profile,
         'date': timezone.now().strftime("%a %d %B %Y")
     }
 
