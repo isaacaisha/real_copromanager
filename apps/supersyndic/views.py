@@ -128,20 +128,24 @@ def gestion_supersyndic(request):
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def delete_supersyndic(request, supersyndic_id):
     """
-    Deletes a SuperSyndic and all related data (residences, coproprietaires, prestataires).
+    Delete a SuperSyndic.
     """
-    supersyndic = get_object_or_404(SuperSyndic, id=supersyndic_id)
-    user = supersyndic.user  # Access the associated user account
+    supersyndic = SuperSyndic.objects.filter(user__id=supersyndic_id).first()
+    if not supersyndic:
+        print(f"No syndic found with id={supersyndic_id}")
+        messages.warning(request, _('SuperSyndic not found.'))
+        return redirect('gestion-supersyndic')
 
-    # Unlink the supersyndic from related coproprietaires
-    supersyndic.supersyndic_coproprietaires.clear()  # Remove all coproprietaires from the many-to-many relationship
-
-    # Clear many-to-many relationships for prestataires
+    supersyndic.supersyndic_coproprietaires.clear()
     supersyndic.supersyndic_prestataires.clear()
-
-    # Residences are many-to-many; ensure no deletion occurs (no explicit action is needed here)
-    # Coproprietaires and Prestataires will still be linked to Residences.
-
-    user.delete()  # Delete the CustomUser SuperSyndic
+    
+    # Ensure the related user exists before trying to delete
+    if supersyndic.user:
+        try:
+            supersyndic.user.delete()
+        except Exception as e:
+            print(f"Error deleting user: {e}")
+    
+    supersyndic.delete()
     messages.success(request, _('SuperSyndic "%s" has been deleted successfully.') % supersyndic.nom)
     return redirect('gestion-supersyndic')

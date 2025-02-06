@@ -1,7 +1,5 @@
 # -*- encoding: utf-8 -*- apps/import_data/views.py
 
-# -*- encoding: utf-8 -*-
-import datetime
 import pandas as pd
 
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -14,6 +12,8 @@ from django.utils import timezone
 
 from apps.authentication.models import CustomUser
 
+from apps.import_data.utils_import_data import parse_excel_date, to_int, to_float
+
 from apps.residence.models import Residence
 
 from apps.syndic.models import Syndic
@@ -21,37 +21,6 @@ from apps.syndic.models import Syndic
 from apps.supersyndic.models import SuperSyndic
 
 from .forms import ImportExcelForm
-
-
-def parse_excel_date(value):
-    """Handle both string dates and Excel serial dates.
-    Returns a date object or None.
-    """
-    try:
-        if pd.isnull(value) or str(value).strip() == "":
-            return None
-        if isinstance(value, (int, float)):  # Excel serial dates
-            return (datetime.datetime(1899, 12, 30) + datetime.timedelta(days=value)).date()
-        return pd.to_datetime(value).date()
-    except Exception as e:
-        print(f"Date parsing error for value {value}: {e}")
-        return None
-
-def to_int(value, default=0):
-    try:
-        if pd.isnull(value) or str(value).strip() == "":
-            return default
-        return int(value)
-    except Exception:
-        return default
-
-def to_float(value, default=0.0):
-    try:
-        if pd.isnull(value) or str(value).strip() == "":
-            return default
-        return float(value)
-    except Exception:
-        return default
 
 
 @login_required
@@ -64,9 +33,6 @@ def import_residences(request, user_id=None):
     """
     # Use the URL parameter user_id when the logged-in user is Superadmin.
     if request.user.role == "Superadmin":
-        if not user_id:
-            messages.error(request, _("A target user id must be provided for Superadmin imports."))
-            return redirect('gestion-residence')
         target_profile = get_object_or_404(CustomUser, id=user_id)
     else:
         target_profile = request.user
@@ -76,12 +42,11 @@ def import_residences(request, user_id=None):
         if form.is_valid():
             try:
                 df = pd.read_excel(request.FILES['file'])
-                print("Excel columns:", df.columns.tolist())  # Debug print
 
                 report = {'success': 0, 'errors': [], 'total': len(df)}
                 known_columns = {
-                    'Nom',            # Required field for residence name
-                    'Adresse',        # Required field for residence address
+                    'Nom',
+                    'Adresse',
                     'Nombre Appartements',
                     'Superficie Totale',
                     'Date Construction',
@@ -111,8 +76,8 @@ def import_residences(request, user_id=None):
                 for index, row in df.iterrows():
                     try:
                         # Read and standardize the required fields:
-                        nom = validate_required('Nom', get_column_value(row, 'Nom')).title() # Convert to title case
-                        adresse = validate_required('Adresse', get_column_value(row, 'Adresse')).title() # Convert to title case
+                        nom = validate_required('Nom', get_column_value(row, 'Nom')).strip().title() # Convert to title case
+                        adresse = validate_required('Adresse', get_column_value(row, 'Adresse')).strip().title() # Convert to title case
                         # Date fields are optional
                         date_construction = parse_excel_date(row.get('Date Construction'))
                         date_dernier = parse_excel_date(row.get('Date Dernier Contrôle'))
@@ -198,11 +163,17 @@ def import_residences(request, user_id=None):
     else:
         form = ImportExcelForm()
 
+    if request.user.role == "Superadmin":
+        residences = Residence.objects.all()
+    else:
+        residences = Residence.objects.filter(created_by=target_profile)
+
     context = {
         'segment': 'import-data',
         'titlePage': 'Residence Import Data',
         'import_data_form': form,
         'profile': target_profile,
+        'residences': residences,
         'date': timezone.now().strftime("%a %d %B %Y")
     }
 

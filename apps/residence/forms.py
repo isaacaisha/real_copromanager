@@ -55,8 +55,19 @@ class ResidenceForm(forms.ModelForm):
             'type_chauffage': _('Heating Type'),
         }
 
+    def clean_nom(self):
+        nom = self.cleaned_data.get('nom', '')
+        return nom.title()
+
+    def clean_adresse(self):
+        adresse = self.cleaned_data.get('adresse', '').strip()
+        return adresse  # Removes leading/trailing spaces
+    
     def save(self, user, target_user=None, commit=True):
         residence = super().save(commit=False)
+
+        residence.nom = self.cleaned_data['nom']  # Ensure title case is applied
+        residence.adresse = self.cleaned_data.get('adresse')
 
         # Automatically set the 'created_by' field to the logged-in user
         residence.created_by = user

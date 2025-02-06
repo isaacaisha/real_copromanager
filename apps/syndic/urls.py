@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*- apps/authentication/urls.py
+# -*- encoding: utf-8 -*- apps/syndic/urls.py
 """
 Copyright (c) 2019 - present AppSeed.us
 """

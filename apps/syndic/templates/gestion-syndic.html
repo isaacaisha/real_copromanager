@@ -104,10 +104,6 @@
                             <td>
                                 <form method="post" action="{% url 'delete-syndic' syndic.id %}" style="display:inline;">
                                     {% csrf_token %}
-                                    <!--<button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Are you sure you want to delete this syndic?');">
-                                            Delete
-                                        </button>-->
                                     <button type="submit" rel="tooltip" title="Supprimer"
                                         class="btn btn-danger btn-link btn-sm"
                                         data-confirm="{% trans 'Are you sure you want to delete this syndic?' %}">

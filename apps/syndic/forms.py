@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*- apps/authentication/forms.py
+# -*- encoding: utf-8 -*- apps/syndic/forms.py
 
 """
 Copyright (c) 2019 - present AppSeed.us

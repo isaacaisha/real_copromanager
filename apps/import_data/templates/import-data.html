@@ -11,38 +11,190 @@
 
 {% block content %}
 
-<div class="mt-5">
+<div class="mt-4">
+    {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+    <div class="container text-center mb-3">
+        <a href="{% url 'create-residence' user.id %}" class="btn btn-success btn-sm">
+            {% trans "Create Residence" %}
+        </a>
+    </div>
+    {% endif %}
+
     <div class="card">
         <div class="card-header card-header-icon">
             <div class="card-icon">
-                <i class="fas fa-file-import fa-2x"></i>
+                <i class="fa-solid fa-city"></i>
             </div>
-            <span class="card-title">
-                {% trans "Residences Import Datas for" %} {{ profile.nom }}
-                <br>
-                {% if user.role == 'Superadmin' %}
-                {% trans "Import Data ID" %} {{ profile.id }}
-                {% endif %}
-            </span>
+            <h3 class="card-title">
+                {% trans "Backoffice - Managing Residences" %}
+            </h3>
         </div>
-
+        <div class="card-footer">
+            <div class="stats">
+                <i class="material-icons">info</i>
+                <span class="card-title">{{ residences.count }} {% trans "Residences" %}</span>
+            </div>
+        </div>
         <div class="card-body">
-            <br>
-            <form method="POST" action="{% url 'import-residences' profile.id %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <span class="text-center">{{ import_data_form.as_p }}</span>
-                <br>
 
-                <div class="text-center">
-                    <button type="submit" class="btn btn-success btn-sm pull-left">{% trans "Import" %}</button>
-                    <a href="javascript:history.back()" class="btn btn-sm pull-right">{% trans "Cancel" %}</a>
+            <!-- Residences Section -->
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-sm-12">
                 </div>
-            </form>
+            </div>
+            <h3>{% trans "Details of Residences" %}</h3>
+            <div class="table-responsive mb-5" style="max-height: 455px; overflow-y: auto;">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>{% trans "Residence Name" %}</th>
+                            {% if user.role == 'Superadmin' %}
+                            <th>{% trans "Email" %}</th>
+                            {% endif %}
+                            <th>{% trans "Import Excel Data" %}</th>
+                            <th>{% trans "Residence Info" %}</th>
+                            <th>{% trans "Update Residence" %}</th>
+                            <th>{% trans "Delete" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if residences %}
+                        {% for residence in residences %}
+                        <tr>
+                            <td>{{ residence.nom }}</td>
+                            {% if user.role == 'Superadmin' %}
+                            <td>
+                                {% if residence.syndic.exists %}
+                                {% for syndic in residence.syndic.all %}
+                                <a href="mailto:{{ syndic.user.email }}" class="a_link">{{ syndic.user.email }}</a><br>
+                                {% endfor %}
+                                {% endif %}
+
+                                {% if residence.supersyndic.exists %}
+                                {% for supersyndic in residence.supersyndic.all %}
+                                <a href="mailto:{{ supersyndic.user.email }}" class="a_link">{{ supersyndic.user.email }}</a><br>
+                                {% endfor %}
+                                {% endif %}
+                            </td>
+                            {% endif %}
+                            <td>
+                                <form method="POST" action="{% url 'import-residences' profile.id %}" enctype="multipart/form-data"
+                                    class="importForm">
+                                    {% csrf_token %}
+                                    <input type="file" name="file" class="importFile" accept=".xls,.xlsx" style="display: none;">
+                            
+                                    <div class="text-center">
+                                        <button type="button" class="btn btn-success btn-sm importButton">
+                                            <i class="fas fa-file-import fa-2x"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td>
+                                <a href="{% url 'residence-detail' residence.id %}" class="btn btn-sm">
+                                    <i class="material-icons">search</i> 
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{% url 'update-residence' residence.id %}" class="btn btn-warning btn-sm">
+                                    <i class="material-icons">edit</i>
+                                </a>
+                            </td>
+                            <td>
+                                <form method="post" action="{% url 'delete-residence' residence.id %}"
+                                    style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" rel="tooltip" title="Supprimer"
+                                        class="btn btn-danger btn-danger btn-sm"
+                                        data-confirm="{% trans 'Are you sure you want to delete this residence?' %}">
+                                        <i class="material-icons">close</i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                {% trans "No residences available." %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
+
+    <!--<div class="mt-5">
+        <div class="card">
+            <div class="card-header card-header-icon">
+                <div class="card-icon">
+                    <i class="fas fa-file-import fa-2x"></i>
+                </div>
+                <span class="card-title">
+                    {% trans "Residences Import Datas for" %} {{ profile.nom }}
+                    <br>
+                    {% if user.role == 'Superadmin' %}
+                    {% trans "Import Data User ID" %} {{ profile.id }}
+                    {% endif %}
+                </span>
+            </div>
+    
+            <div class="card-body">
+                <br>
+                <form method="POST" action="{% url 'import-residences' profile.id %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <span class="text-center">{{ import_data_form.as_p }}</span>
+                    <br>
+    
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success btn-sm pull-left">{% trans "Import" %}</button>
+                        <a href="javascript:history.back()" class="btn btn-sm pull-right">{% trans "Cancel" %}</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>-->
+
+    <!-- Go Back Button -->
+    <div class="text-center mt-3">
+        <a href="javascript:history.back()" class="btn btn-sm">
+            <i class="material-icons">arrow_back</i> {% trans "Go back" %}
+        </a>
+    </div>
+
 </div>
 
 {% endblock %}
 
 <!-- Specific Page JS goes HERE  -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script>
+    // Import Excel Data Button
+    document.querySelectorAll(".importButton").forEach((button, index) => {
+            button.addEventListener("click", function () {
+                document.querySelectorAll(".importFile")[index].click();
+            });
+        });
+
+        document.querySelectorAll(".importFile").forEach((fileInput, index) => {
+            fileInput.addEventListener("change", function () {
+                if (this.files.length > 0) {
+                    document.querySelectorAll(".importForm")[index].submit();
+                }
+            });
+        });
+    
+    // Delete Residence Alerte Button
+    document.querySelectorAll('button[data-confirm]').forEach(button => {
+        button.addEventListener('click', function (event) {
+            const confirmMessage = this.getAttribute('data-confirm');
+            if (!confirm(confirmMessage)) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+{% endblock javascripts %}

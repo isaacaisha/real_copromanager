@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*- apps/dashboard/views.py
+# -*- encoding: utf-8 -*- apps/syndic/views.py
 
 """
 Copyright (c) 2019 - present AppSeed.us
@@ -119,20 +119,24 @@ def gestion_syndic(request):
 @user_passes_test(lambda u: u.is_active and u.role == 'Superadmin')
 def delete_syndic(request, syndic_id):
     """
-    Deletes a Syndic and all related data (residences, coproprietaires, prestataires).
+    Deletes a Syndic.
     """
-    syndic = get_object_or_404(Syndic, id=syndic_id)
-    user = syndic.user  # Access the associated user account
+    syndic = Syndic.objects.filter(user__id=syndic_id).first()
+    if not syndic:
+        print(f"No syndic found with id={syndic_id}")
+        messages.warning(request, _('Syndic not found.'))
+        return redirect('gestion-syndic')
 
-    # Unlink the supersyndic from related coproprietaires
-    syndic.syndic_coproprietaires.clear()  # Remove all coproprietaires from the many-to-many relationship
-
-    # Clear many-to-many relationships for prestataires
+    syndic.syndic_coproprietaires.clear()
     syndic.syndic_prestataires.clear()
-
-    # Residences are many-to-many; ensure no deletion occurs (no explicit action is needed here)
-    # Coproprietaires and Prestataires will still be linked to Residences.
-
-    user.delete()  # Delete the CustomUser syndic
+    
+    # Ensure the related user exists before trying to delete
+    if syndic.user:
+        try:
+            syndic.user.delete()
+        except Exception as e:
+            print(f"Error deleting user: {e}")
+    
+    syndic.delete()
     messages.success(request, _('Syndic "%s" has been deleted successfully.') % syndic.nom)
     return redirect('gestion-syndic')

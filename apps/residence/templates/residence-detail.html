@@ -339,21 +339,6 @@
             </a>
         </div>
         {% endif %}
-
-        <div class="text-center">
-            {% if residence %}
-            <a href="{% url 'update-residence' residence.id %}" class="a_link">
-                <button type="submit" rel="tooltip" title="{% trans 'Update' %}" class="btn btn-warning btn-sm">
-                    <i class="material-icons">edit</i>
-                </button>
-                <br>
-                <label for="">{% trans "Update Residence" %}</label>
-            </a>
-            {% else %}
-            <p>{% trans "No Residence found for this user." %}</p>
-            {% endif %}
-        </div>
-    
     </div>
     
     <!-- Go Back Button -->
