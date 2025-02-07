@@ -28,7 +28,7 @@
     </a>
     
     <div class="text-center">
-        <a href="{% url 'remove-syndic' %}" class="btn btn-danger btn-sm text-center">
+        <a href="{% url 'remove-syndic' %}" class="btn btn-danger btn-sm">
             {% trans "Remove from Residence" %}
         </a>
     </div>
@@ -45,13 +45,15 @@
         {% trans "Add to Residence" %}
     </a>
 </div>
-<br>
+
+<div class="text-center">
+    <a href="{% url 'associate-to-syndicate' %}" class="btn btn-success btn-sm">
+        {% trans "Associate to a Syndicate" %}
+    </a>
+</div>
 {% endif %}
 
 <div>
-    <!-- apps/dashboard/templates/users-datas.html -->
-    
-    {% load static i18n %}
     
     <!-- Card principale -->
     <div class="card card-body">
@@ -68,19 +70,26 @@
                             <div>
                                 {% if user.role == 'Superadmin' and residence.created_by %}
                                 <!-- For Superadmin, use the created_by user id (assumed to be a Syndic/SuperSyndic) -->
-                                <a href="{% url 'import-residences' residence.created_by.id %}" rel="tooltip" title="{% trans 'Settings' %}"
-                                    class="btn btn-warning btn-sm">
-                                    <i class="fas fa-file-import fa-2x"></i>
-                                    <span class="ms-0">{% trans "Settings" %}</span>
+                                <a href="{% url 'import-residences' residence.created_by.id %}" rel="tooltip" title="{% trans 'Gestion' %}"
+                                    class="btn btn-sm">
+                                    <i class="material-icons">location_city</i>
+                                    <span class="ms-0">{% trans "Residences Gestion" %}</span>
                                 </a>
                                 {% else %}
                                 <!-- For other users, use the logged-in user id -->
-                                <a href="{% url 'import-residences' user.id %}" rel="tooltip" title="{% trans 'Settings' %}"
-                                    class="btn btn-warning btn-sm">
-                                    <i class="fas fa-file-import fa-2x"></i>
-                                    <span class="ms-0">{% trans "Settings" %}</span>
+                                <a href="{% url 'import-residences' user.id %}" rel="tooltip" title="{% trans 'Gestion' %}"
+                                    class="btn btn-sm">
+                                    <i class="material-icons">location_city</i>
+                                    <span class="ms-0">{% trans "Residences Gestion" %}</span>
                                 </a>
                                 {% endif %}
+
+                                <!-- For other users, use the logged-in user id -->
+                                <a href="{% url 'import-excel-update' residence.id %}" rel="tooltip" title="{% trans 'Settings' %}"
+                                    class="btn btn-warning btn-sm">
+                                    <i class="material-icons">upload_file</i>
+                                    <span class="ms-0">{% trans "Settings" %}</span>
+                                </a>
                             </div>
                         </li>
                     </ul>
@@ -331,14 +340,7 @@
             {% endif %}
 
         </div>
-        
-        {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
-        <div class="container text-center mb-3">
-            <a href="{% url 'associate-to-syndicate' %}" class="btn btn-success btn-sm">
-                {% trans "Associate to a Syndicate" %}
-            </a>
-        </div>
-        {% endif %}
+
     </div>
     
     <!-- Go Back Button -->
@@ -359,6 +361,7 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script>
+    // Delete Residence Alerte Button
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll('a[data-confirm]').forEach(link => {
             link.addEventListener('click', function (event) {

@@ -26,6 +26,7 @@ pycodestyle==2.7.0
 pypng==0.20220715.0
 python-dateutil==2.9.0.post0
 python-decouple==3.4
+python-magic==0.4.27
 pytz==2021.1
 qrcode==7.4.2
 requests==2.32.3

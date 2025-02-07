@@ -150,7 +150,8 @@ def import_residences(request, user_id=None):
                     except Exception as e:
                         report['errors'].append(f"Row {index+1}: {str(e)}")
 
-                messages.success(request, f"Imported {report['success']}/{report['total']} residences")
+                messages.success(request, f"{residence.nom} Succesfully Updated")
+                messages.success(request, f"Imported {report['success']}/{report['total']} residences to Odoo")
                 if report['errors']:
                     messages.warning(request, f"Errors: {', '.join(report['errors'][:3])}...")
                 if last_residence:
@@ -165,6 +166,7 @@ def import_residences(request, user_id=None):
 
     if request.user.role == "Superadmin":
         residences = Residence.objects.all()
+        messages.success(request, f"Residence Succesfully Updated")
     else:
         residences = Residence.objects.filter(created_by=target_profile)
 

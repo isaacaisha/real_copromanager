@@ -1,0 +1,148 @@
+<!-- apps/dashboard/templates/import-excel-update.html -->
+
+{% extends "layouts/base.html" %}
+
+{% load static i18n %}
+
+{% block title %} {% trans "Residence Details" %} - {{ residence.id }} {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+<style>
+    .icons_span {
+        font-size: x-small;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+{% if user.role == 'Superadmin' %}
+<div class="container">
+    <a href="{% url 'register' %}?role=Syndic" class="btn btn-success btn-sm pull-left">
+        {% trans "Create a Syndic" %}
+    </a>
+
+    <a href="{% url 'assign-syndic' %}" class="btn btn-success btn-sm pull-right">
+        {% trans "Add to Residence" %}
+    </a>
+
+    <div class="text-center">
+        <a href="{% url 'remove-syndic' %}" class="btn btn-danger btn-sm">
+            {% trans "Remove from Residence" %}
+        </a>
+    </div>
+</div>
+{% endif %}
+
+{% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+<div class="container">
+    <a href="{% url 'register' %}?role=Coproprietaire" class="btn btn-success btn-sm pull-left">
+        {% trans "Create a Co-Owner" %}
+    </a>
+
+    <a href="{% url 'associate-to-residence' %}" class="btn btn-success btn-sm pull-right">
+        {% trans "Add to Residence" %}
+    </a>
+</div>
+
+<div class="text-center">
+    <a href="{% url 'associate-to-syndicate' %}" class="btn btn-success btn-sm">
+        {% trans "Associate to a Syndicate" %}
+    </a>
+</div>
+{% endif %}
+
+<div>
+
+    <!-- Card principale -->
+    <div class="mt-5">
+        <div class="card">
+            <div class="card-header card-header-icon">
+                <div class="card-icon">
+                    <i class="fas fa-file-import fa-2x"></i>
+                </div>
+                <span class="card-title pull-left">
+                    {% trans "Upload Datas &/or Update" %} {{ residence.nom }}
+                    <br>
+                    {% trans "Created by" %} {{ residence.created_by.nom|default:'-----' }}
+                </span>
+                <span class="card-title pull-right">
+                    <br>
+                    {% trans "Created at" %} {{ residence.created_at|default:'-----' }}
+                </span>
+            </div>
+
+            <div class="card-body">
+                <br>
+                <form method="POST" action="{% url 'import-residences' user.id %}" enctype="multipart/form-data"
+                    class="importForm">
+                    {% csrf_token %}
+                    <input type="file" name="file" class="importFile" accept=".xls,.xlsx,.csv" style="display: none;">
+
+
+                    <div class="pull-left">
+                        <button type="button" class="btn btn-success btn-sm importButton">
+                            <i class="material-icons">upload_file</i>
+                        </button>
+                        <br>
+                        <span>{% trans "Upload Excel or CSV Files" %}</span>
+                    </div>
+                    <div class="pull-right">
+                        <a href="{% url 'update-residence' residence.id %}" class="btn btn-warning btn-sm">
+                            <i class="material-icons">edit</i>
+                        </a>
+                        <br>
+                        <span>{% trans "Update Residence" %}</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Go Back Button -->
+    <div class="text-center mt-3">
+        {% if user.is_authenticated and user.role == 'Superadmin' or user.role == 'Syndic' or user.role == 'SuperSyndic' %}
+        <a href="javascript:history.back()" class="btn btn-sm">
+            <i class="material-icons">arrow_back</i> {% trans "Go back" %}
+        </a>
+        {% else %}
+        <a href="{% url 'home' %}" class="btn btn-secondary btn-sm">{% trans "Back to Home" %}</a>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+    // Import Excel Data Button
+    document.querySelectorAll(".importButton").forEach((button, index) => {
+        button.addEventListener("click", function () {
+            document.querySelectorAll(".importFile")[index].click();
+        });
+    });
+
+    document.querySelectorAll(".importFile").forEach((fileInput, index) => {
+        fileInput.addEventListener("change", function () {
+            if (this.files.length > 0) {
+                document.querySelectorAll(".importForm")[index].submit();
+            }
+        });
+    });
+
+    // Delete Residence Alerte Button
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('a[data-confirm]').forEach(link => {
+            link.addEventListener('click', function (event) {
+                const confirmMessage = this.getAttribute('data-confirm');
+                if (!confirm(confirmMessage)) {
+                    event.preventDefault(); // Stop the link from navigating if canceled
+                }
+            });
+        });
+    });
+</script>
+{% endblock javascripts %}

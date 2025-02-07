@@ -66,6 +66,22 @@ def create_residence(request, user_id):
     except Exception as e:
         messages.error(request, _("An unexpected error occurred: %s") % str(e))
         return redirect('home')
+    
+
+@login_required(login_url="/login/")
+@user_passes_test(lambda u: u.is_active and u.role in ['Superadmin', 'Syndic', 'SuperSyndic'])
+def import_excel_update(request, residence_id):
+    residence = get_object_or_404(Residence, id=residence_id)
+
+    context = {
+        'segment': 'import-excel-data-update',
+        'residence': residence,
+        'titlePage': _('Import Excel Data &/or Update Residence "%s"') % residence.nom,
+        'date': timezone.now().strftime(_("%a %d %B %Y")),
+    }
+
+    html_template = loader.get_template('import-excel-update.html')
+    return HttpResponse(html_template.render(context, request))
 
 
 @login_required(login_url="/login/")

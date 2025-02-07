@@ -20,8 +20,8 @@ from apps.superadmin.views import (
     )
 
 from apps.residence.views import (
-    create_residence, update_residence, residence_detail,
-    gestion_residence, delete_residence
+    create_residence, import_excel_update, update_residence,
+    residence_detail, gestion_residence, delete_residence
     )
 
 from apps.import_data.views import import_residences
@@ -76,6 +76,7 @@ urlpatterns = [
 
     # URLs for Residence
     path('create-residence/<int:user_id>/', create_residence, name='create-residence'),
+    path('import-excel-update/<int:residence_id>/', import_excel_update, name='import-excel-update'),
     path('update-residence/<int:residence_id>/', update_residence, name='update-residence'), 
     path('residence-detail/<int:residence_id>/', residence_detail, name='residence-detail'),
     path('import-residences/<int:user_id>/', import_residences, name='import-residences'),

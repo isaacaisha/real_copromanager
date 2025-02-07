@@ -35,9 +35,15 @@
 
 {% if user.role == 'Syndic' or user.role == 'SuperSyndic' %}
 <div class="container">
+    {% if residences %}
     <a href="{% url 'register' %}?role=Prestataire" class="btn btn-success btn-sm pull-left">
         {% trans "Create Provider" %}
     </a>
+    {% else %}
+    <a href="{% url 'create-residence' user.id %}" class="btn btn-success btn-sm pull-left">
+        {% trans "Create Residence" %}
+    </a>
+    {% endif %}
     
     <a href="{% url 'create-residence' user.id %}" class="btn btn-success btn-sm pull-right">
         {% trans "Create Residence" %}
